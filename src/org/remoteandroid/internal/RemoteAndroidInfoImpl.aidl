@@ -1,0 +1,2 @@
+package org.remoteandroid.internal;
+parcelable RemoteAndroidInfoImpl;
