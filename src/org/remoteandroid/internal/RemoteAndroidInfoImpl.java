@@ -1,6 +1,6 @@
 package org.remoteandroid.internal;
 
-import static org.remoteandroid.internal.Constants.I;
+import static org.remoteandroid.internal.Constants.*;
 import static org.remoteandroid.internal.Constants.PREFIX_LOG;
 
 import java.net.InetAddress;
@@ -277,7 +277,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 		ArrayList<String> uris = new ArrayList<String>();
 		if (address != null)
 		{
-			uris.add("tcp://" + address.getHostAddress()); // TODO: Gestion du port
+			uris.add(SCHEME_TCP4 + address.getHostAddress()); // TODO: Gestion du port et du v6
 		}
 		if (Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_ECLAIR)
 		{
@@ -294,14 +294,14 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 							if (bonded.getBondState() == BluetoothDevice.BOND_BONDED
 									&& bonded.getAddress().equals(bluetoothid))
 							{
-								uris.add("bts://" + bonded.getName());
+								uris.add(SCHEME_BTS + bonded.getName());
 								isBonded=true;
 								break;
 							}
 						}
 						if (!isBonded && Compatibility.VERSION_SDK_INT > Compatibility.VERSION_GINGERBREAD && version > Compatibility.VERSION_GINGERBREAD) // Accept anonymous bluetooth
 						{
-							uris.add("bt://" + bluetoothid);
+							uris.add(SCHEME_BT + bluetoothid);
 						}
 					}
 				}

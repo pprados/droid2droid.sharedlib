@@ -20,6 +20,10 @@ public class Constants
 	public static final String TAG_PREFERENCE 	= "Preference";
 	public static final String TAG_CLIENT_BIND 	= "Client";
 
+	public static final String SCHEME_TCP4="ip://";
+	public static final String SCHEME_TCP6=SCHEME_TCP4;
+	public static final String SCHEME_BT="bt://";
+	public static final String SCHEME_BTS="bts://";
 	
 	public static final boolean USE_SHAREDLIB=Friend.USE_SHAREDLIB;
 	public static final String SHARED_LIB=Friend.SHARED_LIB;

@@ -36,6 +36,7 @@ public class BluetoothSocketBossSender implements BossSocketSender
 	// TODO: en mutualisant le SDK, il est possible de maintenir le cycle de vie des connexions vers autres android,
 	// et ainsi, les réutiliser entre les applications pour éviter de devoir utiliser plusieurs UUID.
 	// Number of applications in the same phone, to connect to another phone.
+	// FIXME: utiliser deux jeux de sKeys différents pour ano et non ano
 	public static final UUID[] sKeys=
 	{
 	

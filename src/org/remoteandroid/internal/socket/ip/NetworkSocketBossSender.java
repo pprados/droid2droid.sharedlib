@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.Messages.Msg;
+import org.remoteandroid.internal.Tools;
 import org.remoteandroid.internal.socket.BossSocketSender;
 import org.remoteandroid.internal.socket.DownstreamHandler;
 
@@ -39,24 +40,8 @@ public class NetworkSocketBossSender implements BossSocketSender
 	{
     	mId=sId.incrementAndGet();
     	mHandler=handler;
-    	mHost=uri.getHost();
-    	if (mHost.startsWith("[")) // Detect IPV6 format
-    	{
-    		String uriv6=uri.toString();
-    		int i=uriv6.indexOf('[');
-    		int j=uriv6.indexOf(']');
-    		mHost=uriv6.substring(i+1,j);
-    		if (uriv6.charAt(j+1)==':')
-    		{
-    			String port;
-        		port=uriv6.substring(j+2);
-        		int k=port.indexOf('/');
-    			if (k!=-1) port=port.substring(0,k);
-    			mPort=Integer.parseInt(port);
-    		}
-    	}
-    	else
-    		mPort=uri.getPort();
+    	mHost=Tools.uriGetHostIPV6(uri);
+    	mPort=Tools.uriGetPortIPV6(uri);
     	if (mPort==-1)
     		mPort=RemoteAndroidManager.DEFAULT_PORT;
     	Socket socket=new Socket(mHost,mPort);
