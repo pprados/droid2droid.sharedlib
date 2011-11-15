@@ -23,6 +23,7 @@ import org.apache.http.MethodNotSupportedException;
 import org.remoteandroid.RemoteAndroid;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
+import org.remoteandroid.internal.Messages.Msg;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -40,6 +41,7 @@ import android.os.IInterface;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
+import android.util.Pair;
 
 // NAT file:///home/pprados/Bureau/J%20ICE/index.html
 /** @hide */
@@ -333,7 +335,7 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 		return true;
 	}
 	
-	public abstract long connectWithAuthent(long timeout) throws UnknownHostException, IOException, RemoteException;
+	public abstract Pair<RemoteAndroidInfoImpl,Long> connectWithAuthent(long timeout) throws UnknownHostException, IOException, RemoteException;
 	
 	private static final void postPublishProgress(final PublishListener listener,final int progress)
 	{

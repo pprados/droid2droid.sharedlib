@@ -47,7 +47,7 @@ public class Tools
 		{
 			ProcessBuilder pb = new ProcessBuilder("/system/bin/cat", "/proc/cpuinfo");
 			Process process = pb.start();
-			in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			in = new BufferedReader(new InputStreamReader(process.getInputStream()),8096);
 			String line;
 			while ((line=in.readLine())!=null)
 			{
@@ -86,7 +86,7 @@ public class Tools
 		{
 			ProcessBuilder pb = new ProcessBuilder("/system/bin/cat", "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq");
 			Process process = pb.start();
-			in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			in = new BufferedReader(new InputStreamReader(process.getInputStream()),8096);
 			String line;
 			return Long.parseLong(in.readLine());
 		}

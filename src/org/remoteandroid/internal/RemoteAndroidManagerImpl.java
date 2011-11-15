@@ -28,6 +28,7 @@ import org.remoteandroid.ListRemoteAndroidInfo;
 import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
+import org.remoteandroid.internal.Messages.Msg;
 import org.remoteandroid.internal.socket.bluetooth.BluetoothSocketRemoteAndroid;
 import org.remoteandroid.internal.socket.ip.NetworkSocketRemoteAndroid;
 
@@ -45,6 +46,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.AndroidRuntimeException;
 import android.util.Log;
+import android.util.Pair;
 
 
 public class RemoteAndroidManagerImpl extends RemoteAndroidManager
@@ -297,6 +299,12 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	}
 	public long askCookie(Uri uri)
 	{
+		Pair<RemoteAndroidInfoImpl,Long> msg=askMsgCookie(uri);
+		if (msg==null) return 0;
+		return msg.second;
+	}
+	public Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri)
+	{
 		AbstractRemoteAndroidImpl binder=null;
 		try
 		{
@@ -306,11 +314,16 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			binder=driver.factoryBinder(RemoteAndroidManagerImpl.this,uri);
 			return binder.connectWithAuthent(TIMEOUT_CONNECT);
 		}
+		catch (SecurityException e)
+		{
+			if (W && !D) Log.w(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.");
+			if (D) Log.d(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.",e);
+			return null;
+		}
 		catch (Exception e)
 		{
-			// FIXME : cookie impossible
-			if (E) Log.e(TAG_CLIENT_BIND,"Connection impossible ",e);
-			return 0;
+			if (E) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie",e);
+			return null;
 		}
 		finally
 		{

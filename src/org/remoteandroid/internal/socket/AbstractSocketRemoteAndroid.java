@@ -9,12 +9,14 @@ import java.util.concurrent.TimeUnit;
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.AbstractProtoBufRemoteAndroid;
 import org.remoteandroid.internal.Login;
+import org.remoteandroid.internal.RemoteAndroidInfoImpl;
 import org.remoteandroid.internal.Messages.Msg;
 
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
+import android.util.Pair;
 
 public abstract class AbstractSocketRemoteAndroid<T extends BossSocketSender> extends AbstractProtoBufRemoteAndroid
 {
@@ -98,7 +100,7 @@ public abstract class AbstractSocketRemoteAndroid<T extends BossSocketSender> ex
 	}
 
 	@Override
-	public long connectWithAuthent(long timeout) throws UnknownHostException, IOException, RemoteException
+	public Pair<RemoteAndroidInfoImpl,Long> connectWithAuthent(long timeout) throws UnknownHostException, IOException, RemoteException
 	{
 		initBootstrap();
 		return Login.getLogin().client(this, timeout);
