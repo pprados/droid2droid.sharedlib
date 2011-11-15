@@ -281,9 +281,9 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 		{
 			// FIXME: toutes les ip. Et gestion du port
 			if (address instanceof Inet4Address)
-				uris.add(SCHEME_TCP4 + address.getHostAddress()+':'+RemoteAndroidManager.DEFAULT_PORT+'/');
+				uris.add(SCHEME_TCP4 + "://"+ address.getHostAddress()+':'+RemoteAndroidManager.DEFAULT_PORT+'/');
 			else
-				uris.add(SCHEME_TCP6 + '['+address.getHostAddress()+"]:"+RemoteAndroidManager.DEFAULT_PORT+'/');
+				uris.add(SCHEME_TCP6 + "://"+ '['+address.getHostAddress()+"]:"+RemoteAndroidManager.DEFAULT_PORT+'/');
 		}
 		if (Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_ECLAIR)
 		{
@@ -300,14 +300,14 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 							if (bonded.getBondState() == BluetoothDevice.BOND_BONDED
 									&& bonded.getAddress().equals(bluetoothid))
 							{
-								uris.add(SCHEME_BTS + bonded.getName()+'/');
+								uris.add(SCHEME_BTS + "://"+ bonded.getName()+'/');
 								isBonded=true;
 								break;
 							}
 						}
 						if (!isBonded && Compatibility.VERSION_SDK_INT > Compatibility.VERSION_GINGERBREAD && version > Compatibility.VERSION_GINGERBREAD) // Accept anonymous bluetooth
 						{
-							uris.add(SCHEME_BT + bluetoothid +'/');
+							uris.add(SCHEME_BT + "://"+ bluetoothid +'/');
 						}
 					}
 				}

@@ -62,10 +62,33 @@ public class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 		filter.addAction(RemoteAndroidManager.ACTION_DISCOVER_ANDROID);
 		filter.addAction(RemoteAndroidManager.ACTION_START_DISCOVER_ANDROID);
 		filter.addAction(RemoteAndroidManager.ACTION_STOP_DISCOVER_ANDROID);
-		mManager.getContext().registerReceiver(mReceiver, 
+		BroadcastReceiver receiver=new BroadcastReceiver()
+		{
+			@Override
+			public void onReceive(Context context, Intent intent)
+			{
+				final String action=intent.getAction();
+				if (RemoteAndroidManager.ACTION_DISCOVER_ANDROID.equals(action))
+				{
+					RemoteAndroidInfoImpl info=(RemoteAndroidInfoImpl)intent.getParcelableExtra(RemoteAndroidManager.EXTRA_DISCOVER);
+					detectAndroid(info);
+				}
+				else if (RemoteAndroidManager.ACTION_START_DISCOVER_ANDROID.equals(action))
+				{
+					processOnStart();
+				}
+				else if (RemoteAndroidManager.ACTION_STOP_DISCOVER_ANDROID.equals(action))
+				{
+					processOnStop();
+				}
+			}
+
+		};
+		mManager.getContext().registerReceiver(receiver, 
 				filter,
 				RemoteAndroidManager.PERMISSION_DISCOVER_SEND,null
 				);
+		mReceiver=receiver;
 	}
 	
 	@Override

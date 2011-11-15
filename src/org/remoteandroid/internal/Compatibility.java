@@ -7,7 +7,6 @@ import android.os.Build;
 
 public class Compatibility
 {
-	public static ApplicationInfo sAppInfo;
     public static String MANUFACTURER;
     public static int VERSION_SDK_INT;
     public static final int VERSION_CUPCAKE=3;
@@ -42,15 +41,4 @@ public class Compatibility
     	}
     }
     
-	public static void init(Context context)
-	{
-		try
-		{
-			sAppInfo=context.getPackageManager().getApplicationInfo(context.getPackageName(), 0);
-		}
-		catch (NameNotFoundException e)
-		{
-			throw new Error();
-		}
-	}
 }

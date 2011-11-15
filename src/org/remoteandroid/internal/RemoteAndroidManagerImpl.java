@@ -43,6 +43,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.util.AndroidRuntimeException;
 import android.util.Log;
 
 
@@ -95,7 +96,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	public RemoteAndroidManagerImpl(final Context applicationContext)
 	{
 		mAppContext=applicationContext;
-		
+		initAppInfo(applicationContext);
 		if (Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_ECLAIR)
 		{
 			// Verify wrapper
@@ -144,6 +145,24 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 				noDiscoverPrivilege=true;
 				if (E) Log.e(TAG_CLIENT_BIND,"Error "+e.getMessage(),e);
 			}
+			catch (AndroidRuntimeException e)
+			{
+				if (E && !D) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible");
+				if (D) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible",e);
+				throw new Error("Remote android client package not found. Install with this application if you want discover something.");
+			}
+		}
+	}
+
+	public static void initAppInfo(final Context applicationContext) throws Error
+	{
+		try
+		{
+			sAppInfo=applicationContext.getPackageManager().getApplicationInfo(applicationContext.getPackageName(), 0);
+		}
+		catch (NameNotFoundException e)
+		{
+			throw new Error();
 		}
 	}
 
@@ -158,7 +177,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		sDrivers=new HashMap<String,Driver>();
 		if (ETHERNET)
 		{
-			sDrivers.put("tcp",
+			sDrivers.put(SCHEME_TCP4,
 				new Driver()
 				{
 	
@@ -168,6 +187,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 						return new NetworkSocketRemoteAndroid(manager,uri);
 					}
 				});
+			// TODO: Specificique for SCHEME_TCP6 ?
 		}
 		if (BLUETOOTH)
 		{
@@ -179,7 +199,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 					return new BluetoothSocketRemoteAndroid(manager,uri);
 				}
 			};
-			sDrivers.put("bts",btsd);
+			sDrivers.put(SCHEME_BTS,btsd);
 			Driver btd=new Driver()
 			{
 				@Override
@@ -188,7 +208,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 					return new BluetoothSocketRemoteAndroid(manager,uri);
 				}
 			};
-			sDrivers.put("bt",btd);
+			sDrivers.put(SCHEME_BT,btd);
 		}
 	}
 	// -------------------------------------------------
