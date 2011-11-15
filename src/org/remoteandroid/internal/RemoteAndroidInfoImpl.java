@@ -3,6 +3,7 @@ package org.remoteandroid.internal;
 import static org.remoteandroid.internal.Constants.*;
 import static org.remoteandroid.internal.Constants.PREFIX_LOG;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import org.remoteandroid.RemoteAndroidInfo;
+import org.remoteandroid.RemoteAndroidManager;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -277,7 +279,11 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 		ArrayList<String> uris = new ArrayList<String>();
 		if (address != null)
 		{
-			uris.add(SCHEME_TCP4 + address.getHostAddress()); // TODO: Gestion du port et du v6
+			// FIXME: toutes les ip. Et gestion du port
+			if (address instanceof Inet4Address)
+				uris.add(SCHEME_TCP4 + address.getHostAddress()+':'+RemoteAndroidManager.DEFAULT_PORT+'/');
+			else
+				uris.add(SCHEME_TCP6 + '['+address.getHostAddress()+"]:"+RemoteAndroidManager.DEFAULT_PORT+'/');
 		}
 		if (Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_ECLAIR)
 		{
@@ -294,14 +300,14 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 							if (bonded.getBondState() == BluetoothDevice.BOND_BONDED
 									&& bonded.getAddress().equals(bluetoothid))
 							{
-								uris.add(SCHEME_BTS + bonded.getName());
+								uris.add(SCHEME_BTS + bonded.getName()+'/');
 								isBonded=true;
 								break;
 							}
 						}
 						if (!isBonded && Compatibility.VERSION_SDK_INT > Compatibility.VERSION_GINGERBREAD && version > Compatibility.VERSION_GINGERBREAD) // Accept anonymous bluetooth
 						{
-							uris.add(SCHEME_BT + bluetoothid);
+							uris.add(SCHEME_BT + bluetoothid +'/');
 						}
 					}
 				}
