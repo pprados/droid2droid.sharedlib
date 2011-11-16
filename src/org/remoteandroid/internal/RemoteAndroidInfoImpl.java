@@ -1,11 +1,17 @@
 package org.remoteandroid.internal;
 
-import static org.remoteandroid.internal.Constants.*;
+import static org.remoteandroid.internal.Constants.ETHERNET_IPV4_FIRST;
+import static org.remoteandroid.internal.Constants.ETHERNET_ONLY_IPV4;
 import static org.remoteandroid.internal.Constants.PREFIX_LOG;
+import static org.remoteandroid.internal.Constants.*;
+import static org.remoteandroid.internal.Constants.SCHEME_BTS;
+import static org.remoteandroid.internal.Constants.SCHEME_TCP;
+import static org.remoteandroid.internal.Constants.TAG_CANDIDATE;
+import static org.remoteandroid.internal.Constants.V;
 
 import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -16,11 +22,9 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import org.remoteandroid.RemoteAndroidInfo;
-import org.remoteandroid.RemoteAndroidManager;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.os.Build;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -38,23 +42,15 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	/** Public key; */
 	public PublicKey		publicKey;
 
+	/** Os name. */
+	public String			os	= "android";			// Reserve for port to other os
+
 	/** Android version. */
 	public int				version;
 
 	/** Capability. */
 	public int				capability;
 	
-	/** Bluetooth mac. */
-	public String			bluetoothid;
-
-	/** Current inet address. */
-	public InetAddress		address;
-
-	/** Ethernet mac address. */
-	public String			ethernetMac;
-
-	public String			os	= "android";			// Reserve for port to other os
-
 	public boolean			isBonded;
 	
 	public boolean			acceptAnonymous;
@@ -62,6 +58,8 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	public boolean			isDiscoverBT;
 	public boolean			isDiscoverEthernet;
 	public boolean			isDiscoverGSM;
+	
+	public ArrayList<String> uris=new ArrayList<String>(0);
 	
 	public RemoteAndroidInfoImpl()
 	{
@@ -102,42 +100,40 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 			merged=true;
 			capability=info.capability;
 		}
-		if (info.bluetoothid!=null && !info.bluetoothid.equals(bluetoothid))
+		if (uris!=null)
 		{
+			// TODO: Mixed les uris ?
 			merged=true;
-			bluetoothid=info.bluetoothid;
-		}
-		if (info.address!=null && !info.address.equals(address))
-		{
-			merged=true;
-			address=info.address;
+			//FIXME: réorganise les uris lors du merge ? Messages.Candidates candidates=ProtobufConvs.toCandidates(info);
+			
+			for (int i=0;i<info.uris.size();++i)
+			{
+				String uri=info.uris.get(i);
+				uris.remove(uri);
+				uris.add(0,uri); // Add at top
+			}
 		}
 		if (remove)
 		{
 			merged=true;
-			address=null;
-		}
-		if (info.ethernetMac!=null && info.ethernetMac.length()!=0 && !info.ethernetMac.equals(ethernetMac))
-		{
-			merged=true;
-			ethernetMac=info.ethernetMac;
+			uris.clear();
 		}
 		if (!isBonded)
 		{
 			merged=true;
 			isBonded=info.isBonded;
 		}
-		if (isDiscoverBT!=info.isDiscoverBT)
+		if (isDiscoverBT!=info.isDiscoverBT && info.isDiscoverBT)
 		{
 			merged=true;
 			isDiscoverBT=info.isDiscoverBT;
 		}
-		if (isDiscoverEthernet!=info.isDiscoverEthernet)
+		if (isDiscoverEthernet!=info.isDiscoverEthernet && info.isDiscoverEthernet)
 		{
 			merged=true;
 			isDiscoverEthernet=info.isDiscoverEthernet;
 		}
-		if (isDiscoverGSM!=info.isDiscoverGSM)
+		if (isDiscoverGSM!=info.isDiscoverGSM && info.isDiscoverGSM)
 		{
 			merged=true;
 			isDiscoverGSM=info.isDiscoverGSM;
@@ -226,36 +222,68 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 		return !isBonded && !isDiscover();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object x)
+	{
+		if (!(x instanceof RemoteAndroidInfoImpl))
+			return false;
+		RemoteAndroidInfoImpl other=(RemoteAndroidInfoImpl)x;
+		return uuid.equals(other.uuid);
+	}
+	@Override
+	public void removeUri(String uri)
+	{
+		uris.remove(uri);
+	}
+	
+	//TODO: Override method ?
+	public boolean removeUrisWithScheme(String sheme)
+	{
+		boolean remove=false;
+		for (int i=uris.size()-1;i>=0;--i)
+		{
+			if (uris.get(i).startsWith(sheme))
+			{
+				uris.remove(i);
+				remove=true;
+			}
+		}
+		return remove;
+	}
+	
+	public void addUris(String uri)
+	{
+		uris.remove(uri);
+		uris.add(0,uri);
+	}
+	
+	public boolean isConnectableWithBluetooth()
+	{
+		for (int i=uris.size()-1;i>=0;--i)
+		{
+			if (uris.get(i).startsWith(SCHEME_BT) || uris.get(i).startsWith(SCHEME_BTS))
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean isConnectableWithIP()
+	{
+		for (int i=uris.size()-1;i>=0;--i)
+		{
+			if (uris.get(i).startsWith(SCHEME_TCP) /*|| uris.get(i).startsWith(SCHEME_TCP6)*/)
+				return true;
+		}
+		return false;
+	}
+	
 	public void clearDiscover()
 	{
-		address=null;
+		uris.clear();
 		isDiscoverBT=isDiscoverEthernet=false;
-	}
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getBluetoothId()
-	{
-		return bluetoothid;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public InetAddress[] getInetAddresses()
-	{
-		return (address!=null) ? new InetAddress[]{address} : new InetAddress[]{}; // TODO: Manage multiple addresses.
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getEthernetMac()
-	{
-		return ethernetMac;
 	}
 
 	/**
@@ -276,73 +304,9 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	@Override
 	public String[] getUris()
 	{
-		ArrayList<String> uris = new ArrayList<String>();
-		if (address != null)
-		{
-			// FIXME: toutes les ip. Et gestion du port
-			if (address instanceof Inet4Address)
-				uris.add(SCHEME_TCP4 + "://"+ address.getHostAddress()+':'+RemoteAndroidManager.DEFAULT_PORT+'/');
-			else
-				uris.add(SCHEME_TCP6 + "://"+ '['+address.getHostAddress()+"]:"+RemoteAndroidManager.DEFAULT_PORT+'/');
-		}
-		if (Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_ECLAIR)
-		{
-			if ((bluetoothid != null) && bluetoothid.length() != 0)
-			{
-				try
-				{
-					BluetoothAdapter ba = BluetoothAdapter.getDefaultAdapter();
-					if (ba.isEnabled())
-					{
-						boolean isBonded=false;
-						for (BluetoothDevice bonded : ba.getBondedDevices())
-						{
-							if (bonded.getBondState() == BluetoothDevice.BOND_BONDED
-									&& bonded.getAddress().equals(bluetoothid))
-							{
-								uris.add(SCHEME_BTS + "://"+ bonded.getName()+'/');
-								isBonded=true;
-								break;
-							}
-						}
-						if (!isBonded && Compatibility.VERSION_SDK_INT > Compatibility.VERSION_GINGERBREAD && version > Compatibility.VERSION_GINGERBREAD) // Accept anonymous bluetooth
-						{
-							uris.add(SCHEME_BT + "://"+ bluetoothid +'/');
-						}
-					}
-				}
-				catch (SecurityException e)
-				{
-					// Ignore
-					if (I)
-						Log.i(TAG, PREFIX_LOG+'[' + Build.MANUFACTURER
-								+ "] Add android.permission.BLUETOOTH in manifest");
-				}
-			}
-		}
 		return uris.toArray(new String[uris.size()]);
 	}
-	@Override
-	public void remoteUri(String uri)
-	{
-		if (uri.startsWith("tcp"))
-		{
-			address=null;
-		}
-		else
-		{
-			bluetoothid=null;
-		}
-	}
-	public boolean isConnectableWithBluetooth()
-	{
-		return (BluetoothAdapter.getDefaultAdapter().isEnabled() && (bluetoothid != null) && bluetoothid.length() != 0);
-	}
-	public boolean isConnectableWithIP()
-	{
-		return address!=null;
-	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -351,18 +315,21 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	{
 		StringBuilder buf = new StringBuilder();
 		buf.append(name).append("->");
-		String[] uris = getUris();
-		if (uris.length > 0)
+		if (uris.size()==0)
 		{
-			for (String s : uris)
-			{
-				buf.append(s).append(',');
-			}
-			buf.setLength(buf.length() - 1);
+			buf.append("Impossible to connect");
 		}
 		else
 		{
-			buf.append("Impossible to connect");
+			for (int i=0;i<uris.size();++i)
+			{
+				String uri=uris.get(i);
+				for (String s : uris)
+				{
+					buf.append(s).append(',');
+				}
+				buf.setLength(buf.length() - 1);
+			}
 		}
 		if (isBonded) buf.append(" (Bonded)");
 		if (isDiscoverBT) buf.append(" [BT]");
@@ -385,9 +352,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 		dest.writeInt(version);
 		dest.writeString(os);
 		dest.writeInt(capability);
-		dest.writeString(bluetoothid);
-		dest.writeByteArray(address==null ? null : address.getAddress());
-		dest.writeString(ethernetMac);
+		dest.writeStringList(uris);
 		dest.writeByte((byte) (isBonded ? 1 : 0));
 		dest.writeByte((byte) (isDiscoverEthernet ? 1 : 0));
 		dest.writeByte((byte) (isDiscoverBT ? 1 : 0));
@@ -406,19 +371,10 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 			version = parcel.readInt();
 			os=parcel.readString();
 			capability=parcel.readInt();
-			bluetoothid = parcel.readString();
-			byte[] add = parcel.createByteArray();
-			try
-			{
-				if (add != null)
-					address = InetAddress.getByAddress(add);
-			}
-			catch (UnknownHostException e)
-			{
-				// Ignore
-				Log.i(TAG,'['+ Build.MANUFACTURER+ "] UnknownHostException",e);
-			}
-			ethernetMac = parcel.readString();
+			uris=parcel.createStringArrayList();
+			if (uris==null) uris=new ArrayList<String>(0);
+			else
+				uris.trimToSize();
 			isBonded=(parcel.readByte()==1);
 			isDiscoverEthernet=(parcel.readByte()==1);
 			isDiscoverBT=(parcel.readByte()==1);
@@ -460,17 +416,5 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 			return new RemoteAndroidInfoImpl[size];
 		}
 	};
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(Object x)
-	{
-		if (!(x instanceof RemoteAndroidInfoImpl))
-			return false;
-		RemoteAndroidInfoImpl other=(RemoteAndroidInfoImpl)x;
-		return uuid.equals(other.uuid);
-	}
 
 }

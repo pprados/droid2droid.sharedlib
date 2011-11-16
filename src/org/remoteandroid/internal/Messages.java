@@ -70,6 +70,883 @@ public final class Messages {
     // @@protoc_insertion_point(enum_scope:org.remoteandroid.internal.Type)
   }
   
+  public interface CandidatesOrBuilder
+      extends com.google.protobuf.MessageLiteOrBuilder {
+    
+    // optional int32 port = 10;
+    boolean hasPort();
+    int getPort();
+    
+    // repeated fixed32 internetIpv4 = 21;
+    java.util.List<java.lang.Integer> getInternetIpv4List();
+    int getInternetIpv4Count();
+    int getInternetIpv4(int index);
+    
+    // repeated bytes internetIpv6 = 22;
+    java.util.List<com.google.protobuf.ByteString> getInternetIpv6List();
+    int getInternetIpv6Count();
+    com.google.protobuf.ByteString getInternetIpv6(int index);
+    
+    // repeated fixed32 intranetIpv4 = 31;
+    java.util.List<java.lang.Integer> getIntranetIpv4List();
+    int getIntranetIpv4Count();
+    int getIntranetIpv4(int index);
+    
+    // repeated bytes intranetIpv6 = 32;
+    java.util.List<com.google.protobuf.ByteString> getIntranetIpv6List();
+    int getIntranetIpv6Count();
+    com.google.protobuf.ByteString getIntranetIpv6(int index);
+    
+    // optional bytes bssid = 40;
+    boolean hasBssid();
+    com.google.protobuf.ByteString getBssid();
+    
+    // optional fixed32 bluetoothMac = 50;
+    boolean hasBluetoothMac();
+    int getBluetoothMac();
+    
+    // optional bool bluetoothAnonmymous = 51;
+    boolean hasBluetoothAnonmymous();
+    boolean getBluetoothAnonmymous();
+  }
+  public static final class Candidates extends
+      com.google.protobuf.GeneratedMessageLite
+      implements CandidatesOrBuilder {
+    // Use Candidates.newBuilder() to construct.
+    private Candidates(Builder builder) {
+      super(builder);
+    }
+    private Candidates(boolean noInit) {}
+    
+    private static final Candidates defaultInstance;
+    public static Candidates getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public Candidates getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    private int bitField0_;
+    // optional int32 port = 10;
+    public static final int PORT_FIELD_NUMBER = 10;
+    private int port_;
+    public boolean hasPort() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getPort() {
+      return port_;
+    }
+    
+    // repeated fixed32 internetIpv4 = 21;
+    public static final int INTERNETIPV4_FIELD_NUMBER = 21;
+    private java.util.List<java.lang.Integer> internetIpv4_;
+    public java.util.List<java.lang.Integer>
+        getInternetIpv4List() {
+      return internetIpv4_;
+    }
+    public int getInternetIpv4Count() {
+      return internetIpv4_.size();
+    }
+    public int getInternetIpv4(int index) {
+      return internetIpv4_.get(index);
+    }
+    
+    // repeated bytes internetIpv6 = 22;
+    public static final int INTERNETIPV6_FIELD_NUMBER = 22;
+    private java.util.List<com.google.protobuf.ByteString> internetIpv6_;
+    public java.util.List<com.google.protobuf.ByteString>
+        getInternetIpv6List() {
+      return internetIpv6_;
+    }
+    public int getInternetIpv6Count() {
+      return internetIpv6_.size();
+    }
+    public com.google.protobuf.ByteString getInternetIpv6(int index) {
+      return internetIpv6_.get(index);
+    }
+    
+    // repeated fixed32 intranetIpv4 = 31;
+    public static final int INTRANETIPV4_FIELD_NUMBER = 31;
+    private java.util.List<java.lang.Integer> intranetIpv4_;
+    public java.util.List<java.lang.Integer>
+        getIntranetIpv4List() {
+      return intranetIpv4_;
+    }
+    public int getIntranetIpv4Count() {
+      return intranetIpv4_.size();
+    }
+    public int getIntranetIpv4(int index) {
+      return intranetIpv4_.get(index);
+    }
+    
+    // repeated bytes intranetIpv6 = 32;
+    public static final int INTRANETIPV6_FIELD_NUMBER = 32;
+    private java.util.List<com.google.protobuf.ByteString> intranetIpv6_;
+    public java.util.List<com.google.protobuf.ByteString>
+        getIntranetIpv6List() {
+      return intranetIpv6_;
+    }
+    public int getIntranetIpv6Count() {
+      return intranetIpv6_.size();
+    }
+    public com.google.protobuf.ByteString getIntranetIpv6(int index) {
+      return intranetIpv6_.get(index);
+    }
+    
+    // optional bytes bssid = 40;
+    public static final int BSSID_FIELD_NUMBER = 40;
+    private com.google.protobuf.ByteString bssid_;
+    public boolean hasBssid() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public com.google.protobuf.ByteString getBssid() {
+      return bssid_;
+    }
+    
+    // optional fixed32 bluetoothMac = 50;
+    public static final int BLUETOOTHMAC_FIELD_NUMBER = 50;
+    private int bluetoothMac_;
+    public boolean hasBluetoothMac() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public int getBluetoothMac() {
+      return bluetoothMac_;
+    }
+    
+    // optional bool bluetoothAnonmymous = 51;
+    public static final int BLUETOOTHANONMYMOUS_FIELD_NUMBER = 51;
+    private boolean bluetoothAnonmymous_;
+    public boolean hasBluetoothAnonmymous() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    public boolean getBluetoothAnonmymous() {
+      return bluetoothAnonmymous_;
+    }
+    
+    private void initFields() {
+      port_ = 0;
+      internetIpv4_ = java.util.Collections.emptyList();;
+      internetIpv6_ = java.util.Collections.emptyList();;
+      intranetIpv4_ = java.util.Collections.emptyList();;
+      intranetIpv6_ = java.util.Collections.emptyList();;
+      bssid_ = com.google.protobuf.ByteString.EMPTY;
+      bluetoothMac_ = 0;
+      bluetoothAnonmymous_ = false;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(10, port_);
+      }
+      for (int i = 0; i < internetIpv4_.size(); i++) {
+        output.writeFixed32(21, internetIpv4_.get(i));
+      }
+      for (int i = 0; i < internetIpv6_.size(); i++) {
+        output.writeBytes(22, internetIpv6_.get(i));
+      }
+      for (int i = 0; i < intranetIpv4_.size(); i++) {
+        output.writeFixed32(31, intranetIpv4_.get(i));
+      }
+      for (int i = 0; i < intranetIpv6_.size(); i++) {
+        output.writeBytes(32, intranetIpv6_.get(i));
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(40, bssid_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeFixed32(50, bluetoothMac_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBool(51, bluetoothAnonmymous_);
+      }
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(10, port_);
+      }
+      {
+        int dataSize = 0;
+        dataSize = 4 * getInternetIpv4List().size();
+        size += dataSize;
+        size += 2 * getInternetIpv4List().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < internetIpv6_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(internetIpv6_.get(i));
+        }
+        size += dataSize;
+        size += 2 * getInternetIpv6List().size();
+      }
+      {
+        int dataSize = 0;
+        dataSize = 4 * getIntranetIpv4List().size();
+        size += dataSize;
+        size += 2 * getIntranetIpv4List().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < intranetIpv6_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(intranetIpv6_.get(i));
+        }
+        size += dataSize;
+        size += 2 * getIntranetIpv6List().size();
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(40, bssid_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFixed32Size(50, bluetoothMac_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(51, bluetoothAnonmymous_);
+      }
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static org.remoteandroid.internal.Messages.Candidates parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static org.remoteandroid.internal.Messages.Candidates parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static org.remoteandroid.internal.Messages.Candidates parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static org.remoteandroid.internal.Messages.Candidates parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static org.remoteandroid.internal.Messages.Candidates parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static org.remoteandroid.internal.Messages.Candidates parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static org.remoteandroid.internal.Messages.Candidates parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static org.remoteandroid.internal.Messages.Candidates parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static org.remoteandroid.internal.Messages.Candidates parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static org.remoteandroid.internal.Messages.Candidates parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.remoteandroid.internal.Messages.Candidates prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          org.remoteandroid.internal.Messages.Candidates, Builder>
+        implements org.remoteandroid.internal.Messages.CandidatesOrBuilder {
+      // Construct using org.remoteandroid.internal.Messages.Candidates.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        port_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        internetIpv4_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        internetIpv6_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        intranetIpv4_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        intranetIpv6_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        bssid_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        bluetoothMac_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000040);
+        bluetoothAnonmymous_ = false;
+        bitField0_ = (bitField0_ & ~0x00000080);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public org.remoteandroid.internal.Messages.Candidates getDefaultInstanceForType() {
+        return org.remoteandroid.internal.Messages.Candidates.getDefaultInstance();
+      }
+      
+      public org.remoteandroid.internal.Messages.Candidates build() {
+        org.remoteandroid.internal.Messages.Candidates result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private org.remoteandroid.internal.Messages.Candidates buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        org.remoteandroid.internal.Messages.Candidates result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public org.remoteandroid.internal.Messages.Candidates buildPartial() {
+        org.remoteandroid.internal.Messages.Candidates result = new org.remoteandroid.internal.Messages.Candidates(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.port_ = port_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          internetIpv4_ = java.util.Collections.unmodifiableList(internetIpv4_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.internetIpv4_ = internetIpv4_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          internetIpv6_ = java.util.Collections.unmodifiableList(internetIpv6_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.internetIpv6_ = internetIpv6_;
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          intranetIpv4_ = java.util.Collections.unmodifiableList(intranetIpv4_);
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.intranetIpv4_ = intranetIpv4_;
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          intranetIpv6_ = java.util.Collections.unmodifiableList(intranetIpv6_);
+          bitField0_ = (bitField0_ & ~0x00000010);
+        }
+        result.intranetIpv6_ = intranetIpv6_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.bssid_ = bssid_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.bluetoothMac_ = bluetoothMac_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.bluetoothAnonmymous_ = bluetoothAnonmymous_;
+        result.bitField0_ = to_bitField0_;
+        return result;
+      }
+      
+      public Builder mergeFrom(org.remoteandroid.internal.Messages.Candidates other) {
+        if (other == org.remoteandroid.internal.Messages.Candidates.getDefaultInstance()) return this;
+        if (other.hasPort()) {
+          setPort(other.getPort());
+        }
+        if (!other.internetIpv4_.isEmpty()) {
+          if (internetIpv4_.isEmpty()) {
+            internetIpv4_ = other.internetIpv4_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureInternetIpv4IsMutable();
+            internetIpv4_.addAll(other.internetIpv4_);
+          }
+          
+        }
+        if (!other.internetIpv6_.isEmpty()) {
+          if (internetIpv6_.isEmpty()) {
+            internetIpv6_ = other.internetIpv6_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureInternetIpv6IsMutable();
+            internetIpv6_.addAll(other.internetIpv6_);
+          }
+          
+        }
+        if (!other.intranetIpv4_.isEmpty()) {
+          if (intranetIpv4_.isEmpty()) {
+            intranetIpv4_ = other.intranetIpv4_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureIntranetIpv4IsMutable();
+            intranetIpv4_.addAll(other.intranetIpv4_);
+          }
+          
+        }
+        if (!other.intranetIpv6_.isEmpty()) {
+          if (intranetIpv6_.isEmpty()) {
+            intranetIpv6_ = other.intranetIpv6_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensureIntranetIpv6IsMutable();
+            intranetIpv6_.addAll(other.intranetIpv6_);
+          }
+          
+        }
+        if (other.hasBssid()) {
+          setBssid(other.getBssid());
+        }
+        if (other.hasBluetoothMac()) {
+          setBluetoothMac(other.getBluetoothMac());
+        }
+        if (other.hasBluetoothAnonmymous()) {
+          setBluetoothAnonmymous(other.getBluetoothAnonmymous());
+        }
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              
+              return this;
+            default: {
+              if (!parseUnknownField(input, extensionRegistry, tag)) {
+                
+                return this;
+              }
+              break;
+            }
+            case 80: {
+              bitField0_ |= 0x00000001;
+              port_ = input.readInt32();
+              break;
+            }
+            case 173: {
+              ensureInternetIpv4IsMutable();
+              internetIpv4_.add(input.readFixed32());
+              break;
+            }
+            case 170: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              while (input.getBytesUntilLimit() > 0) {
+                addInternetIpv4(input.readFixed32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 178: {
+              ensureInternetIpv6IsMutable();
+              internetIpv6_.add(input.readBytes());
+              break;
+            }
+            case 253: {
+              ensureIntranetIpv4IsMutable();
+              intranetIpv4_.add(input.readFixed32());
+              break;
+            }
+            case 250: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              while (input.getBytesUntilLimit() > 0) {
+                addIntranetIpv4(input.readFixed32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 258: {
+              ensureIntranetIpv6IsMutable();
+              intranetIpv6_.add(input.readBytes());
+              break;
+            }
+            case 322: {
+              bitField0_ |= 0x00000020;
+              bssid_ = input.readBytes();
+              break;
+            }
+            case 405: {
+              bitField0_ |= 0x00000040;
+              bluetoothMac_ = input.readFixed32();
+              break;
+            }
+            case 408: {
+              bitField0_ |= 0x00000080;
+              bluetoothAnonmymous_ = input.readBool();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional int32 port = 10;
+      private int port_ ;
+      public boolean hasPort() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getPort() {
+        return port_;
+      }
+      public Builder setPort(int value) {
+        bitField0_ |= 0x00000001;
+        port_ = value;
+        
+        return this;
+      }
+      public Builder clearPort() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        port_ = 0;
+        
+        return this;
+      }
+      
+      // repeated fixed32 internetIpv4 = 21;
+      private java.util.List<java.lang.Integer> internetIpv4_ = java.util.Collections.emptyList();;
+      private void ensureInternetIpv4IsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          internetIpv4_ = new java.util.ArrayList<java.lang.Integer>(internetIpv4_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+      public java.util.List<java.lang.Integer>
+          getInternetIpv4List() {
+        return java.util.Collections.unmodifiableList(internetIpv4_);
+      }
+      public int getInternetIpv4Count() {
+        return internetIpv4_.size();
+      }
+      public int getInternetIpv4(int index) {
+        return internetIpv4_.get(index);
+      }
+      public Builder setInternetIpv4(
+          int index, int value) {
+        ensureInternetIpv4IsMutable();
+        internetIpv4_.set(index, value);
+        
+        return this;
+      }
+      public Builder addInternetIpv4(int value) {
+        ensureInternetIpv4IsMutable();
+        internetIpv4_.add(value);
+        
+        return this;
+      }
+      public Builder addAllInternetIpv4(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureInternetIpv4IsMutable();
+        super.addAll(values, internetIpv4_);
+        
+        return this;
+      }
+      public Builder clearInternetIpv4() {
+        internetIpv4_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        
+        return this;
+      }
+      
+      // repeated bytes internetIpv6 = 22;
+      private java.util.List<com.google.protobuf.ByteString> internetIpv6_ = java.util.Collections.emptyList();;
+      private void ensureInternetIpv6IsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          internetIpv6_ = new java.util.ArrayList<com.google.protobuf.ByteString>(internetIpv6_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      public java.util.List<com.google.protobuf.ByteString>
+          getInternetIpv6List() {
+        return java.util.Collections.unmodifiableList(internetIpv6_);
+      }
+      public int getInternetIpv6Count() {
+        return internetIpv6_.size();
+      }
+      public com.google.protobuf.ByteString getInternetIpv6(int index) {
+        return internetIpv6_.get(index);
+      }
+      public Builder setInternetIpv6(
+          int index, com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureInternetIpv6IsMutable();
+        internetIpv6_.set(index, value);
+        
+        return this;
+      }
+      public Builder addInternetIpv6(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureInternetIpv6IsMutable();
+        internetIpv6_.add(value);
+        
+        return this;
+      }
+      public Builder addAllInternetIpv6(
+          java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
+        ensureInternetIpv6IsMutable();
+        super.addAll(values, internetIpv6_);
+        
+        return this;
+      }
+      public Builder clearInternetIpv6() {
+        internetIpv6_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        
+        return this;
+      }
+      
+      // repeated fixed32 intranetIpv4 = 31;
+      private java.util.List<java.lang.Integer> intranetIpv4_ = java.util.Collections.emptyList();;
+      private void ensureIntranetIpv4IsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          intranetIpv4_ = new java.util.ArrayList<java.lang.Integer>(intranetIpv4_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+      public java.util.List<java.lang.Integer>
+          getIntranetIpv4List() {
+        return java.util.Collections.unmodifiableList(intranetIpv4_);
+      }
+      public int getIntranetIpv4Count() {
+        return intranetIpv4_.size();
+      }
+      public int getIntranetIpv4(int index) {
+        return intranetIpv4_.get(index);
+      }
+      public Builder setIntranetIpv4(
+          int index, int value) {
+        ensureIntranetIpv4IsMutable();
+        intranetIpv4_.set(index, value);
+        
+        return this;
+      }
+      public Builder addIntranetIpv4(int value) {
+        ensureIntranetIpv4IsMutable();
+        intranetIpv4_.add(value);
+        
+        return this;
+      }
+      public Builder addAllIntranetIpv4(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureIntranetIpv4IsMutable();
+        super.addAll(values, intranetIpv4_);
+        
+        return this;
+      }
+      public Builder clearIntranetIpv4() {
+        intranetIpv4_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        
+        return this;
+      }
+      
+      // repeated bytes intranetIpv6 = 32;
+      private java.util.List<com.google.protobuf.ByteString> intranetIpv6_ = java.util.Collections.emptyList();;
+      private void ensureIntranetIpv6IsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          intranetIpv6_ = new java.util.ArrayList<com.google.protobuf.ByteString>(intranetIpv6_);
+          bitField0_ |= 0x00000010;
+         }
+      }
+      public java.util.List<com.google.protobuf.ByteString>
+          getIntranetIpv6List() {
+        return java.util.Collections.unmodifiableList(intranetIpv6_);
+      }
+      public int getIntranetIpv6Count() {
+        return intranetIpv6_.size();
+      }
+      public com.google.protobuf.ByteString getIntranetIpv6(int index) {
+        return intranetIpv6_.get(index);
+      }
+      public Builder setIntranetIpv6(
+          int index, com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureIntranetIpv6IsMutable();
+        intranetIpv6_.set(index, value);
+        
+        return this;
+      }
+      public Builder addIntranetIpv6(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureIntranetIpv6IsMutable();
+        intranetIpv6_.add(value);
+        
+        return this;
+      }
+      public Builder addAllIntranetIpv6(
+          java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
+        ensureIntranetIpv6IsMutable();
+        super.addAll(values, intranetIpv6_);
+        
+        return this;
+      }
+      public Builder clearIntranetIpv6() {
+        intranetIpv6_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        
+        return this;
+      }
+      
+      // optional bytes bssid = 40;
+      private com.google.protobuf.ByteString bssid_ = com.google.protobuf.ByteString.EMPTY;
+      public boolean hasBssid() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      public com.google.protobuf.ByteString getBssid() {
+        return bssid_;
+      }
+      public Builder setBssid(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        bssid_ = value;
+        
+        return this;
+      }
+      public Builder clearBssid() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        bssid_ = getDefaultInstance().getBssid();
+        
+        return this;
+      }
+      
+      // optional fixed32 bluetoothMac = 50;
+      private int bluetoothMac_ ;
+      public boolean hasBluetoothMac() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      public int getBluetoothMac() {
+        return bluetoothMac_;
+      }
+      public Builder setBluetoothMac(int value) {
+        bitField0_ |= 0x00000040;
+        bluetoothMac_ = value;
+        
+        return this;
+      }
+      public Builder clearBluetoothMac() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        bluetoothMac_ = 0;
+        
+        return this;
+      }
+      
+      // optional bool bluetoothAnonmymous = 51;
+      private boolean bluetoothAnonmymous_ ;
+      public boolean hasBluetoothAnonmymous() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      public boolean getBluetoothAnonmymous() {
+        return bluetoothAnonmymous_;
+      }
+      public Builder setBluetoothAnonmymous(boolean value) {
+        bitField0_ |= 0x00000080;
+        bluetoothAnonmymous_ = value;
+        
+        return this;
+      }
+      public Builder clearBluetoothAnonmymous() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        bluetoothAnonmymous_ = false;
+        
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:org.remoteandroid.internal.Candidates)
+    }
+    
+    static {
+      defaultInstance = new Candidates(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:org.remoteandroid.internal.Candidates)
+  }
+  
   public interface IdentityOrBuilder
       extends com.google.protobuf.MessageLiteOrBuilder {
     
@@ -101,17 +978,9 @@ public final class Messages {
     boolean hasBounded();
     boolean getBounded();
     
-    // optional string ethernetMac = 20;
-    boolean hasEthernetMac();
-    String getEthernetMac();
-    
-    // optional int32 bluetoothAnonymous = 30;
-    boolean hasBluetoothAnonymous();
-    int getBluetoothAnonymous();
-    
-    // optional string bluetoothId = 31;
-    boolean hasBluetoothId();
-    String getBluetoothId();
+    // optional .org.remoteandroid.internal.Candidates candidates = 20;
+    boolean hasCandidates();
+    org.remoteandroid.internal.Messages.Candidates getCandidates();
   }
   public static final class Identity extends
       com.google.protobuf.GeneratedMessageLite
@@ -268,78 +1137,14 @@ public final class Messages {
       return bounded_;
     }
     
-    // optional string ethernetMac = 20;
-    public static final int ETHERNETMAC_FIELD_NUMBER = 20;
-    private java.lang.Object ethernetMac_;
-    public boolean hasEthernetMac() {
+    // optional .org.remoteandroid.internal.Candidates candidates = 20;
+    public static final int CANDIDATES_FIELD_NUMBER = 20;
+    private org.remoteandroid.internal.Messages.Candidates candidates_;
+    public boolean hasCandidates() {
       return ((bitField0_ & 0x00000080) == 0x00000080);
     }
-    public String getEthernetMac() {
-      java.lang.Object ref = ethernetMac_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          ethernetMac_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getEthernetMacBytes() {
-      java.lang.Object ref = ethernetMac_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        ethernetMac_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    // optional int32 bluetoothAnonymous = 30;
-    public static final int BLUETOOTHANONYMOUS_FIELD_NUMBER = 30;
-    private int bluetoothAnonymous_;
-    public boolean hasBluetoothAnonymous() {
-      return ((bitField0_ & 0x00000100) == 0x00000100);
-    }
-    public int getBluetoothAnonymous() {
-      return bluetoothAnonymous_;
-    }
-    
-    // optional string bluetoothId = 31;
-    public static final int BLUETOOTHID_FIELD_NUMBER = 31;
-    private java.lang.Object bluetoothId_;
-    public boolean hasBluetoothId() {
-      return ((bitField0_ & 0x00000200) == 0x00000200);
-    }
-    public String getBluetoothId() {
-      java.lang.Object ref = bluetoothId_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          bluetoothId_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getBluetoothIdBytes() {
-      java.lang.Object ref = bluetoothId_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        bluetoothId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public org.remoteandroid.internal.Messages.Candidates getCandidates() {
+      return candidates_;
     }
     
     private void initFields() {
@@ -350,9 +1155,7 @@ public final class Messages {
       os_ = "";
       capability_ = 0;
       bounded_ = false;
-      ethernetMac_ = "";
-      bluetoothAnonymous_ = 0;
-      bluetoothId_ = "";
+      candidates_ = org.remoteandroid.internal.Messages.Candidates.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -388,13 +1191,7 @@ public final class Messages {
         output.writeBool(16, bounded_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        output.writeBytes(20, getEthernetMacBytes());
-      }
-      if (((bitField0_ & 0x00000100) == 0x00000100)) {
-        output.writeInt32(30, bluetoothAnonymous_);
-      }
-      if (((bitField0_ & 0x00000200) == 0x00000200)) {
-        output.writeBytes(31, getBluetoothIdBytes());
+        output.writeMessage(20, candidates_);
       }
     }
     
@@ -434,15 +1231,7 @@ public final class Messages {
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(20, getEthernetMacBytes());
-      }
-      if (((bitField0_ & 0x00000100) == 0x00000100)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(30, bluetoothAnonymous_);
-      }
-      if (((bitField0_ & 0x00000200) == 0x00000200)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(31, getBluetoothIdBytes());
+          .computeMessageSize(20, candidates_);
       }
       memoizedSerializedSize = size;
       return size;
@@ -560,12 +1349,8 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000020);
         bounded_ = false;
         bitField0_ = (bitField0_ & ~0x00000040);
-        ethernetMac_ = "";
+        candidates_ = org.remoteandroid.internal.Messages.Candidates.getDefaultInstance();
         bitField0_ = (bitField0_ & ~0x00000080);
-        bluetoothAnonymous_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000100);
-        bluetoothId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
       
@@ -630,15 +1415,7 @@ public final class Messages {
         if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
           to_bitField0_ |= 0x00000080;
         }
-        result.ethernetMac_ = ethernetMac_;
-        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
-          to_bitField0_ |= 0x00000100;
-        }
-        result.bluetoothAnonymous_ = bluetoothAnonymous_;
-        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
-          to_bitField0_ |= 0x00000200;
-        }
-        result.bluetoothId_ = bluetoothId_;
+        result.candidates_ = candidates_;
         result.bitField0_ = to_bitField0_;
         return result;
       }
@@ -666,14 +1443,8 @@ public final class Messages {
         if (other.hasBounded()) {
           setBounded(other.getBounded());
         }
-        if (other.hasEthernetMac()) {
-          setEthernetMac(other.getEthernetMac());
-        }
-        if (other.hasBluetoothAnonymous()) {
-          setBluetoothAnonymous(other.getBluetoothAnonymous());
-        }
-        if (other.hasBluetoothId()) {
-          setBluetoothId(other.getBluetoothId());
+        if (other.hasCandidates()) {
+          mergeCandidates(other.getCandidates());
         }
         return this;
       }
@@ -735,18 +1506,12 @@ public final class Messages {
               break;
             }
             case 162: {
-              bitField0_ |= 0x00000080;
-              ethernetMac_ = input.readBytes();
-              break;
-            }
-            case 240: {
-              bitField0_ |= 0x00000100;
-              bluetoothAnonymous_ = input.readInt32();
-              break;
-            }
-            case 250: {
-              bitField0_ |= 0x00000200;
-              bluetoothId_ = input.readBytes();
+              org.remoteandroid.internal.Messages.Candidates.Builder subBuilder = org.remoteandroid.internal.Messages.Candidates.newBuilder();
+              if (hasCandidates()) {
+                subBuilder.mergeFrom(getCandidates());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setCandidates(subBuilder.buildPartial());
               break;
             }
           }
@@ -950,97 +1715,47 @@ public final class Messages {
         return this;
       }
       
-      // optional string ethernetMac = 20;
-      private java.lang.Object ethernetMac_ = "";
-      public boolean hasEthernetMac() {
+      // optional .org.remoteandroid.internal.Candidates candidates = 20;
+      private org.remoteandroid.internal.Messages.Candidates candidates_ = org.remoteandroid.internal.Messages.Candidates.getDefaultInstance();
+      public boolean hasCandidates() {
         return ((bitField0_ & 0x00000080) == 0x00000080);
       }
-      public String getEthernetMac() {
-        java.lang.Object ref = ethernetMac_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          ethernetMac_ = s;
-          return s;
-        } else {
-          return (String) ref;
-        }
+      public org.remoteandroid.internal.Messages.Candidates getCandidates() {
+        return candidates_;
       }
-      public Builder setEthernetMac(String value) {
+      public Builder setCandidates(org.remoteandroid.internal.Messages.Candidates value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000080;
-        ethernetMac_ = value;
+          throw new NullPointerException();
+        }
+        candidates_ = value;
         
-        return this;
-      }
-      public Builder clearEthernetMac() {
-        bitField0_ = (bitField0_ & ~0x00000080);
-        ethernetMac_ = getDefaultInstance().getEthernetMac();
-        
-        return this;
-      }
-      void setEthernetMac(com.google.protobuf.ByteString value) {
         bitField0_ |= 0x00000080;
-        ethernetMac_ = value;
-        
-      }
-      
-      // optional int32 bluetoothAnonymous = 30;
-      private int bluetoothAnonymous_ ;
-      public boolean hasBluetoothAnonymous() {
-        return ((bitField0_ & 0x00000100) == 0x00000100);
-      }
-      public int getBluetoothAnonymous() {
-        return bluetoothAnonymous_;
-      }
-      public Builder setBluetoothAnonymous(int value) {
-        bitField0_ |= 0x00000100;
-        bluetoothAnonymous_ = value;
-        
         return this;
       }
-      public Builder clearBluetoothAnonymous() {
-        bitField0_ = (bitField0_ & ~0x00000100);
-        bluetoothAnonymous_ = 0;
+      public Builder setCandidates(
+          org.remoteandroid.internal.Messages.Candidates.Builder builderForValue) {
+        candidates_ = builderForValue.build();
         
+        bitField0_ |= 0x00000080;
         return this;
       }
-      
-      // optional string bluetoothId = 31;
-      private java.lang.Object bluetoothId_ = "";
-      public boolean hasBluetoothId() {
-        return ((bitField0_ & 0x00000200) == 0x00000200);
-      }
-      public String getBluetoothId() {
-        java.lang.Object ref = bluetoothId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          bluetoothId_ = s;
-          return s;
+      public Builder mergeCandidates(org.remoteandroid.internal.Messages.Candidates value) {
+        if (((bitField0_ & 0x00000080) == 0x00000080) &&
+            candidates_ != org.remoteandroid.internal.Messages.Candidates.getDefaultInstance()) {
+          candidates_ =
+            org.remoteandroid.internal.Messages.Candidates.newBuilder(candidates_).mergeFrom(value).buildPartial();
         } else {
-          return (String) ref;
+          candidates_ = value;
         }
-      }
-      public Builder setBluetoothId(String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000200;
-        bluetoothId_ = value;
         
+        bitField0_ |= 0x00000080;
         return this;
       }
-      public Builder clearBluetoothId() {
-        bitField0_ = (bitField0_ & ~0x00000200);
-        bluetoothId_ = getDefaultInstance().getBluetoothId();
+      public Builder clearCandidates() {
+        candidates_ = org.remoteandroid.internal.Messages.Candidates.getDefaultInstance();
         
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
-      }
-      void setBluetoothId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000200;
-        bluetoothId_ = value;
-        
       }
       
       // @@protoc_insertion_point(builder_scope:org.remoteandroid.internal.Identity)

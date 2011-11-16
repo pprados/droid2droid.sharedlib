@@ -18,6 +18,23 @@ enum Type
    TRANSACT_Apk=42;
 }
 
+message Candidates 
+{
+	optional int32 			 port 		= 10;
+	// Public ip
+	repeated fixed32 internetIpv4 		= 21;
+	repeated bytes   internetIpv6 		= 22;
+	repeated fixed32 intranetIpv4		= 31;
+	repeated bytes   intranetIpv6		= 32;
+	
+	// Wifi id
+	optional bytes bssid 				= 40;
+
+	// Bluetooth	
+	optional fixed32 bluetoothMac		= 50;
+	optional bool bluetoothAnonmymous	= 51;
+}
+
 message Identity 
 {
 	optional string uuid 			= 10;
@@ -27,11 +44,8 @@ message Identity
 	optional string os				= 14;
 	optional int32 capability		= 15;
 	optional bool bounded			= 16;
-	
-	optional string ethernetMac		= 20;
 
-	optional int32  bluetoothAnonymous 	= 30;
-	optional string bluetoothId			= 31;
+	optional Candidates candidates  = 20;
 }
 //FIXME: Est-ce necessaire de placer ici ? Plutot dans un autre fichier protobuf pour le srv
 message BroadcastMsg

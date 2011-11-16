@@ -19,9 +19,9 @@ public class Constants
 	public static final String TAG_SECURITY		= "Security";
 	public static final String TAG_PREFERENCE 	= "Preference";
 	public static final String TAG_CLIENT_BIND 	= "Client";
+	public static final String TAG_CANDIDATE 	= "Candidate";
 
-	public static final String SCHEME_TCP4="ip";
-	public static final String SCHEME_TCP6=SCHEME_TCP4;
+	public static final String SCHEME_TCP="ip";
 	public static final String SCHEME_BT="bt";
 	public static final String SCHEME_BTS="bts";
 	
@@ -43,6 +43,11 @@ public class Constants
 
 	/** Use ethernet */
 	public static final boolean ETHERNET=true;
+    /** Fix bug in Xoom ? */
+    public static final boolean ETHERNET_ONLY_IPV4 = false; // FIXME: Xoom: No route to host
+	// Orginaze the ip candidates with IPV4 first, then IPV6 ?
+	public static final boolean ETHERNET_IPV4_FIRST=false;
+    
 	
 	/** Use Mobile network */
 	public static final boolean WAN=false;

@@ -179,7 +179,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		sDrivers=new HashMap<String,Driver>();
 		if (ETHERNET)
 		{
-			sDrivers.put(SCHEME_TCP4,
+			sDrivers.put(SCHEME_TCP,
 				new Driver()
 				{
 	
