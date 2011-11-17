@@ -13,6 +13,7 @@ import static org.remoteandroid.internal.Constants.VERSION;
 import static org.remoteandroid.internal.Constants.W;
 
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -296,13 +297,13 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			// Ignore
 		}
 	}
-	public long askCookie(Uri uri)
+	public long askCookie(Uri uri) throws SecurityException, IOException
 	{
 		Pair<RemoteAndroidInfoImpl,Long> msg=askMsgCookie(uri);
 		if (msg==null) return 0;
 		return msg.second;
 	}
-	public Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri)
+	public Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri) throws IOException, SecurityException
 	{
 		AbstractRemoteAndroidImpl binder=null;
 		try
@@ -317,7 +318,13 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		{
 			if (W && !D) Log.w(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.");
 			if (D) Log.d(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.",e);
-			return null;
+			throw (SecurityException)e.fillInStackTrace();
+		}
+		catch (IOException e)
+		{
+			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie ("+e.getMessage()+")");
+			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible for ask cookie.",e);
+			throw (IOException)e.fillInStackTrace();
 		}
 		catch (Exception e)
 		{
@@ -372,6 +379,11 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
     			catch (MalformedURLException e)
     			{
     				if (E) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+"When you bind a remote android, the uri "+uri+" is invalide");
+    				PostTools.postServiceDisconnected(conn,name); // TODO: Maintenir le lien
+    			}
+    			catch (IOException e)
+    			{
+    				if (E) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+"bindRemote",e);
     				PostTools.postServiceDisconnected(conn,name); // TODO: Maintenir le lien
     			}
     			catch (Exception e)

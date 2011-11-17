@@ -143,52 +143,58 @@ public class ProtobufConvs
 //		}
 		int[] priority; // odd: IPV6, even: IPV4;
 		
-		if (ETHERNET_IPV4_FIRST)
+		if (ETHERNET)
 		{
-			priority=new int[]{1,0};
-		}
-		else
-			priority=new int[]{0,1};
-		
-		for (int prio:priority)
-		{
-			switch (prio)
+			if (ETHERNET_IPV4_FIRST)
 			{
-				case 0:
-					if (!ETHERNET_ONLY_IPV4)
-						tryIpv6(candidates, results, localNetwork,port);
-					break;
-				case 1:
-					tryIpv4(candidates, results, localNetwork,port);
-					break;
-			}
-		}
-		
-		
-		if (candidates.hasBluetoothMac())
-		{
-			final int BT_MAC_SIZE=12;
-			String btmac=("00000000"+Long.toHexString(candidates.getBluetoothMac()).toUpperCase());
-			btmac=btmac.substring(btmac.length()-BT_MAC_SIZE,btmac.length());
-			StringBuilder buf=new StringBuilder();
-			for (int j=0;j<btmac.length();j+=2)
-			{
-				buf.append(btmac.substring(j,j+2)+':');
-			}
-			buf.setLength(buf.length()-1);
-			if (BLUETOOTH_FIRST)
-			{
-				if (candidates.hasBluetoothAnonmymous())
-					results.add(0,SCHEME_BT+"://"+buf.toString()+'/');
-				else
-					results.add(0,SCHEME_BTS+"://"+buf.toString()+'/');
+				priority=new int[]{1,0};
 			}
 			else
+				priority=new int[]{0,1};
+			
+			for (int prio:priority)
 			{
-				if (candidates.hasBluetoothAnonmymous())
-					results.add(SCHEME_BT+"://"+buf.toString()+'/');
+				switch (prio)
+				{
+					case 0:
+						if (!ETHERNET_ONLY_IPV4)
+							tryIpv6(candidates, results, localNetwork,port);
+						break;
+					case 1:
+						tryIpv4(candidates, results, localNetwork,port);
+						break;
+				}
+			}
+		}
+		
+		if (BLUETOOTH)
+		{
+			
+			if (candidates.hasBluetoothMac() && candidates.getBluetoothMac()!=0)
+			{
+				final int BT_MAC_SIZE=12;
+				String btmac=("00000000000"+Long.toHexString(candidates.getBluetoothMac()).toUpperCase());
+				btmac=btmac.substring(btmac.length()-BT_MAC_SIZE,btmac.length());
+				StringBuilder buf=new StringBuilder();
+				for (int j=0;j<btmac.length();j+=2)
+				{
+					buf.append(btmac.substring(j,j+2)+':');
+				}
+				buf.setLength(buf.length()-1);
+				if (BLUETOOTH_FIRST)
+				{
+					if (candidates.hasBluetoothAnonmymous())
+						results.add(0,SCHEME_BT+"://"+buf.toString()+'/');
+					else
+						results.add(0,SCHEME_BTS+"://"+buf.toString()+'/');
+				}
 				else
-					results.add(SCHEME_BTS+"://"+buf.toString()+'/');
+				{
+					if (candidates.hasBluetoothAnonmymous())
+						results.add(SCHEME_BT+"://"+buf.toString()+'/');
+					else
+						results.add(SCHEME_BTS+"://"+buf.toString()+'/');
+				}
 			}
 		}
 // FIXME: gérer le cas du results vide !

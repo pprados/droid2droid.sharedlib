@@ -308,8 +308,11 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 				if (!forPairing)
 				{
 					cookie=((RemoteAndroidManagerImpl)mManager).getCookie(mUri.toString());
+					if (cookie==-1)
+						throw new IOException("Impossible to get cookie with "+mUri); // TODO: Avec Motorola Milestone et IPV6, java.net.SocketException: The socket level is invalid
+
 					if (cookie==0)
-						throw new SecurityException("Can't find a cookie");
+						throw new SecurityException("Can't find a cookie with "+mUri);
 				}
 			}
 			initBootstrap();

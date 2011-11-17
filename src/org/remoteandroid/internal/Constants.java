@@ -46,7 +46,7 @@ public class Constants
 	/** Use ethernet */
 	public static final boolean ETHERNET=true;
     /** Use only IP v4 */
-    public static final boolean ETHERNET_ONLY_IPV4 = false; // FIXME: Xoom: No route to host
+    public static final boolean ETHERNET_ONLY_IPV4 = false; // FIXME: Socket level invalide depuis Motorola en IPV6. Xoom: No route to host
 	/** Order uris with IPV4 before IPV6 */
 	public static final boolean ETHERNET_IPV4_FIRST=false;
     
