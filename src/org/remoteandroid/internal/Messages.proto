@@ -31,7 +31,7 @@ message Candidates
 	optional bytes bssid 				= 40;
 
 	// Bluetooth	
-	optional fixed32 bluetoothMac		= 50;
+	optional fixed64 bluetoothMac		= 50;
 	optional bool bluetoothAnonmymous	= 51;
 }
 

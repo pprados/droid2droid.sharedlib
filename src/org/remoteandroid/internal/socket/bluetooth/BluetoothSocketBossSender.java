@@ -74,7 +74,6 @@ public class BluetoothSocketBossSender implements BossSocketSender
 	}
 
 	private BluetoothSocketChannel mChannel;
-	private Random mRandom=new Random();
 
 	private int mId;
     private Thread mThreadW;
@@ -94,7 +93,7 @@ public class BluetoothSocketBossSender implements BossSocketSender
     	mId=sId.incrementAndGet();
     	// FIXME: tolérer l'absence de privilège bluetooth
     	mHandler=handler;
-    	mSecure="bts".equals(uri.getScheme());
+    	mSecure=SCHEME_BTS.equals(uri.getScheme());
     	if (!mSecure && (Compatibility.VERSION_SDK_INT<Compatibility.VERSION_GINGERBREAD))
     		throw new IllegalArgumentException("Insecure bluetooth not supported");
     	mMac=uri.getAuthority();

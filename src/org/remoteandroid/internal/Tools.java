@@ -120,11 +120,22 @@ public class Tools
                 (byte)(value >>> 8),
                 (byte)value};
 	}
-	public static final int byteArrayToInt(byte [] b) {
+	public static final int byteArrayToInt(byte [] b) 
+	{
         return (b[0] << 24)
                 + ((b[1] & 0xFF) << 16)
                 + ((b[2] & 0xFF) << 8)
                 + (b[3] & 0xFF);
+	}
+	
+	public static final long byteArrayToLong(byte [] b) 
+	{
+		long value = 0;
+		for (int i = 0; i < b.length; i++)
+		{
+		   value = (value << 8) + (b[i] & 0xff);
+		}
+		return value;
 	}
 	
 

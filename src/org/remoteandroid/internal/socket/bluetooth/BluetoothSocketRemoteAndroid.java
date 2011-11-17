@@ -41,7 +41,8 @@ public class BluetoothSocketRemoteAndroid extends AbstractSocketRemoteAndroid<Bl
 		try
 		{
 			super.disconnect(connid);
-			mBootstrap.close();
+			if (mBootstrap!=null)
+				mBootstrap.close();
 			mBootstrap=null;
 		}
 		catch (IOException e)

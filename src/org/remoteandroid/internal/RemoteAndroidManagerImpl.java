@@ -189,7 +189,6 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 						return new NetworkSocketRemoteAndroid(manager,uri);
 					}
 				});
-			// TODO: Specificique for SCHEME_TCP6 ?
 		}
 		if (BLUETOOTH)
 		{
@@ -322,7 +321,8 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		}
 		catch (Exception e)
 		{
-			if (E) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie",e);
+			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie ("+e.getMessage()+")");
+			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible for ask cookie.",e);
 			return null;
 		}
 		finally

@@ -101,9 +101,9 @@ public final class Messages {
     boolean hasBssid();
     com.google.protobuf.ByteString getBssid();
     
-    // optional fixed32 bluetoothMac = 50;
+    // optional fixed64 bluetoothMac = 50;
     boolean hasBluetoothMac();
-    int getBluetoothMac();
+    long getBluetoothMac();
     
     // optional bool bluetoothAnonmymous = 51;
     boolean hasBluetoothAnonmymous();
@@ -204,13 +204,13 @@ public final class Messages {
       return bssid_;
     }
     
-    // optional fixed32 bluetoothMac = 50;
+    // optional fixed64 bluetoothMac = 50;
     public static final int BLUETOOTHMAC_FIELD_NUMBER = 50;
-    private int bluetoothMac_;
+    private long bluetoothMac_;
     public boolean hasBluetoothMac() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public int getBluetoothMac() {
+    public long getBluetoothMac() {
       return bluetoothMac_;
     }
     
@@ -231,7 +231,7 @@ public final class Messages {
       intranetIpv4_ = java.util.Collections.emptyList();;
       intranetIpv6_ = java.util.Collections.emptyList();;
       bssid_ = com.google.protobuf.ByteString.EMPTY;
-      bluetoothMac_ = 0;
+      bluetoothMac_ = 0L;
       bluetoothAnonmymous_ = false;
     }
     private byte memoizedIsInitialized = -1;
@@ -265,7 +265,7 @@ public final class Messages {
         output.writeBytes(40, bssid_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeFixed32(50, bluetoothMac_);
+        output.writeFixed64(50, bluetoothMac_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeBool(51, bluetoothAnonmymous_);
@@ -318,7 +318,7 @@ public final class Messages {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeFixed32Size(50, bluetoothMac_);
+          .computeFixed64Size(50, bluetoothMac_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
@@ -438,7 +438,7 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000010);
         bssid_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000020);
-        bluetoothMac_ = 0;
+        bluetoothMac_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000040);
         bluetoothAnonmymous_ = false;
         bitField0_ = (bitField0_ & ~0x00000080);
@@ -641,9 +641,9 @@ public final class Messages {
               bssid_ = input.readBytes();
               break;
             }
-            case 405: {
+            case 401: {
               bitField0_ |= 0x00000040;
-              bluetoothMac_ = input.readFixed32();
+              bluetoothMac_ = input.readFixed64();
               break;
             }
             case 408: {
@@ -894,15 +894,15 @@ public final class Messages {
         return this;
       }
       
-      // optional fixed32 bluetoothMac = 50;
-      private int bluetoothMac_ ;
+      // optional fixed64 bluetoothMac = 50;
+      private long bluetoothMac_ ;
       public boolean hasBluetoothMac() {
         return ((bitField0_ & 0x00000040) == 0x00000040);
       }
-      public int getBluetoothMac() {
+      public long getBluetoothMac() {
         return bluetoothMac_;
       }
-      public Builder setBluetoothMac(int value) {
+      public Builder setBluetoothMac(long value) {
         bitField0_ |= 0x00000040;
         bluetoothMac_ = value;
         
@@ -910,7 +910,7 @@ public final class Messages {
       }
       public Builder clearBluetoothMac() {
         bitField0_ = (bitField0_ & ~0x00000040);
-        bluetoothMac_ = 0;
+        bluetoothMac_ = 0L;
         
         return this;
       }

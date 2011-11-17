@@ -36,16 +36,18 @@ public class Constants
 	
 	/** Use blue tooth */
 	public static final boolean BLUETOOTH=false;
+	/** Order uris with Bluetooth first */
+	public static final boolean BLUETOOTH_FIRST=false; // FIXME: false
 	
-	public static final int BT_HACK_WAIT_AFTER_CREATE_RF_COMM=0; // Zero for good bluetooth stack.
+	public static final int BT_HACK_WAIT_AFTER_CREATE_RF_COMM=1000; // FIXME: 0; // Zero for good bluetooth stack.
     /** Delay to discover others remote androids. */
 	public static final long TIME_MAX_TO_DISCOVER				=20000L;
 
 	/** Use ethernet */
 	public static final boolean ETHERNET=true;
-    /** Fix bug in Xoom ? */
+    /** Use only IP v4 */
     public static final boolean ETHERNET_ONLY_IPV4 = false; // FIXME: Xoom: No route to host
-	// Orginaze the ip candidates with IPV4 first, then IPV6 ?
+	/** Order uris with IPV4 before IPV6 */
 	public static final boolean ETHERNET_IPV4_FIRST=false;
     
 	

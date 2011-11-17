@@ -111,8 +111,6 @@ public class ProtobufConvs
 			info.os=identity.getOs();
 			info.capability=identity.getCapability();
 			info.uris=toUris(identity.getCandidates());
-//			info.bluetoothid=identity.getBluetoothId();
-//			info.ethernetMac=identity.getEthernetMac();
 			info.isBonded=identity.getBounded();
 			return info;
 		}
@@ -157,7 +155,7 @@ public class ProtobufConvs
 			switch (prio)
 			{
 				case 0:
-					if (ETHERNET_ONLY_IPV4)
+					if (!ETHERNET_ONLY_IPV4)
 						tryIpv6(candidates, results, localNetwork,port);
 					break;
 				case 1:
@@ -169,12 +167,29 @@ public class ProtobufConvs
 		
 		if (candidates.hasBluetoothMac())
 		{
-			int i=candidates.getBluetoothMac();
-			String btmac=Integer.toHexString(i);
-			if (candidates.hasBluetoothAnonmymous())
-				results.add(SCHEME_BT+"://"+btmac+'/');
+			final int BT_MAC_SIZE=12;
+			String btmac=("00000000"+Long.toHexString(candidates.getBluetoothMac()).toUpperCase());
+			btmac=btmac.substring(btmac.length()-BT_MAC_SIZE,btmac.length());
+			StringBuilder buf=new StringBuilder();
+			for (int j=0;j<btmac.length();j+=2)
+			{
+				buf.append(btmac.substring(j,j+2)+':');
+			}
+			buf.setLength(buf.length()-1);
+			if (BLUETOOTH_FIRST)
+			{
+				if (candidates.hasBluetoothAnonmymous())
+					results.add(0,SCHEME_BT+"://"+buf.toString()+'/');
+				else
+					results.add(0,SCHEME_BTS+"://"+buf.toString()+'/');
+			}
 			else
-				results.add(SCHEME_BTS+"://"+btmac+'/');
+			{
+				if (candidates.hasBluetoothAnonmymous())
+					results.add(SCHEME_BT+"://"+buf.toString()+'/');
+				else
+					results.add(SCHEME_BTS+"://"+buf.toString()+'/');
+			}
 		}
 // FIXME: gérer le cas du results vide !
 		results.trimToSize();

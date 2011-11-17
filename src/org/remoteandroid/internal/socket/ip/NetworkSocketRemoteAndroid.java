@@ -36,7 +36,7 @@ public class NetworkSocketRemoteAndroid extends AbstractSocketRemoteAndroid<Netw
 	public void disconnect(int connid)
 	{
 		super.disconnect(connid);
-		mBootstrap.close();
+		if (mBootstrap!=null) mBootstrap.close();
 		mBootstrap=null;
 	}
 }
