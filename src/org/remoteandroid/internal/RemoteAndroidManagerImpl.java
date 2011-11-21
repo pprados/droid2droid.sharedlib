@@ -33,7 +33,6 @@ import org.remoteandroid.internal.Messages.Msg;
 import org.remoteandroid.internal.socket.bluetooth.BluetoothSocketRemoteAndroid;
 import org.remoteandroid.internal.socket.ip.NetworkSocketRemoteAndroid;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -47,7 +46,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.AndroidRuntimeException;
 import android.util.Log;
-import android.util.Pair;
 
 
 public class RemoteAndroidManagerImpl extends RemoteAndroidManager

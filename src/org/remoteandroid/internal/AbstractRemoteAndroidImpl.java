@@ -41,7 +41,6 @@ import android.os.IInterface;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
-import android.util.Pair;
 
 // NAT file:///home/pprados/Bureau/J%20ICE/index.html
 /** @hide */

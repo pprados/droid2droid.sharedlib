@@ -6,7 +6,6 @@ import java.net.UnknownHostException;
 import org.remoteandroid.internal.Messages.Msg;
 
 import android.os.RemoteException;
-import android.util.Pair;
 
 public abstract class Login
 {
