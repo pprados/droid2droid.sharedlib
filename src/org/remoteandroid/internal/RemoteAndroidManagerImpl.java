@@ -15,8 +15,6 @@ import static org.remoteandroid.internal.Constants.W;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -29,10 +27,10 @@ import org.remoteandroid.ListRemoteAndroidInfo;
 import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
-import org.remoteandroid.internal.Messages.Msg;
 import org.remoteandroid.internal.socket.bluetooth.BluetoothSocketRemoteAndroid;
 import org.remoteandroid.internal.socket.ip.NetworkSocketRemoteAndroid;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -101,14 +99,15 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		if (Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_ECLAIR)
 		{
 			// Verify wrapper
-//			new Runnable()
-//			{
-//				public void run() 
-//				{
-//					BluetoothAdapter.getDefaultAdapter();
-//				}
-//			}.run();
+			new Runnable()
+			{
+				public void run() 
+				{
+					BluetoothAdapter.getDefaultAdapter();
+				}
+			}.run();
 		}
+		setDeviceParameter();
 		if (sManager==null)
 		{
 			final Intent intent=new Intent(ACTION_REMOTE_ANDROID);
@@ -436,14 +435,15 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		{
 			try
 			{
-				Thread.sleep(3000);
+				Thread.sleep(BINDING_TIMEOUT_WAIT);
 				++cnt;
 			}
 			catch (InterruptedException e)
 			{
 				// Ignore
+				if (D && sManager==null) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+"Binding to RemoteAndroid failed.");
 			}
-			if (cnt==5) 
+			if (cnt==BINDING_NB_RETRY) 
 				throw new IllegalStateException("Service Remote android not found");
 		}
 	}
@@ -475,5 +475,15 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		if ((type & (1<<2))!=0) I=state;
 		if ((type & (1<<3))!=0) D=state;
 		if ((type & (1<<4))!=0) V=state;
+	}
+	
+	private static final void setDeviceParameter()
+	{
+		// HTC Desire HD have a buggy bluetooth stack.
+		if (Build.FINGERPRINT.equals("htc_wwe/htc_ace/ace:2.3.3/GRI40/87995:user/release-keys"))
+		{
+			Constants.BLUETOOTH=false;
+		}
+		
 	}
 }

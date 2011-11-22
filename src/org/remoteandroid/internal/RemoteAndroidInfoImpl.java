@@ -323,13 +323,9 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 		{
 			for (int i=0;i<uris.size();++i)
 			{
-				String uri=uris.get(i);
-				for (String s : uris)
-				{
-					buf.append(s).append(',');
-				}
-				buf.setLength(buf.length() - 1);
+				buf.append(uris.get(i)).append(',');
 			}
+			buf.setLength(buf.length() - 1);
 		}
 		if (isBonded) buf.append(" (Bonded)");
 		if (isDiscoverBT) buf.append(" [BT]");

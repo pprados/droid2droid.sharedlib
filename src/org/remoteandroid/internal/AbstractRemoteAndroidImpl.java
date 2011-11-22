@@ -55,7 +55,7 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 	public static final int PING_BINDER = 3;
 
 	public static final int IS_BINDER_ALIVE = 4;
-
+	
 	public static final String EXTRA_FOR_PAIRING="forPairing";
 	
 	public static final int STATUS_REFUSE_CONNECTION_MODE=-1;

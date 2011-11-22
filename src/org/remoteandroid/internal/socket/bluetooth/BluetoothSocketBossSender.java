@@ -24,6 +24,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Looper;
 import android.os.Process;
 import android.util.Log;
 
@@ -33,13 +34,14 @@ public class BluetoothSocketBossSender implements BossSocketSender
 {
 	private static AtomicInteger sId=new AtomicInteger();
 	
-	// TODO: en mutualisant le SDK, il est possible de maintenir le cycle de vie des connexions vers autres android,
-	// et ainsi, les réutiliser entre les applications pour éviter de devoir utiliser plusieurs UUID.
-	// Number of applications in the same phone, to connect to another phone.
-	// FIXME: utiliser deux jeux de sKeys différents pour ano et non ano
 	public static final UUID[] sKeys=
 	{
-	
+		UUID.fromString("07687b0e-cbd1-42b2-ad70-fabf739e5a56"),
+		UUID.fromString("17687b0e-cbd1-42b2-ad70-fabf739e5a56"),
+		UUID.fromString("27687b0e-cbd1-42b2-ad70-fabf739e5a56"),
+		UUID.fromString("37687b0e-cbd1-42b2-ad70-fabf739e5a56"),
+		UUID.fromString("47687b0e-cbd1-42b2-ad70-fabf739e5a56"),
+/*	
 		UUID.fromString("47687b0e-cbd1-42b2-ad70-fabf739e5a56"),
 		UUID.fromString("2bad19e0-8662-480a-b74e-8fe031a6c8e9"),
 		UUID.fromString("9cec93f9-0caa-4114-81b2-eed208b48f83"),
@@ -47,6 +49,8 @@ public class BluetoothSocketBossSender implements BossSocketSender
 		UUID.fromString("306e9a8d-9a1b-4910-b168-b85af5b84f7c"),
 		UUID.fromString("5b4c6919-5b62-416c-be5c-f4a8e3f1bca4"),
 		UUID.fromString("aa0b4e69-5600-4149-88d4-9c85b2733e81"),
+*/		
+/*		
 		UUID.fromString("514a9fa1-538d-4d34-9559-f0dd2a8f9280"),
 		UUID.fromString("7c29e5e8-1c9b-43c9-b349-d99503f1ecdc"),
 		UUID.fromString("f6b67392-8319-4c75-b0a8-8229a4bef402"),
@@ -55,7 +59,34 @@ public class BluetoothSocketBossSender implements BossSocketSender
 		UUID.fromString("91890d84-e0da-42e0-85ab-a58b50abfd1d"),
 		UUID.fromString("70e96911-8edb-45b5-aaf3-c7da3cb473da"),
 		UUID.fromString("0f866321-527d-4354-a71c-eee07455ccef"),
-/**/		
+*/		
+	};
+	public static final UUID[] sKeysAno=
+	{
+		UUID.fromString("57687b0e-cbd1-42b2-ad70-fabf739e5a56"),
+		UUID.fromString("67687b0e-cbd1-42b2-ad70-fabf739e5a56"),
+		UUID.fromString("77687b0e-cbd1-42b2-ad70-fabf739e5a56"),
+		UUID.fromString("87687b0e-cbd1-42b2-ad70-fabf739e5a56"),
+		UUID.fromString("97687b0e-cbd1-42b2-ad70-fabf739e5a56"),
+/*	
+		UUID.fromString("47687b0e-cbd1-42b2-ad70-fabf739e5a56"),
+		UUID.fromString("2bad19e0-8662-480a-b74e-8fe031a6c8e9"),
+		UUID.fromString("9cec93f9-0caa-4114-81b2-eed208b48f83"),
+		UUID.fromString("6bcdea3b-e4eb-43e7-acf1-7c37ae805497"),
+		UUID.fromString("306e9a8d-9a1b-4910-b168-b85af5b84f7c"),
+		UUID.fromString("5b4c6919-5b62-416c-be5c-f4a8e3f1bca4"),
+		UUID.fromString("aa0b4e69-5600-4149-88d4-9c85b2733e81"),
+*/		
+/*		
+		UUID.fromString("514a9fa1-538d-4d34-9559-f0dd2a8f9280"),
+		UUID.fromString("7c29e5e8-1c9b-43c9-b349-d99503f1ecdc"),
+		UUID.fromString("f6b67392-8319-4c75-b0a8-8229a4bef402"),
+		UUID.fromString("9adee858-77fd-4ffa-93a7-5d0a11af8f4a"),
+		UUID.fromString("9404715e-54cf-4444-99a3-67e282ca11a6"),
+		UUID.fromString("91890d84-e0da-42e0-85ab-a58b50abfd1d"),
+		UUID.fromString("70e96911-8edb-45b5-aaf3-c7da3cb473da"),
+		UUID.fromString("0f866321-527d-4354-a71c-eee07455ccef"),
+*/		
 	};
 	public static final UUID sDiscoverUUID=UUID.fromString("15ef2fee-f765-438b-b540-df1bf93d7712");
 
@@ -96,7 +127,14 @@ public class BluetoothSocketBossSender implements BossSocketSender
     	mSecure=SCHEME_BTS.equals(uri.getScheme());
     	if (!mSecure && (Compatibility.VERSION_SDK_INT<Compatibility.VERSION_GINGERBREAD))
     		throw new IllegalArgumentException("Insecure bluetooth not supported");
-    	mMac=uri.getAuthority();
+    	final String authority=uri.getAuthority();
+    	StringBuilder mac=new StringBuilder(authority.length()/2*3);
+    	for (int i=0;i<authority.length();i+=2)
+    	{
+    		mac.append(authority.substring(i,i+2)).append(':');
+    	}
+    	mac.setLength(mac.length()-1);
+    	mMac=mac.toString();
     	mName=null;
     	if (!BluetoothAdapter.checkBluetoothAddress(mMac))
     	{
@@ -108,27 +146,35 @@ public class BluetoothSocketBossSender implements BossSocketSender
     	if (!mAdapter.isEnabled())
     		throw new IOException("Bluetooth disabled");
     	BluetoothDevice device=null;
-    	if (mSecure)
+    	
+    	device=mAdapter.getRemoteDevice(mMac);
+    	
+    	if (!AUTO_PAIRING_BT)
     	{
-	    	for (BluetoothDevice dev:mAdapter.getBondedDevices())
+	    	if (mSecure)
 	    	{
-	    		if (mMac!=null && dev.getAddress().equals(mMac))
-	    		{
-	    			device=dev;
-	    			break;
-	    		}
-	    		if (mName!=null && dev.getName().equalsIgnoreCase(mName))
-	    		{
-	    			device=dev;
-	    			break;
-	    		}
+		    	for (BluetoothDevice dev:mAdapter.getBondedDevices())
+		    	{
+		    		if (mMac!=null && dev.getAddress().equals(mMac))
+		    		{
+		    			device=dev;
+		    			break;
+		    		}
+		    		if (mName!=null && dev.getName().equalsIgnoreCase(mName))
+		    		{
+		    			device=dev;
+		    			break;
+		    		}
+		    	}
 	    	}
+	    	else
+	    		device=mAdapter.getRemoteDevice(mMac);
     	}
     	else
     		device=mAdapter.getRemoteDevice(mMac);
     	
     	if (device==null)
-    		throw new IllegalArgumentException("Not found device "+((mName==null) ? mMac : mName));
+    		throw new IllegalArgumentException("BT Not found device "+((mName==null) ? mMac : mName));
     	
     	// Try one UUID. If it's failed, try with another one.
     	// Use a random selection.
@@ -139,25 +185,20 @@ public class BluetoothSocketBossSender implements BossSocketSender
     	UUID uuid=null;
     	for (int i=0;i<BT_NB_UUID;++i)
     	{
-    		uuid=sKeys[i];
     		for (;;)
     		{
     			if (V) Log.v(TAG_CLIENT_BIND,PREFIX_LOG+"Try with uuid "+i+"...");
 	    		try
 	    		{
 	    			if (mSecure)
+	    			{
+	    	    		uuid=sKeys[i];
 	    				socket=device.createRfcommSocketToServiceRecord(uuid);
+	    			}
 	    			else
 	    			{
-	    				// Back compatibility of socket=device.createInsecureRfcommSocketToServiceRecord(uuid);
-						try
-						{
-	    					socket=(BluetoothSocket)sMethod.invoke(device,uuid);
-						}
-						catch (Exception e)
-						{
-							throw new IllegalArgumentException("Anonymous bluetooth not supported with this device");
-						}
+	    	    		uuid=sKeysAno[i];
+	    				socket=device.createInsecureRfcommSocketToServiceRecord(uuid);
 	    			}
 	    			if (BT_HACK_WAIT_AFTER_CREATE_RF_COMM!=0)
 	    				try { Thread.sleep(BT_HACK_WAIT_AFTER_CREATE_RF_COMM); } catch (InterruptedException e) {} 
@@ -168,13 +209,7 @@ public class BluetoothSocketBossSender implements BossSocketSender
 	    		}
 	    		catch (IOException e)
 	    		{
-	    			lastException=e; // Device or resource busy
-//	    			if (e==null || e.getMessage().contains("iscovery")) 
-//	    			{
-//	        			if (V) Log.v(TAG,PREFIX_LOG+"Unable to start service discovery. Retry");
-//	        			try { Thread.sleep(300+mRandom.nextInt(200)); } catch (InterruptedException ee) {}
-//	    				continue;
-//	    			}
+	    			lastException=e;
 	    		}
     			if (lastException.getMessage().indexOf("busy")==-1)
     				throw lastException;
@@ -226,6 +261,7 @@ public class BluetoothSocketBossSender implements BossSocketSender
 	    @Override
 	    public void run()
 	    {
+	    	Looper.prepare();
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 	    	for (;;)
 	    	{
@@ -261,7 +297,8 @@ public class BluetoothSocketBossSender implements BossSocketSender
     	@Override
     	public void run()
     	{
-            Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+	    	Looper.prepare();
+	    	Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
     		for (;;)
     		{
 				try

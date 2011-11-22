@@ -52,20 +52,21 @@ public class ProtobufConvs
 			String uri=info.uris.get(j);
 			Uri uuri=Uri.parse(uri);
 			String sheme=uuri.getScheme();
-			if (sheme.equals(SCHEME_BT))
+			if (sheme.equals(SCHEME_BT) || sheme.equals(SCHEME_BTS))
 			{
-				if (!setbtanonymous)
+				if (sheme.equals(SCHEME_BT) && !setbtanonymous)
 				{
 					candidateBuilder.setBluetoothAnonmymous(true);
 					setbtanonymous=true;
 				}
-				int value=Integer.parseInt(uuri.getHost(),16);
-				candidateBuilder.setBluetoothMac(value);
-			}
-			else if (sheme.equals(SCHEME_BTS))
-			{
-				int value=Integer.parseInt(uuri.getHost(),16);
-				candidateBuilder.setBluetoothMac(value);
+				try
+				{
+					candidateBuilder.setBluetoothMac(Long.parseLong(uuri.getHost(),16));
+				}
+				catch (NumberFormatException e)
+				{
+					if (W) Log.w(TAG_CANDIDATE,PREFIX_LOG+" Error when parse uri "+uri);
+				}
 			}
 			else if (sheme.equals(SCHEME_TCP))
 			{
@@ -89,7 +90,7 @@ public class ProtobufConvs
 				}
 				catch (UnknownHostException e)
 				{
-					if (W) Log.w(TAG_CANDIDATE,PREFIX_LOG+" Error when parse uri.",e);
+					if (W) Log.w(TAG_CANDIDATE,PREFIX_LOG+" Error when parse uri "+uri);
 				}
 			}
 		}
@@ -175,25 +176,21 @@ public class ProtobufConvs
 				final int BT_MAC_SIZE=12;
 				String btmac=("00000000000"+Long.toHexString(candidates.getBluetoothMac()).toUpperCase());
 				btmac=btmac.substring(btmac.length()-BT_MAC_SIZE,btmac.length());
-				StringBuilder buf=new StringBuilder();
-				for (int j=0;j<btmac.length();j+=2)
-				{
-					buf.append(btmac.substring(j,j+2)+':');
-				}
-				buf.setLength(buf.length()-1);
+				boolean acceptAnonymous=(Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_GINGERBREAD_MR1);
 				if (BLUETOOTH_FIRST)
 				{
-					if (candidates.hasBluetoothAnonmymous())
-						results.add(0,SCHEME_BT+"://"+buf.toString()+'/');
+					
+					if (acceptAnonymous && candidates.hasBluetoothAnonmymous())
+						results.add(0,SCHEME_BT+"://"+btmac+'/');
 					else
-						results.add(0,SCHEME_BTS+"://"+buf.toString()+'/');
+						results.add(0,SCHEME_BTS+"://"+btmac+'/');
 				}
 				else
 				{
-					if (candidates.hasBluetoothAnonmymous())
-						results.add(SCHEME_BT+"://"+buf.toString()+'/');
+					if (acceptAnonymous && candidates.hasBluetoothAnonmymous())
+						results.add(SCHEME_BT+"://"+btmac+'/');
 					else
-						results.add(SCHEME_BTS+"://"+buf.toString()+'/');
+						results.add(SCHEME_BTS+"://"+btmac+'/');
 				}
 			}
 		}
