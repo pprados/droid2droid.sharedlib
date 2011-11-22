@@ -69,14 +69,14 @@ public class Constants
 	public static final String PREFIX_LOG='['+Build.DEVICE+' '+Build.MODEL+"] ";
 
 	/** Timeout for ping remote binder. */
-	public static final long TIMEOUT_PING_BINDER				=5000L; // second
+	public static final long TIMEOUT_PING_BINDER				=2000L; // second
 
 	/** Timeout for connect to remote android. */
-	public static final long TIMEOUT_CONNECT					=45000L; // TODO 10; // second
+	public static final long TIMEOUT_CONNECT					=2000L; // second
 	/** Timeout to detect if binder is alive. */
-	public static final long TIMEOUT_IS_BINDER_ALIVE			=50000L; // second
+	public static final long TIMEOUT_IS_BINDER_ALIVE			=5000L; // second
 	/** Timeout to inform the finalize of binder. */
-	public static final long TIMEOUT_FINALIZE					=10000L; // second
+	public static final long TIMEOUT_FINALIZE					=2000L; // second
 	
 	/** Timeout for accept a pairing chalenge. */
 	public static final long TIMEOUT_PAIRING_ASK_CHALENGE		=30000L; // 30s

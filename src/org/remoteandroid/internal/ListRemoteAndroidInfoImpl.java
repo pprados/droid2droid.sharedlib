@@ -1,6 +1,6 @@
 package org.remoteandroid.internal;
 
-import static org.remoteandroid.internal.Constants.PREFIX_LOG;
+import static org.remoteandroid.internal.Constants.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -84,13 +84,20 @@ public class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 	protected void finalize() throws Throwable
 	{
 		super.finalize();
-		if (mReceiver!=null)
-			mManager.getContext().unregisterReceiver(mReceiver);
+		try
+		{
+			if (mReceiver!=null)
+				mManager.getContext().unregisterReceiver(mReceiver);
+		}
+		catch (Exception e)
+		{
+			// Ignore
+		}
 	}
 	
 	synchronized private void detectAndroid(RemoteAndroidInfoImpl android)
 	{
-		Log.d("Discover",PREFIX_LOG+"Discover "+android);
+		if (D) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+"Discover "+android);
 		for (RemoteAndroidInfo a:mDiscoveredAndroid)
 		{
 			RemoteAndroidInfoImpl and=(RemoteAndroidInfoImpl)a;

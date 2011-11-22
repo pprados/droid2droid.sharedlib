@@ -102,7 +102,6 @@ public class ProtobufConvs
 		try
 		{
 			RemoteAndroidInfoImpl info=new RemoteAndroidInfoImpl();
-			if (D) Log.d("Conv",PREFIX_LOG+"UUID=\""+identity.getUuid()+'"');
 			info.uuid=UUID.fromString(identity.getUuid());
 			info.name=identity.getName();
 			byte[] pubBytes=identity.getPublicKey().toByteArray();

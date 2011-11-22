@@ -77,7 +77,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
                     return new Thread(r, "RemoteAndroid #" + mCount.getAndIncrement());
                 }
             });    
-	private final Context mAppContext;
+	public final Context mAppContext;
 	private static volatile IRemoteAndroidManager sManager;
 	private static boolean noDiscoverPrivilege=false;
 	
@@ -182,9 +182,9 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 				{
 	
 					@Override
-					public AbstractRemoteAndroidImpl factoryBinder(RemoteAndroidManager manager,Uri uri)
+					public AbstractRemoteAndroidImpl factoryBinder(Context context,RemoteAndroidManagerImpl manager,Uri uri)
 					{
-						return new NetworkSocketRemoteAndroid(manager,uri);
+						return new NetworkSocketRemoteAndroid(context,manager,uri);
 					}
 				});
 		}
@@ -193,7 +193,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			Driver btsd=new Driver()
 			{
 				@Override
-				public AbstractRemoteAndroidImpl factoryBinder(RemoteAndroidManager manager,Uri uri)
+				public AbstractRemoteAndroidImpl factoryBinder(Context context,RemoteAndroidManagerImpl manager,Uri uri)
 				{
 					return new BluetoothSocketRemoteAndroid(manager,uri);
 				}
@@ -202,7 +202,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			Driver btd=new Driver()
 			{
 				@Override
-				public AbstractRemoteAndroidImpl factoryBinder(RemoteAndroidManager manager,Uri uri)
+				public AbstractRemoteAndroidImpl factoryBinder(Context context,RemoteAndroidManagerImpl manager,Uri uri)
 				{
 					return new BluetoothSocketRemoteAndroid(manager,uri);
 				}
@@ -305,10 +305,15 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		AbstractRemoteAndroidImpl binder=null;
 		try
 		{
+			String scheme=uri.getScheme();
+			if (!ETHERNET && scheme.equals(SCHEME_TCP))
+				return new Pair<RemoteAndroidInfoImpl,Long>(null,0L);
+			if (!BLUETOOTH && (scheme.equals(SCHEME_BT) || scheme.equals(SCHEME_BTS)))
+				return new Pair<RemoteAndroidInfoImpl,Long>(null,0L);
 			Driver driver=sDrivers.get(uri.getScheme());
 			if (driver==null)
 				throw new MalformedURLException("Unknown "+uri);
-			binder=driver.factoryBinder(RemoteAndroidManagerImpl.this,uri);
+			binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
 			return binder.connectWithAuthent(TIMEOUT_CONNECT);
 		}
 		catch (SecurityException e)
@@ -355,7 +360,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
     				Driver driver=sDrivers.get(uri.getScheme());
     				if (driver==null)
     					throw new MalformedURLException("Unknown "+uri);
-    				AbstractRemoteAndroidImpl binder=driver.factoryBinder(RemoteAndroidManagerImpl.this,uri);
+    				AbstractRemoteAndroidImpl binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
     					
     				final AbstractRemoteAndroidImpl fbinder=binder;
     				binder.connect(forPairing,TIMEOUT_CONNECT);
