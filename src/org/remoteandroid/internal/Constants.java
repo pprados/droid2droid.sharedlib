@@ -35,7 +35,7 @@ public class Constants
 	public static final boolean UPDATE_PARCEL=true;
 	
 	/** Use blue tooth */
-	public static final boolean BLUETOOTH=false;
+	public static /*final*/ boolean BLUETOOTH=false;
 	/** Order uris with Bluetooth first */
 	public static final boolean BLUETOOTH_FIRST=false; // FIXME: false
 	
