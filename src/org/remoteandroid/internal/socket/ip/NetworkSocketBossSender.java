@@ -56,7 +56,8 @@ public class NetworkSocketBossSender implements BossSocketSender
     	// TODO: ne pas tanter si moi en global network et target en local network. Mais en vérifier toutes les ip
     	//if (Trusted.isLocalNetwork(Appl))
     	Socket socket=new Socket(mHost,mPort);
-        socket.setSoTimeout((int)TIMEOUT_CONNECT);
+        //FIXME: socket.setSoTimeout((int)TIMEOUT_CONNECT);
+    	socket.setSoLinger(ETHERNET_SO_LINGER, ETHERNET_SO_LINGER_TIMEOUT);
         socket.setKeepAlive(true);
         socket.setTcpNoDelay(true);
         socket.setReuseAddress(true);

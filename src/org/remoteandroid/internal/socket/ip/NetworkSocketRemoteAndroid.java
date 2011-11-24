@@ -26,14 +26,14 @@ public class NetworkSocketRemoteAndroid extends AbstractSocketRemoteAndroid<Netw
 	@Override
 	public boolean connect(boolean forPairing,long timeout) throws UnknownHostException, IOException, RemoteException
 	{
-		if (!mConnectivityManager.getActiveNetworkInfo().isConnected()) return false;
+		//FIXME: pb de secu if (!mConnectivityManager.getActiveNetworkInfo().isConnected()) return false;
 		return super.connect(forPairing,timeout);
 	}
 	
 	@Override
 	protected void initBootstrap() throws UnknownHostException, IOException
 	{
-		if (!mConnectivityManager.getActiveNetworkInfo().isConnected()) return;
+		//FIXME: pb de secu if (!mConnectivityManager.getActiveNetworkInfo().isConnected()) return;
 		if (mBootstrap==null) // FIXME : Multi-thread
 		{
 	    	mBootstrap=new NetworkSocketBossSender(mContext,mUri,mHandler);
