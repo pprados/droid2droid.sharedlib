@@ -52,20 +52,21 @@ public class ProtobufConvs
 			String uri=info.uris.get(j);
 			Uri uuri=Uri.parse(uri);
 			String sheme=uuri.getScheme();
-			if (sheme.equals(SCHEME_BT))
+			if (sheme.equals(SCHEME_BT) || sheme.equals(SCHEME_BTS))
 			{
-				if (!setbtanonymous)
+				if (sheme.equals(SCHEME_BT) && !setbtanonymous)
 				{
 					candidateBuilder.setBluetoothAnonmymous(true);
 					setbtanonymous=true;
 				}
-				int value=Integer.parseInt(uuri.getHost(),16);
-				candidateBuilder.setBluetoothMac(value);
-			}
-			else if (sheme.equals(SCHEME_BTS))
-			{
-				int value=Integer.parseInt(uuri.getHost(),16);
-				candidateBuilder.setBluetoothMac(value);
+				try
+				{
+					candidateBuilder.setBluetoothMac(Long.parseLong(uuri.getHost(),16));
+				}
+				catch (NumberFormatException e)
+				{
+					if (W) Log.w(TAG_CANDIDATE,PREFIX_LOG+" Error when parse uri "+uri);
+				}
 			}
 			else if (sheme.equals(SCHEME_TCP))
 			{
@@ -89,7 +90,7 @@ public class ProtobufConvs
 				}
 				catch (UnknownHostException e)
 				{
-					if (W) Log.w(TAG_CANDIDATE,PREFIX_LOG+" Error when parse uri.",e);
+					if (W) Log.w(TAG_CANDIDATE,PREFIX_LOG+" Error when parse uri "+uri);
 				}
 			}
 		}
@@ -101,7 +102,6 @@ public class ProtobufConvs
 		try
 		{
 			RemoteAndroidInfoImpl info=new RemoteAndroidInfoImpl();
-			if (D) Log.d("Conv",PREFIX_LOG+"UUID=\""+identity.getUuid()+'"');
 			info.uuid=UUID.fromString(identity.getUuid());
 			info.name=identity.getName();
 			byte[] pubBytes=identity.getPublicKey().toByteArray();
@@ -143,52 +143,54 @@ public class ProtobufConvs
 //		}
 		int[] priority; // odd: IPV6, even: IPV4;
 		
-		if (ETHERNET_IPV4_FIRST)
+		if (ETHERNET)
 		{
-			priority=new int[]{1,0};
-		}
-		else
-			priority=new int[]{0,1};
-		
-		for (int prio:priority)
-		{
-			switch (prio)
+			if (ETHERNET_IPV4_FIRST)
 			{
-				case 0:
-					if (!ETHERNET_ONLY_IPV4)
-						tryIpv6(candidates, results, localNetwork,port);
-					break;
-				case 1:
-					tryIpv4(candidates, results, localNetwork,port);
-					break;
-			}
-		}
-		
-		
-		if (candidates.hasBluetoothMac())
-		{
-			final int BT_MAC_SIZE=12;
-			String btmac=("00000000"+Long.toHexString(candidates.getBluetoothMac()).toUpperCase());
-			btmac=btmac.substring(btmac.length()-BT_MAC_SIZE,btmac.length());
-			StringBuilder buf=new StringBuilder();
-			for (int j=0;j<btmac.length();j+=2)
-			{
-				buf.append(btmac.substring(j,j+2)+':');
-			}
-			buf.setLength(buf.length()-1);
-			if (BLUETOOTH_FIRST)
-			{
-				if (candidates.hasBluetoothAnonmymous())
-					results.add(0,SCHEME_BT+"://"+buf.toString()+'/');
-				else
-					results.add(0,SCHEME_BTS+"://"+buf.toString()+'/');
+				priority=new int[]{1,0};
 			}
 			else
+				priority=new int[]{0,1};
+			
+			for (int prio:priority)
 			{
-				if (candidates.hasBluetoothAnonmymous())
-					results.add(SCHEME_BT+"://"+buf.toString()+'/');
+				switch (prio)
+				{
+					case 0:
+						if (!ETHERNET_ONLY_IPV4)
+							tryIpv6(candidates, results, localNetwork,port);
+						break;
+					case 1:
+						tryIpv4(candidates, results, localNetwork,port);
+						break;
+				}
+			}
+		}
+		
+		if (BLUETOOTH)
+		{
+			
+			if (candidates.hasBluetoothMac() && candidates.getBluetoothMac()!=0)
+			{
+				final int BT_MAC_SIZE=12;
+				String btmac=("00000000000"+Long.toHexString(candidates.getBluetoothMac()).toUpperCase());
+				btmac=btmac.substring(btmac.length()-BT_MAC_SIZE,btmac.length());
+				boolean acceptAnonymous=(Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_GINGERBREAD_MR1);
+				if (BLUETOOTH_FIRST)
+				{
+					
+					if (acceptAnonymous && candidates.hasBluetoothAnonmymous())
+						results.add(0,SCHEME_BT+"://"+btmac+'/');
+					else
+						results.add(0,SCHEME_BTS+"://"+btmac+'/');
+				}
 				else
-					results.add(SCHEME_BTS+"://"+buf.toString()+'/');
+				{
+					if (acceptAnonymous && candidates.hasBluetoothAnonmymous())
+						results.add(SCHEME_BT+"://"+btmac+'/');
+					else
+						results.add(SCHEME_BTS+"://"+btmac+'/');
+				}
 			}
 		}
 // FIXME: gérer le cas du results vide !

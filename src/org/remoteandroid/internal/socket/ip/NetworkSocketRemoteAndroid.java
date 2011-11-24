@@ -4,30 +4,39 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import org.remoteandroid.RemoteAndroidManager;
+import org.remoteandroid.internal.RemoteAndroidManagerImpl;
 import org.remoteandroid.internal.socket.AbstractSocketRemoteAndroid;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.RemoteException;
 
 
 public class NetworkSocketRemoteAndroid extends AbstractSocketRemoteAndroid<NetworkSocketBossSender>
 {
-	public NetworkSocketRemoteAndroid(RemoteAndroidManager manager,Uri uri)
+	Context mContext;
+	ConnectivityManager mConnectivityManager;
+	public NetworkSocketRemoteAndroid(Context context,RemoteAndroidManagerImpl manager,Uri uri)
 	{
 		super(manager,uri);
+		mContext=context.getApplicationContext();
+		mConnectivityManager=(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	}
 	@Override
 	public boolean connect(boolean forPairing,long timeout) throws UnknownHostException, IOException, RemoteException
 	{
+		if (!mConnectivityManager.getActiveNetworkInfo().isConnected()) return false;
 		return super.connect(forPairing,timeout);
 	}
 	
 	@Override
 	protected void initBootstrap() throws UnknownHostException, IOException
 	{
+		if (!mConnectivityManager.getActiveNetworkInfo().isConnected()) return;
 		if (mBootstrap==null) // FIXME : Multi-thread
 		{
-	    	mBootstrap=new NetworkSocketBossSender(mUri,mHandler);
+	    	mBootstrap=new NetworkSocketBossSender(mContext,mUri,mHandler);
 	    	mBootstrap.start();
 		}
 	}

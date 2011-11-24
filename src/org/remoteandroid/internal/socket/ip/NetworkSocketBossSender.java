@@ -4,6 +4,7 @@ import static org.remoteandroid.internal.Constants.*;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -15,6 +16,8 @@ import org.remoteandroid.internal.Tools;
 import org.remoteandroid.internal.socket.BossSocketSender;
 import org.remoteandroid.internal.socket.DownstreamHandler;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Process;
 import android.util.Log;
@@ -36,15 +39,24 @@ public class NetworkSocketBossSender implements BossSocketSender
 
     private LinkedBlockingQueue<Msg> mMsgs=new LinkedBlockingQueue<Msg>();
    
-    NetworkSocketBossSender(Uri uri,DownstreamHandler handler) throws UnknownHostException, IOException
+    NetworkSocketBossSender(Context context,Uri uri,DownstreamHandler handler) throws UnknownHostException, IOException
 	{
     	mId=sId.incrementAndGet();
     	mHandler=handler;
     	mHost=Tools.uriGetHostIPV6(uri);
     	mPort=Tools.uriGetPortIPV6(uri);
+    	// TODO: Detecter si je suis sur GSM, et dans ce cas, ne permettre que les connexions vers IP globale. Permet d'optimiser si BT+GSM mais pas WIFI et connexion sur WIFI+BT
+    	if (InetAddress.getByName(mHost).isSiteLocalAddress() && ! Tools.isLocalNetwork(context))
+    	{
+    		// I try to connect to local address, but i'm not in local network.
+    		return;
+    	}
     	if (mPort==-1)
     		mPort=RemoteAndroidManager.DEFAULT_PORT;
+    	// TODO: ne pas tanter si moi en global network et target en local network. Mais en vérifier toutes les ip
+    	//if (Trusted.isLocalNetwork(Appl))
     	Socket socket=new Socket(mHost,mPort);
+        socket.setSoTimeout((int)TIMEOUT_CONNECT);
         socket.setKeepAlive(true);
         socket.setTcpNoDelay(true);
         socket.setReuseAddress(true);
@@ -67,21 +79,30 @@ public class NetworkSocketBossSender implements BossSocketSender
     {
     	try
 		{
-			mChannel.close();
+			if (mChannel!=null)
+				mChannel.close();
 		}
 		catch (IOException e)
 		{
 			// Ignore
 		}
-       	mThreadW.interrupt();
-       	mThreadW=null;
-       	mThreadR.interrupt();
-       	mThreadR=null;
+       	if (mThreadW!=null)
+       	{
+       		mThreadW.interrupt();
+       		mThreadW=null;
+       	}
+       	if (mThreadR!=null)
+       	{
+       		mThreadR.interrupt();
+       		mThreadR=null;
+       	}
     }
     
     @Override
     public void start()
     {
+    	if (mChannel==null)
+    		return;
     	if (mThreadW!=null)
     	{
     		Log.i(TAG_CLIENT_BIND,PREFIX_LOG+"Allready started");

@@ -13,9 +13,8 @@ import static org.remoteandroid.internal.Constants.VERSION;
 import static org.remoteandroid.internal.Constants.W;
 
 
+import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -28,7 +27,6 @@ import org.remoteandroid.ListRemoteAndroidInfo;
 import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
-import org.remoteandroid.internal.Messages.Msg;
 import org.remoteandroid.internal.socket.bluetooth.BluetoothSocketRemoteAndroid;
 import org.remoteandroid.internal.socket.ip.NetworkSocketRemoteAndroid;
 
@@ -46,7 +44,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.AndroidRuntimeException;
 import android.util.Log;
-import android.util.Pair;
 
 
 public class RemoteAndroidManagerImpl extends RemoteAndroidManager
@@ -80,7 +77,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
                     return new Thread(r, "RemoteAndroid #" + mCount.getAndIncrement());
                 }
             });    
-	private final Context mAppContext;
+	public final Context mAppContext;
 	private static volatile IRemoteAndroidManager sManager;
 	private static boolean noDiscoverPrivilege=false;
 	
@@ -102,14 +99,15 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		if (Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_ECLAIR)
 		{
 			// Verify wrapper
-//			new Runnable()
-//			{
-//				public void run() 
-//				{
-//					BluetoothAdapter.getDefaultAdapter();
-//				}
-//			}.run();
+			new Runnable()
+			{
+				public void run() 
+				{
+					BluetoothAdapter.getDefaultAdapter();
+				}
+			}.run();
 		}
+		setDeviceParameter();
 		if (sManager==null)
 		{
 			final Intent intent=new Intent(ACTION_REMOTE_ANDROID);
@@ -184,9 +182,9 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 				{
 	
 					@Override
-					public AbstractRemoteAndroidImpl factoryBinder(RemoteAndroidManager manager,Uri uri)
+					public AbstractRemoteAndroidImpl factoryBinder(Context context,RemoteAndroidManagerImpl manager,Uri uri)
 					{
-						return new NetworkSocketRemoteAndroid(manager,uri);
+						return new NetworkSocketRemoteAndroid(context,manager,uri);
 					}
 				});
 		}
@@ -195,7 +193,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			Driver btsd=new Driver()
 			{
 				@Override
-				public AbstractRemoteAndroidImpl factoryBinder(RemoteAndroidManager manager,Uri uri)
+				public AbstractRemoteAndroidImpl factoryBinder(Context context,RemoteAndroidManagerImpl manager,Uri uri)
 				{
 					return new BluetoothSocketRemoteAndroid(manager,uri);
 				}
@@ -204,7 +202,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			Driver btd=new Driver()
 			{
 				@Override
-				public AbstractRemoteAndroidImpl factoryBinder(RemoteAndroidManager manager,Uri uri)
+				public AbstractRemoteAndroidImpl factoryBinder(Context context,RemoteAndroidManagerImpl manager,Uri uri)
 				{
 					return new BluetoothSocketRemoteAndroid(manager,uri);
 				}
@@ -296,28 +294,39 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			// Ignore
 		}
 	}
-	public long askCookie(Uri uri)
+	public long askCookie(Uri uri) throws SecurityException, IOException
 	{
 		Pair<RemoteAndroidInfoImpl,Long> msg=askMsgCookie(uri);
 		if (msg==null) return 0;
 		return msg.second;
 	}
-	public Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri)
+	public Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri) throws IOException, SecurityException
 	{
 		AbstractRemoteAndroidImpl binder=null;
 		try
 		{
+			String scheme=uri.getScheme();
+			if (!ETHERNET && scheme.equals(SCHEME_TCP))
+				return new Pair<RemoteAndroidInfoImpl,Long>(null,0L);
+			if (!BLUETOOTH && (scheme.equals(SCHEME_BT) || scheme.equals(SCHEME_BTS)))
+				return new Pair<RemoteAndroidInfoImpl,Long>(null,0L);
 			Driver driver=sDrivers.get(uri.getScheme());
 			if (driver==null)
 				throw new MalformedURLException("Unknown "+uri);
-			binder=driver.factoryBinder(RemoteAndroidManagerImpl.this,uri);
+			binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
 			return binder.connectWithAuthent(TIMEOUT_CONNECT);
 		}
 		catch (SecurityException e)
 		{
 			if (W && !D) Log.w(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.");
 			if (D) Log.d(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.",e);
-			return null;
+			throw (SecurityException)e.fillInStackTrace();
+		}
+		catch (IOException e)
+		{
+			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie ("+e.getMessage()+")");
+			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible for ask cookie.",e);
+			throw (IOException)e.fillInStackTrace();
 		}
 		catch (Exception e)
 		{
@@ -351,7 +360,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
     				Driver driver=sDrivers.get(uri.getScheme());
     				if (driver==null)
     					throw new MalformedURLException("Unknown "+uri);
-    				AbstractRemoteAndroidImpl binder=driver.factoryBinder(RemoteAndroidManagerImpl.this,uri);
+    				AbstractRemoteAndroidImpl binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
     					
     				final AbstractRemoteAndroidImpl fbinder=binder;
     				binder.connect(forPairing,TIMEOUT_CONNECT);
@@ -372,6 +381,11 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
     			catch (MalformedURLException e)
     			{
     				if (E) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+"When you bind a remote android, the uri "+uri+" is invalide");
+    				PostTools.postServiceDisconnected(conn,name); // TODO: Maintenir le lien
+    			}
+    			catch (IOException e)
+    			{
+    				if (E) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+"bindRemote",e);
     				PostTools.postServiceDisconnected(conn,name); // TODO: Maintenir le lien
     			}
     			catch (Exception e)
@@ -426,14 +440,15 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		{
 			try
 			{
-				Thread.sleep(3000);
+				Thread.sleep(BINDING_TIMEOUT_WAIT);
 				++cnt;
 			}
 			catch (InterruptedException e)
 			{
 				// Ignore
+				if (D && sManager==null) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+"Binding to RemoteAndroid failed.");
 			}
-			if (cnt==5) 
+			if (cnt==BINDING_NB_RETRY) 
 				throw new IllegalStateException("Service Remote android not found");
 		}
 	}
@@ -465,5 +480,15 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		if ((type & (1<<2))!=0) I=state;
 		if ((type & (1<<3))!=0) D=state;
 		if ((type & (1<<4))!=0) V=state;
+	}
+	
+	private static final void setDeviceParameter()
+	{
+		// HTC Desire HD have a buggy bluetooth stack.
+		if (Build.FINGERPRINT.equals("htc_wwe/htc_ace/ace:2.3.3/GRI40/87995:user/release-keys"))
+		{
+			Constants.BLUETOOTH=false;
+		}
+		
 	}
 }

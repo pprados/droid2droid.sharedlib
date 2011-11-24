@@ -3,7 +3,12 @@ package org.remoteandroid.internal;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 
+import android.content.Context;
 import android.net.Uri;
 
 public class Tools
@@ -40,6 +45,31 @@ public class Tools
 		}
 		return uri.getPort();
 	}
+	
+	// Check if local IP is only for local network
+	public static boolean isLocalNetwork(Context context) throws SocketException
+	{
+		boolean local=false;
+		for (Enumeration<NetworkInterface> networks=NetworkInterface.getNetworkInterfaces();networks.hasMoreElements();)
+		{
+			NetworkInterface network=networks.nextElement();
+			for (Enumeration<InetAddress> addrs=network.getInetAddresses();addrs.hasMoreElements();)
+			{
+				InetAddress add=(InetAddress)addrs.nextElement();
+				if (network.getName().startsWith("sit")) // vpn ?
+					continue;
+				if (network.getName().startsWith("dummy")) // ipv6 in ipv4
+					continue;
+				if (add.isLoopbackAddress())
+					continue;
+				if (add.isSiteLocalAddress())
+					local=true;
+			}
+		}
+		return local;
+	}
+	
+	
 	public static double getBogoMips()
 	{
 		BufferedReader in=null;

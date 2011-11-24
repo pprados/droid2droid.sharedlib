@@ -21,11 +21,11 @@ public class BluetoothSocketRemoteAndroid extends AbstractSocketRemoteAndroid<Bl
 	{
 		super(manager,uri);
 	}
-	@Override
-	public boolean connect(boolean forPairing,long timeout) throws UnknownHostException, IOException, RemoteException
-	{
-		return super.connect(forPairing,timeout);
-	}
+//	@Override
+//	public boolean connect(boolean forPairing,long timeout) throws UnknownHostException, IOException, RemoteException
+//	{
+//		return super.connect(forPairing,timeout);
+//	}
 	@Override
 	protected void initBootstrap() throws UnknownHostException, IOException
 	{

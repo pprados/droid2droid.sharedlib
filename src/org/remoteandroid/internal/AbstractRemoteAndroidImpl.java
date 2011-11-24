@@ -41,7 +41,6 @@ import android.os.IInterface;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.util.Log;
-import android.util.Pair;
 
 // NAT file:///home/pprados/Bureau/J%20ICE/index.html
 /** @hide */
@@ -56,7 +55,7 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 	public static final int PING_BINDER = 3;
 
 	public static final int IS_BINDER_ALIVE = 4;
-
+	
 	public static final String EXTRA_FOR_PAIRING="forPairing";
 	
 	public static final int STATUS_REFUSE_CONNECTION_MODE=-1;
