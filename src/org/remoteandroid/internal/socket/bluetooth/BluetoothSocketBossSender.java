@@ -36,12 +36,14 @@ public class BluetoothSocketBossSender implements BossSocketSender
 	
 	public static final UUID[] sKeys=
 	{
+		/*
 		UUID.fromString("07687b0e-cbd1-42b2-ad70-fabf739e5a56"),
 		UUID.fromString("17687b0e-cbd1-42b2-ad70-fabf739e5a56"),
 		UUID.fromString("27687b0e-cbd1-42b2-ad70-fabf739e5a56"),
 		UUID.fromString("37687b0e-cbd1-42b2-ad70-fabf739e5a56"),
 		UUID.fromString("47687b0e-cbd1-42b2-ad70-fabf739e5a56"),
-/*	
+		*/
+
 		UUID.fromString("47687b0e-cbd1-42b2-ad70-fabf739e5a56"),
 		UUID.fromString("2bad19e0-8662-480a-b74e-8fe031a6c8e9"),
 		UUID.fromString("9cec93f9-0caa-4114-81b2-eed208b48f83"),
@@ -49,7 +51,7 @@ public class BluetoothSocketBossSender implements BossSocketSender
 		UUID.fromString("306e9a8d-9a1b-4910-b168-b85af5b84f7c"),
 		UUID.fromString("5b4c6919-5b62-416c-be5c-f4a8e3f1bca4"),
 		UUID.fromString("aa0b4e69-5600-4149-88d4-9c85b2733e81"),
-*/		
+		
 /*		
 		UUID.fromString("514a9fa1-538d-4d34-9559-f0dd2a8f9280"),
 		UUID.fromString("7c29e5e8-1c9b-43c9-b349-d99503f1ecdc"),

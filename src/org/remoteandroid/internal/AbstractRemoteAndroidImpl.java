@@ -46,8 +46,6 @@ import android.util.Log;
 /** @hide */
 public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemoteAndroid, IBinder
 {
-//	private static ExecutorService sPool=Executors.newCachedThreadPool();
-	
 	public static final int BIND_OID = 1;
 
 	public static final int FINALIZE_OID = 2;
