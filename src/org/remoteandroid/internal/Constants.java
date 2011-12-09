@@ -44,14 +44,14 @@ public class Constants
 	/** Auto-propose pairing with remote BT device. */
 	public static final boolean AUTO_PAIRING_BT					=true;
 	
-	public static final int BT_HACK_WAIT_AFTER_CREATE_RF_COMM	=0; // FIXME: 0; // Zero for good bluetooth stack.
+	public static final int BT_HACK_WAIT_AFTER_CREATE_RF_COMM	=0; // Zero for good bluetooth stack.
     /** Delay to discover others remote androids. */
 	public static final long TIME_MAX_TO_DISCOVER				=20000L;
 
 	/** Use ethernet */
 	public static final boolean ETHERNET						=true;
     /** Use only IP v4 */
-    public static final boolean ETHERNET_ONLY_IPV4 				=true; 
+    public static final boolean ETHERNET_ONLY_IPV4 				=false; 
 	/** Order uris with IPV4 before IPV6 */
 	public static final boolean ETHERNET_IPV4_FIRST				=false;
     
@@ -74,13 +74,13 @@ public class Constants
 	/** Timeout for connect to remote android. */
 	public static final long TIMEOUT_CONNECT					=10000L; // FIXME second
     /** Flush current data before close the socket. */
-    public static final boolean ETHERNET_SO_LINGER					=true; 		// Vide les derniers paquets avant la fermeture du socket
+    public static final boolean ETHERNET_SO_LINGER				=true; 	// Vide les derniers paquets avant la fermeture du socket
     /** Timeout to flush the last datas. */
-    public static final int ETHERNET_SO_LINGER_TIMEOUT				=50000; 		// FIXME Delay for flush last packets
+    public static final int ETHERNET_SO_LINGER_TIMEOUT			=2000; // FIXME Delay for flush last packets
 	/** Timeout to detect if binder is alive. */
-	public static final long TIMEOUT_IS_BINDER_ALIVE			=20000L; // FIXME second
+	public static final long TIMEOUT_IS_BINDER_ALIVE			=200L; // FIXME second
 	/** Timeout to inform the finalize of binder. */
-	public static final long TIMEOUT_FINALIZE					=10000L; // FIXME second
+	public static final long TIMEOUT_FINALIZE					=2000L; // FIXME second
 	
 	/** Timeout for accept a pairing chalenge. */
 	public static final long TIMEOUT_PAIRING_ASK_CHALENGE		=30000L; // 30s

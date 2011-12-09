@@ -76,7 +76,7 @@ message Msg
 	
 		
 	// Pair
-	optional int32 capability = 20;	
+	optional int32 feature	   = 20;	
 	optional int32 pairingstep = 21;	
 		
 	// Bind

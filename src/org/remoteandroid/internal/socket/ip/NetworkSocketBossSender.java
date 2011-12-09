@@ -4,9 +4,13 @@ import static org.remoteandroid.internal.Constants.*;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,6 +19,8 @@ import org.remoteandroid.internal.Messages.Msg;
 import org.remoteandroid.internal.Tools;
 import org.remoteandroid.internal.socket.BossSocketSender;
 import org.remoteandroid.internal.socket.DownstreamHandler;
+
+import com.google.protobuf.ByteString;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -55,8 +61,9 @@ public class NetworkSocketBossSender implements BossSocketSender
     		mPort=RemoteAndroidManager.DEFAULT_PORT;
     	// TODO: ne pas tanter si moi en global network et target en local network. Mais en vérifier toutes les ip
     	//if (Trusted.isLocalNetwork(Appl))
-    	Socket socket=new Socket(mHost,mPort);
-        //FIXME: socket.setSoTimeout((int)TIMEOUT_CONNECT);
+    	
+    	Socket socket=new Socket(mHost,mPort); // Note: for ipv6 linkLocalAddress, we must select the interface :-(
+        //FIXME socket.setSoTimeout((int)TIMEOUT_CONNECT);
     	socket.setSoLinger(ETHERNET_SO_LINGER, ETHERNET_SO_LINGER_TIMEOUT);
         socket.setKeepAlive(true);
         socket.setTcpNoDelay(true);
@@ -66,6 +73,35 @@ public class NetworkSocketBossSender implements BossSocketSender
         mChannel=new NetworkSocketChannel(socket);
 		
 	}
+    
+    // For ipv6 local address. Trouver l'interface
+//    InetAddress getMyInterface()
+//    {
+//    	try
+//    	{
+//			for (Enumeration<NetworkInterface> networks=NetworkInterface.getNetworkInterfaces();networks.hasMoreElements();)
+//			{
+//				NetworkInterface network=networks.nextElement();
+//				for (Enumeration<InetAddress> addrs=network.getInetAddresses();addrs.hasMoreElements();)
+//				{
+//					InetAddress add=(InetAddress)addrs.nextElement();
+//					if (network.getName().startsWith("sit")) // vpn ?
+//						continue;
+//					if (network.getName().startsWith("dummy")) // ipv6 in ipv4
+//						continue;
+//					if (add.isLoopbackAddress())
+//						continue;
+//					return add;
+//				}
+//			}
+//    	} catch (Exception e)
+//    	{
+//    		// FIXME
+//    	}
+//    	return null; // FIXME
+//    }
+    
+    
     public void pushMessage(Msg msg)
     {
     	mMsgs.add(msg);
@@ -176,7 +212,7 @@ public class NetworkSocketBossSender implements BossSocketSender
 				}
 				catch (IOException e)
 				{
-					if (D) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+"ReadThread",e);
+					if (D) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+"ReadThread",e);
 					mHandler.channelDisconnected(e);
 					return;
 				}

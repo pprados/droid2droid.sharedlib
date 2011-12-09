@@ -2295,9 +2295,9 @@ public final class Messages {
     boolean hasChallenge2();
     com.google.protobuf.ByteString getChallenge2();
     
-    // optional int32 capability = 20;
-    boolean hasCapability();
-    int getCapability();
+    // optional int32 feature = 20;
+    boolean hasFeature();
+    int getFeature();
     
     // optional int32 pairingstep = 21;
     boolean hasPairingstep();
@@ -2444,14 +2444,14 @@ public final class Messages {
       return challenge2_;
     }
     
-    // optional int32 capability = 20;
-    public static final int CAPABILITY_FIELD_NUMBER = 20;
-    private int capability_;
-    public boolean hasCapability() {
+    // optional int32 feature = 20;
+    public static final int FEATURE_FIELD_NUMBER = 20;
+    private int feature_;
+    public boolean hasFeature() {
       return ((bitField0_ & 0x00000200) == 0x00000200);
     }
-    public int getCapability() {
-      return capability_;
+    public int getFeature() {
+      return feature_;
     }
     
     // optional int32 pairingstep = 21;
@@ -2554,7 +2554,7 @@ public final class Messages {
       challengestep_ = 0;
       challenge1_ = com.google.protobuf.ByteString.EMPTY;
       challenge2_ = com.google.protobuf.ByteString.EMPTY;
-      capability_ = 0;
+      feature_ = 0;
       pairingstep_ = 0;
       status_ = 0;
       oid_ = 0;
@@ -2609,7 +2609,7 @@ public final class Messages {
         output.writeBytes(15, challenge2_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
-        output.writeInt32(20, capability_);
+        output.writeInt32(20, feature_);
       }
       if (((bitField0_ & 0x00000400) == 0x00000400)) {
         output.writeInt32(21, pairingstep_);
@@ -2684,7 +2684,7 @@ public final class Messages {
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(20, capability_);
+          .computeInt32Size(20, feature_);
       }
       if (((bitField0_ & 0x00000400) == 0x00000400)) {
         size += com.google.protobuf.CodedOutputStream
@@ -2842,7 +2842,7 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000080);
         challenge2_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000100);
-        capability_ = 0;
+        feature_ = 0;
         bitField0_ = (bitField0_ & ~0x00000200);
         pairingstep_ = 0;
         bitField0_ = (bitField0_ & ~0x00000400);
@@ -2934,7 +2934,7 @@ public final class Messages {
         if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
           to_bitField0_ |= 0x00000200;
         }
-        result.capability_ = capability_;
+        result.feature_ = feature_;
         if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
           to_bitField0_ |= 0x00000400;
         }
@@ -3004,8 +3004,8 @@ public final class Messages {
         if (other.hasChallenge2()) {
           setChallenge2(other.getChallenge2());
         }
-        if (other.hasCapability()) {
-          setCapability(other.getCapability());
+        if (other.hasFeature()) {
+          setFeature(other.getFeature());
         }
         if (other.hasPairingstep()) {
           setPairingstep(other.getPairingstep());
@@ -3117,7 +3117,7 @@ public final class Messages {
             }
             case 160: {
               bitField0_ |= 0x00000200;
-              capability_ = input.readInt32();
+              feature_ = input.readInt32();
               break;
             }
             case 168: {
@@ -3394,23 +3394,23 @@ public final class Messages {
         return this;
       }
       
-      // optional int32 capability = 20;
-      private int capability_ ;
-      public boolean hasCapability() {
+      // optional int32 feature = 20;
+      private int feature_ ;
+      public boolean hasFeature() {
         return ((bitField0_ & 0x00000200) == 0x00000200);
       }
-      public int getCapability() {
-        return capability_;
+      public int getFeature() {
+        return feature_;
       }
-      public Builder setCapability(int value) {
+      public Builder setFeature(int value) {
         bitField0_ |= 0x00000200;
-        capability_ = value;
+        feature_ = value;
         
         return this;
       }
-      public Builder clearCapability() {
+      public Builder clearFeature() {
         bitField0_ = (bitField0_ & ~0x00000200);
-        capability_ = 0;
+        feature_ = 0;
         
         return this;
       }

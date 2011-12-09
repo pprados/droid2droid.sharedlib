@@ -3,13 +3,18 @@ package org.remoteandroid.internal;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Enumeration;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
+import static org.remoteandroid.RemoteAndroidInfo.*;
 
 public class Tools
 {
@@ -21,9 +26,9 @@ public class Tools
 			String uriv6=uri.toString();
 			int i=uriv6.indexOf('[');
 			int j=uriv6.indexOf(']');
-			return uriv6.substring(i+1,j);
+			host=uriv6.substring(i,j+1);
 		}
-		else return host;
+		return host;
 	}
 	public static int uriGetPortIPV6(Uri uri)
 	{
@@ -68,7 +73,6 @@ public class Tools
 		}
 		return local;
 	}
-	
 	
 	public static double getBogoMips()
 	{

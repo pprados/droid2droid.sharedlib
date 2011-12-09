@@ -15,6 +15,7 @@ import static org.remoteandroid.internal.Constants.W;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -321,6 +322,12 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			if (W && !D) Log.w(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.");
 			if (D) Log.d(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.",e);
 			throw (SecurityException)e.fillInStackTrace();
+		}
+		catch (SocketException e)
+		{
+			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie. Imcompatible with ipv6? ("+e.getMessage()+")");
+			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible for ask cookie. Imcompatible with ipv6?",e);
+			throw (IOException)e.fillInStackTrace();
 		}
 		catch (IOException e)
 		{

@@ -49,7 +49,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	public int				version;
 
 	/** Capability. */
-	public int				capability;
+	public int				feature;
 	
 	public boolean			isBonded;
 	
@@ -95,10 +95,10 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 			merged=true;
 			version=info.version;
 		}
-		if (capability!=info.capability)
+		if (feature!=info.feature)
 		{
 			merged=true;
-			capability=info.capability;
+			feature=info.feature;
 		}
 		if (uris!=null)
 		{
@@ -190,9 +190,9 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int getCapability()
+	public int getFeature()
 	{
-		return capability;
+		return feature;
 	}
 
 	/**
@@ -347,7 +347,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 		dest.writeByteArray(publicKey.getEncoded());
 		dest.writeInt(version);
 		dest.writeString(os);
-		dest.writeInt(capability);
+		dest.writeInt(feature);
 		dest.writeStringList(uris);
 		dest.writeByte((byte) (isBonded ? 1 : 0));
 		dest.writeByte((byte) (isDiscoverEthernet ? 1 : 0));
@@ -366,7 +366,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 			publicKey = KeyFactory.getInstance("RSA").generatePublic(pubKeySpec);
 			version = parcel.readInt();
 			os=parcel.readString();
-			capability=parcel.readInt();
+			feature=parcel.readInt();
 			uris=parcel.createStringArrayList();
 			if (uris==null) uris=new ArrayList<String>(0);
 			else

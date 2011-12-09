@@ -36,7 +36,7 @@ public class ProtobufConvs
 			.setPublicKey(ByteString.copyFrom(info.publicKey.getEncoded()))
 			.setVersion(info.version)
 			.setOs(info.os)
-			.setCapability(info.capability);
+			.setCapability(info.feature);
 
 		identityBuilder.setCandidates(toCandidates(info));
 		return identityBuilder.build();
@@ -109,7 +109,7 @@ public class ProtobufConvs
 			info.publicKey = KeyFactory.getInstance("RSA").generatePublic(pubKeySpec);
 			info.version=identity.getVersion();
 			info.os=identity.getOs();
-			info.capability=identity.getCapability();
+			info.feature=identity.getCapability();
 			info.uris=toUris(identity.getCandidates());
 			info.isBonded=identity.getBounded();
 			return info;
