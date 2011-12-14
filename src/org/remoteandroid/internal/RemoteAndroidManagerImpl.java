@@ -123,6 +123,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 					{
 						sManager=null;
 						// Auto reconnect
+						if (D) Log.d(TAG_CLIENT_BIND,"Lose remote android manage. Try to reconnect.");
 						applicationContext.bindService(intent, this, Context.BIND_AUTO_CREATE);
 					}
 					

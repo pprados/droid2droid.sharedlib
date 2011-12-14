@@ -77,6 +77,7 @@ public class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 	@Override
 	public void close()
 	{
+		cancel();
 		mManager.getContext().unregisterReceiver(mReceiver);
 		mCallBack=null;
 	}
