@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /home/nazim/workspace/remoteandroid/remote-android-sharedlib/src/org/remoteandroid/internal/IRemoteAndroidManager.aidl
+ * Original file: /home/pprados/workspace.remoteandroid/remote-android-sharedlib/src/org/remoteandroid/internal/IRemoteAndroidManager.aidl
  */
 package org.remoteandroid.internal;
 public interface IRemoteAndroidManager extends android.os.IInterface

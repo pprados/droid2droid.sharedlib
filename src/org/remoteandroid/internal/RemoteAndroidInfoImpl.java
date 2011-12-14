@@ -1,18 +1,7 @@
 package org.remoteandroid.internal;
 
-import static org.remoteandroid.internal.Constants.ETHERNET_IPV4_FIRST;
-import static org.remoteandroid.internal.Constants.ETHERNET_ONLY_IPV4;
-import static org.remoteandroid.internal.Constants.PREFIX_LOG;
-import static org.remoteandroid.internal.Constants.*;
-import static org.remoteandroid.internal.Constants.SCHEME_BTS;
 import static org.remoteandroid.internal.Constants.SCHEME_TCP;
-import static org.remoteandroid.internal.Constants.TAG_CANDIDATE;
-import static org.remoteandroid.internal.Constants.V;
 
-import java.net.Inet4Address;
-import java.net.Inet6Address;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -23,11 +12,8 @@ import java.util.UUID;
 
 import org.remoteandroid.RemoteAndroidInfo;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 {
@@ -258,16 +244,6 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	{
 		uris.remove(uri);
 		uris.add(0,uri);
-	}
-	
-	public boolean isConnectableWithBluetooth()
-	{
-		for (int i=uris.size()-1;i>=0;--i)
-		{
-			if (uris.get(i).startsWith(SCHEME_BT) || uris.get(i).startsWith(SCHEME_BTS))
-				return true;
-		}
-		return false;
 	}
 	
 	public boolean isConnectableWithIP()

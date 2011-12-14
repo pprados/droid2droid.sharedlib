@@ -22,8 +22,6 @@ public class Constants
 	public static final String TAG_CANDIDATE 	= "Candidate";
 
 	public static final String SCHEME_TCP						="ip";
-	public static final String SCHEME_BT						="bt";
-	public static final String SCHEME_BTS						="bts";
 	
 	public static final boolean USE_SHAREDLIB					=Friend.USE_SHAREDLIB;
 	public static final String SHARED_LIB						=Friend.SHARED_LIB;
@@ -37,15 +35,6 @@ public class Constants
 	/** Patch parcel for compatibility between different versions of Android */
 	public static final boolean UPDATE_PARCEL = true;
 
-	/** Use blue tooth */
-	public static /*final*/ boolean BLUETOOTH					=false;
-	/** Order uris with Bluetooth first */
-	public static final boolean BLUETOOTH_FIRST = false;
-
-	/** Auto-propose pairing with remote BT device. */
-	public static final boolean AUTO_PAIRING_BT					=true;
-	
-	public static final int BT_HACK_WAIT_AFTER_CREATE_RF_COMM	=0; // Zero for good bluetooth stack.
     /** Delay to discover others remote androids. */
 	public static final long TIME_MAX_TO_DISCOVER				=20000L;
 
@@ -62,9 +51,6 @@ public class Constants
 
 	/** Check security. */
 	public static final boolean SECURITY = true;
-
-	/** Number of UUID key used. */
-	public static final int BT_NB_UUID = 5;
 
 	/** Prefix for log */
 	public static final String PREFIX_LOG='['/*+Build.DEVICE+' '*/+Build.MODEL+"] ";

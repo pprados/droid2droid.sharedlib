@@ -1,17 +1,19 @@
 package org.remoteandroid.internal;
 
-import static org.remoteandroid.internal.Constants.*;
+import static org.remoteandroid.internal.Constants.BINDING_NB_RETRY;
+import static org.remoteandroid.internal.Constants.BINDING_TIMEOUT_WAIT;
 import static org.remoteandroid.internal.Constants.D;
 import static org.remoteandroid.internal.Constants.E;
 import static org.remoteandroid.internal.Constants.ETHERNET;
 import static org.remoteandroid.internal.Constants.I;
 import static org.remoteandroid.internal.Constants.PREFIX_LOG;
+import static org.remoteandroid.internal.Constants.SCHEME_TCP;
 import static org.remoteandroid.internal.Constants.TAG_CLIENT_BIND;
 import static org.remoteandroid.internal.Constants.TIMEOUT_CONNECT;
+import static org.remoteandroid.internal.Constants.TIME_MAX_TO_DISCOVER;
 import static org.remoteandroid.internal.Constants.V;
 import static org.remoteandroid.internal.Constants.VERSION;
 import static org.remoteandroid.internal.Constants.W;
-
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -28,7 +30,6 @@ import org.remoteandroid.ListRemoteAndroidInfo;
 import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
-import org.remoteandroid.internal.socket.bluetooth.BluetoothSocketRemoteAndroid;
 import org.remoteandroid.internal.socket.ip.NetworkSocketRemoteAndroid;
 
 import android.bluetooth.BluetoothAdapter;
@@ -189,27 +190,6 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 					}
 				});
 		}
-		if (BLUETOOTH)
-		{
-			Driver btsd=new Driver()
-			{
-				@Override
-				public AbstractRemoteAndroidImpl factoryBinder(Context context,RemoteAndroidManagerImpl manager,Uri uri)
-				{
-					return new BluetoothSocketRemoteAndroid(manager,uri);
-				}
-			};
-			sDrivers.put(SCHEME_BTS,btsd);
-			Driver btd=new Driver()
-			{
-				@Override
-				public AbstractRemoteAndroidImpl factoryBinder(Context context,RemoteAndroidManagerImpl manager,Uri uri)
-				{
-					return new BluetoothSocketRemoteAndroid(manager,uri);
-				}
-			};
-			sDrivers.put(SCHEME_BT,btd);
-		}
 	}
 	// -------------------------------------------------
 	private long mLastTimeToDiscover=-1L;
@@ -308,8 +288,6 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		{
 			String scheme=uri.getScheme();
 			if (!ETHERNET && scheme.equals(SCHEME_TCP))
-				return new Pair<RemoteAndroidInfoImpl,Long>(null,0L);
-			if (!BLUETOOTH && (scheme.equals(SCHEME_BT) || scheme.equals(SCHEME_BTS)))
 				return new Pair<RemoteAndroidInfoImpl,Long>(null,0L);
 			Driver driver=sDrivers.get(uri.getScheme());
 			if (driver==null)
@@ -491,11 +469,5 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	
 	private static final void setDeviceParameter()
 	{
-		// HTC Desire HD have a buggy bluetooth stack.
-		if (Build.FINGERPRINT.equals("htc_wwe/htc_ace/ace:2.3.3/GRI40/87995:user/release-keys"))
-		{
-			Constants.BLUETOOTH=false;
-		}
-		
 	}
 }

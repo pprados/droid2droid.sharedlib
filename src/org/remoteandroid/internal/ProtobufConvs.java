@@ -52,23 +52,7 @@ public class ProtobufConvs
 			String uri=info.uris.get(j);
 			Uri uuri=Uri.parse(uri);
 			String sheme=uuri.getScheme();
-			if (sheme.equals(SCHEME_BT) || sheme.equals(SCHEME_BTS))
-			{
-				if (sheme.equals(SCHEME_BT) && !setbtanonymous)
-				{
-					candidateBuilder.setBluetoothAnonmymous(true);
-					setbtanonymous=true;
-				}
-				try
-				{
-					candidateBuilder.setBluetoothMac(Long.parseLong(uuri.getHost(),16));
-				}
-				catch (NumberFormatException e)
-				{
-					if (W) Log.w(TAG_CANDIDATE,PREFIX_LOG+" Error when parse uri "+uri);
-				}
-			}
-			else if (sheme.equals(SCHEME_TCP))
+			if (sheme.equals(SCHEME_TCP))
 			{
 				try
 				{
@@ -167,32 +151,6 @@ public class ProtobufConvs
 			}
 		}
 		
-		if (BLUETOOTH)
-		{
-			
-			if (candidates.hasBluetoothMac() && candidates.getBluetoothMac()!=0)
-			{
-				final int BT_MAC_SIZE=12;
-				String btmac=("00000000000"+Long.toHexString(candidates.getBluetoothMac()).toUpperCase());
-				btmac=btmac.substring(btmac.length()-BT_MAC_SIZE,btmac.length());
-				boolean acceptAnonymous=(Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_GINGERBREAD_MR1);
-				if (BLUETOOTH_FIRST)
-				{
-					
-					if (acceptAnonymous && candidates.hasBluetoothAnonmymous())
-						results.add(0,SCHEME_BT+"://"+btmac+'/');
-					else
-						results.add(0,SCHEME_BTS+"://"+btmac+'/');
-				}
-				else
-				{
-					if (acceptAnonymous && candidates.hasBluetoothAnonmymous())
-						results.add(SCHEME_BT+"://"+btmac+'/');
-					else
-						results.add(SCHEME_BTS+"://"+btmac+'/');
-				}
-			}
-		}
 // FIXME: gérer le cas du results vide !
 		results.trimToSize();
 		return results;
