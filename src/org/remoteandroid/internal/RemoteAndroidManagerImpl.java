@@ -80,22 +80,47 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
                 }
             });    
 	public final Context mAppContext;
-	private static volatile IRemoteAndroidManager sManager;
+	private IRemoteAndroidManager mManager;
 	private static boolean noDiscoverPrivilege=false;
-	
+	private ServiceConnection mServiceConnection;
+	private static final Intent sIntentRemoteAndroid=new Intent(ACTION_REMOTE_ANDROID);
+
 	@Override
 	public int getVersion()
 	{
 		return VERSION;
 	}
 	
-	public static void setManager(IRemoteAndroidManager manager)
-	{
-		sManager=manager;
-	}
-	
+//	public void setManager(IRemoteAndroidManager manager)
+//	{
+//		mManager=manager;
+//	}
 	public RemoteAndroidManagerImpl(final Context applicationContext)
 	{
+		mServiceConnection=new ServiceConnection()
+		{
+			
+			@Override
+			public void onServiceDisconnected(ComponentName name)
+			{
+				mManager=null;
+				// Auto reconnect
+				if (D) Log.d(TAG_CLIENT_BIND,"Lose remote android manage. Try to reconnect.");
+				applicationContext.bindService(sIntentRemoteAndroid, this, Context.BIND_AUTO_CREATE);
+			}
+			
+			@Override
+			public void onServiceConnected(ComponentName name, IBinder service)
+			{
+				mManager=IRemoteAndroidManager.Stub.asInterface(service);
+				if (mLastTimeToDiscover!=-1)
+				{
+					startDiscover(mLastFlag,mLastTimeToDiscover);
+					mLastTimeToDiscover=0;
+				}
+			}
+		};
+		
 		mAppContext=applicationContext;
 		initAppInfo(applicationContext);
 		if (Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_ECLAIR)
@@ -110,34 +135,13 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			}.run();
 		}
 		setDeviceParameter();
-		if (sManager==null)
+		if (mManager==null)
 		{
-			final Intent intent=new Intent(ACTION_REMOTE_ANDROID);
 			try
 			{
-				boolean rc=applicationContext.bindService(intent, new ServiceConnection()
-				{
-					
-					@Override
-					public void onServiceDisconnected(ComponentName name)
-					{
-						sManager=null;
-						// Auto reconnect
-						if (D) Log.d(TAG_CLIENT_BIND,"Lose remote android manage. Try to reconnect.");
-						applicationContext.bindService(intent, this, Context.BIND_AUTO_CREATE);
-					}
-					
-					@Override
-					public void onServiceConnected(ComponentName name, IBinder service)
-					{
-						sManager=IRemoteAndroidManager.Stub.asInterface(service);
-						if (mLastTimeToDiscover!=-1)
-						{
-							startDiscover(mLastFlag,mLastTimeToDiscover);
-							mLastTimeToDiscover=0;
-						}
-					}
-				}, Context.BIND_AUTO_CREATE);
+				// Don't forget to close the manager. 
+				boolean rc=applicationContext.bindService(sIntentRemoteAndroid,mServiceConnection, 
+					Context.BIND_AUTO_CREATE|Context.BIND_NOT_FOREGROUND|Context.BIND_IMPORTANT);
 				if (rc==false)
 				{
 					if (E) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible"); // TODO: gestion du bind impossible sur l'app client
@@ -208,7 +212,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		mLastFlag=flags;
 		try
 		{
-			sManager.startDiscover(flags,timeToDiscover);
+			mManager.startDiscover(flags,timeToDiscover);
 		}
 		catch (RemoteException e)
 		{
@@ -224,7 +228,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		waitBinding();
 		try
 		{
-			sManager.cancelDiscover();
+			mManager.cancelDiscover();
 		}
 		catch (RemoteException e)
 		{
@@ -240,7 +244,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		waitBinding();
 		try
 		{
-			return sManager.isDiscovering();
+			return mManager.isDiscovering();
 		}
 		catch (RemoteException e)
 		{
@@ -254,7 +258,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		waitBinding(); // TODO: reconnection si necessaire
 		try
 		{
-			return sManager.getCookie(uri);
+			return mManager.getCookie(uri);
 		}
 		catch (RemoteException e)
 		{
@@ -268,7 +272,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		waitBinding();
 		try
 		{
-			sManager.removeCookie(uri);
+			mManager.removeCookie(uri);
 		}
 		catch (RemoteException e)
 		{
@@ -390,7 +394,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		waitBinding();
 		try
 		{
-			return sManager.getInfo();
+			return mManager.getInfo();
 		}
 		catch (RemoteException e)
 		{
@@ -406,7 +410,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		ListRemoteAndroidInfo rc=new ListRemoteAndroidInfoImpl(this);
 		try
 		{
-			List<RemoteAndroidInfoImpl> boundedDevices=sManager.getBoundedDevices();
+			List<RemoteAndroidInfoImpl> boundedDevices=mManager.getBoundedDevices();
 			for (int i=0;i<boundedDevices.size();++i)
 			{
 				rc.add(boundedDevices.get(i));
@@ -422,7 +426,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	private void waitBinding() //TODO: reconnection
 	{
 		int cnt=0;
-		while (sManager==null)
+		while (mManager==null)
 		{
 			try
 			{
@@ -432,7 +436,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			catch (InterruptedException e)
 			{
 				// Ignore
-				if (D && sManager==null) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+"Binding to RemoteAndroid failed.");
+				if (D && mManager==null) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+"Binding to RemoteAndroid failed.");
 			}
 			if (cnt==BINDING_NB_RETRY) 
 				throw new IllegalStateException("Service Remote android not found");
@@ -451,7 +455,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		waitBinding();
 		try
 		{
-			sManager.setLog(type, state);
+			mManager.setLog(type, state);
 		}
 		catch (RemoteException e)
 		{
@@ -470,5 +474,13 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	
 	private static final void setDeviceParameter()
 	{
+	}
+
+	@Override
+	public void close()
+	{
+		// TODO Auto-generated method stub
+		mAppContext.unbindService(mServiceConnection);
+		mManager=null;
 	}
 }
