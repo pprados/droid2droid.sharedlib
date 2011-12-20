@@ -78,4 +78,5 @@ public class Constants
 	/** Number of probe sent */
 	public static final int PROBE_SENT = 2;
 
+	public static final boolean HACK_DEAD_LOCK=false;
 }

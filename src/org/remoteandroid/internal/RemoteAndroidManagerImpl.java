@@ -1,6 +1,6 @@
 package org.remoteandroid.internal;
 
-import static org.remoteandroid.internal.Constants.BINDING_NB_RETRY;
+import static org.remoteandroid.internal.Constants.*;
 import static org.remoteandroid.internal.Constants.BINDING_TIMEOUT_WAIT;
 import static org.remoteandroid.internal.Constants.D;
 import static org.remoteandroid.internal.Constants.E;
@@ -135,29 +135,26 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			}.run();
 		}
 		setDeviceParameter();
-		if (mManager==null)
+		try
 		{
-			try
+			// Don't forget to close the manager. 
+			boolean rc=applicationContext.bindService(sIntentRemoteAndroid,mServiceConnection, 
+				Context.BIND_AUTO_CREATE|Context.BIND_NOT_FOREGROUND|Context.BIND_IMPORTANT); // FIXME: Les flags
+			if (rc==false)
 			{
-				// Don't forget to close the manager. 
-				boolean rc=applicationContext.bindService(sIntentRemoteAndroid,mServiceConnection, 
-					Context.BIND_AUTO_CREATE|Context.BIND_NOT_FOREGROUND|Context.BIND_IMPORTANT);
-				if (rc==false)
-				{
-					if (E) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible"); // TODO: gestion du bind impossible sur l'app client
-					throw new Error("Remote android client package not found. Install with this application if you want discover something.");
-				}
-			} catch (SecurityException e)
-			{
-				noDiscoverPrivilege=true;
-				if (E) Log.e(TAG_CLIENT_BIND,"Error "+e.getMessage(),e);
-			}
-			catch (AndroidRuntimeException e)
-			{
-				if (E && !D) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible");
-				if (D) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible",e);
+				if (E) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible"); // TODO: gestion du bind impossible sur l'app client
 				throw new Error("Remote android client package not found. Install with this application if you want discover something.");
 			}
+		} catch (SecurityException e)
+		{
+			noDiscoverPrivilege=true;
+			if (E) Log.e(TAG_CLIENT_BIND,"Error "+e.getMessage(),e);
+		}
+		catch (AndroidRuntimeException e)
+		{
+			if (E && !D) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible");
+			if (D) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible",e);
+			throw new Error("Remote android client package not found. Install with this application if you want discover something.");
 		}
 	}
 
@@ -241,7 +238,14 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	{
 		if (noDiscoverPrivilege)
 			return false;
-		waitBinding();
+		//FIXME: dead-lock sur waitBinding lors de l'init à cause de l'event reseau qui arrive dans le main thread.
+		if (HACK_DEAD_LOCK)
+		{
+			if (mManager==null) return false;
+		}
+		else
+			waitBinding();
+		//Donc stratégie anti-dead-lock
 		try
 		{
 			return mManager.isDiscovering();
