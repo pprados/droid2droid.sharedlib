@@ -105,7 +105,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			{
 				mManager=null;
 				// Auto reconnect
-				if (D) Log.d(TAG_CLIENT_BIND,"Lose remote android manage. Try to reconnect.");
+				if (D) Log.d(TAG_CLIENT_BIND,"Loses remote android manage. Try to reconnect.");
 				applicationContext.bindService(sIntentRemoteAndroid, this, Context.BIND_AUTO_CREATE);
 			}
 			
@@ -257,12 +257,21 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		return false;
 	}
 	
+	public boolean isInit()
+	{
+		return mManager!=null;
+	}
+	
 	public long getCookie(String uri)
 	{
 		waitBinding(); // TODO: reconnection si necessaire
 		try
 		{
 			return mManager.getCookie(uri);
+		}
+		catch (SecurityException e)
+		{
+			if (W) Log.w(TAG_CLIENT_BIND,PREFIX_LOG+"Impossible to get cookie (pairing rejected).");
 		}
 		catch (RemoteException e)
 		{

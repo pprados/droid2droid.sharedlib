@@ -31,7 +31,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
     protected Map<Long, ReadWait> mLocks=Collections.synchronizedMap(new HashMap<Long,ReadWait>());
     
 	public abstract Msg sendRequestAndReadResponse(Msg msg,long timeout)
-	throws RemoteException;
+			throws RemoteException;
 
 	protected AbstractProtoBufRemoteAndroid(RemoteAndroidManager manager,Uri uri)
 	{
@@ -292,54 +292,69 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 	
 	protected abstract void initBootstrap() throws UnknownHostException, IOException;
 	
-	// Connection avec exploitationd d'un cookie
+	// Connection avec exploitation d'un cookie
 	@Override
 	public boolean connect(boolean forPairing,long timeout) throws UnknownHostException, IOException, RemoteException, SecurityException
 	{
 		final long threadid = Thread.currentThread().getId();
 		Msg resp;
 		boolean cookieAlive;
+		boolean refuse=false;
 		do
 		{
-			// 1. Ask a cookie
-			long cookie=0;
-			if (SECURITY)
+			do
 			{
-				if (!forPairing)
+				// 1. Ask a cookie
+				long cookie=0;
+				if (SECURITY)
 				{
-					cookie=((RemoteAndroidManagerImpl)mManager).getCookie(mUri.toString());
-					if (cookie==-1)
-						throw new IOException("Impossible to get cookie with "+mUri); // TODO: Avec Motorola Milestone et IPV6, java.net.SocketException: The socket level is invalid
-
-					if (cookie==0)
-						throw new SecurityException("Can't find a cookie with "+mUri);
+					if (!forPairing)
+					{
+						cookie=((RemoteAndroidManagerImpl)mManager).getCookie(mUri.toString());
+						if (cookie==-1)
+							throw new IOException("Impossible to get cookie with "+mUri); // TODO: Avec Motorola Milestone et IPV6, java.net.SocketException: The socket level is invalid
+	
+						if (cookie==0)
+							throw new SecurityException("Can't find a cookie with "+mUri);
+					}
 				}
-			}
-			initBootstrap();
-			
-			// 2. Use the cookie
-			Msg msg = Msg.newBuilder()
-				.setType(forPairing ? Type.CONNECT_FOR_PAIRING : Type.CONNECT)
-				.setThreadid(threadid)
-				.setCookie(cookie)
-				.setIdentity(ProtobufConvs.toIdentity(mManager.getInfos())) // My identity
-				.build();
-			resp = sendRequestAndReadResponse(msg,timeout);
-			// If invalide cookie, ask a new one and retry
-
-			cookieAlive=resp.getStatus()!=AbstractRemoteAndroidImpl.STATUS_INVALIDE_COOKIE;
-			if (!cookieAlive)
+				initBootstrap();
+				
+				// 2. Use the cookie
+				Msg msg = Msg.newBuilder()
+					.setType(forPairing ? Type.CONNECT_FOR_PAIRING : Type.CONNECT)
+					.setThreadid(threadid)
+					.setCookie(cookie)
+					.setIdentity(ProtobufConvs.toIdentity(mManager.getInfos())) // My identity
+					.build();
+				resp = sendRequestAndReadResponse(msg,timeout);
+				// If invalide cookie, ask a new one and retry
+	
+				cookieAlive=resp.getStatus()!=AbstractRemoteAndroidImpl.STATUS_INVALIDE_COOKIE;
+				if (!cookieAlive)
+				{
+					((RemoteAndroidManagerImpl)mManager).removeCookie(mUri.toString());
+					close();
+				}
+			} while (!cookieAlive);
+			if (!refuse && resp.getStatus()==AbstractRemoteAndroidImpl.STATUS_REFUSE_ANONYMOUS)
 			{
+				refuse=true;
+				forPairing=true;
 				((RemoteAndroidManagerImpl)mManager).removeCookie(mUri.toString());
-				close();
 			}
-		} while (!cookieAlive);
+			else
+			{
+				refuse=false;
+			}
+		} while (refuse);
+			
 		if (resp.getStatus()!=AbstractRemoteAndroidImpl.STATUS_OK)
 		{
 			((RemoteAndroidManagerImpl)mManager).removeCookie(mUri.toString());
 		}
 		checkStatus(resp.getStatus());
-		mInfo=ProtobufConvs.toRemoteAndroidInfo(resp.getIdentity());
+		mInfo=ProtobufConvs.toRemoteAndroidInfo(mManager.getContext(),resp.getIdentity());
 		return true;
 	}
 	
