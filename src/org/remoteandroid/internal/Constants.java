@@ -26,7 +26,7 @@ public class Constants
 	public static final boolean USE_SHAREDLIB					=Friend.USE_SHAREDLIB;
 	public static final String SHARED_LIB						=Friend.SHARED_LIB;
 		
-	public static final int BINDING_TIMEOUT_WAIT				=3000; // FIXME
+	public static final int BINDING_TIMEOUT_WAIT				=10000; // FIXME: remove
 	public static final int BINDING_NB_RETRY					=3;
 	
 	/** Buffer size for down load */

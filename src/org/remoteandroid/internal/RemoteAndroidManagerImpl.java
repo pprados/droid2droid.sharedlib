@@ -83,7 +83,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	private IRemoteAndroidManager mManager;
 	private static boolean noDiscoverPrivilege=false;
 	private ServiceConnection mServiceConnection;
-	private static final Intent sIntentRemoteAndroid=new Intent(ACTION_REMOTE_ANDROID);
+	private static final Intent sIntentRemoteAndroid=new Intent(ACTION_BIND_REMOTE_ANDROID);
 
 	@Override
 	public int getVersion()
