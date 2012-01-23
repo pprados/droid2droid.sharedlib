@@ -181,7 +181,7 @@ public class NetworkSocketBossSender implements BossSocketSender
 				}
 				catch (InterruptedException e)
 				{
-					if (D) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+"ReadThread",e);
+					if (V) Log.v(TAG_CLIENT_BIND,PREFIX_LOG+"ReadThread",e);
 					mHandler.channelDisconnected(e);
 					return;
 				}
@@ -206,7 +206,7 @@ public class NetworkSocketBossSender implements BossSocketSender
 				catch (EOFException e)
 				{
 					if (I && !V) Log.i(TAG_CLIENT_BIND,PREFIX_LOG+"Socket closed");
-					if (V) Log.v(TAG_CLIENT_BIND,PREFIX_LOG+"Socket closed",e);
+					//if (V) Log.v(TAG_CLIENT_BIND,PREFIX_LOG+"Socket closed",e);
 					mHandler.channelDisconnected(e);
 					return;
 				}

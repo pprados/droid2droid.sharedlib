@@ -50,6 +50,40 @@ import android.util.Log;
 
 public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 {
+	public static void bootStrap(final Context context,final RemoteAndroidManager.ManagerListener listener)
+	{
+		class Bootstrap
+		{
+			private RemoteAndroidManager mManager;
+			
+			Bootstrap(final Context context,final RemoteAndroidManager.ManagerListener listener)
+			{
+				context.bindService(sIntentRemoteAndroid, new ServiceConnection()
+				{
+					
+					@Override
+					public void onServiceConnected(ComponentName name, IBinder service)
+					{
+						mManager=new RemoteAndroidManagerImpl(context,IRemoteAndroidManager.Stub.asInterface(service));
+//						if (mManager.mLastTimeToDiscover!=-1)
+//						{
+//							mManagerstartDiscover(mLastFlag,mLastTimeToDiscover);
+//							mManagermLastTimeToDiscover=0;
+//						}
+						listener.bind(mManager);
+					}
+					
+					@Override
+					public void onServiceDisconnected(ComponentName name)
+					{
+						listener.unbind(mManager);					
+					}
+				},
+				Context.BIND_AUTO_CREATE|Context.BIND_NOT_FOREGROUND|Context.BIND_IMPORTANT); // FIXME: Les flags
+			}
+		}
+		new Bootstrap(context,listener);
+	}
 	public static ApplicationInfo sAppInfo;
 	
 	// Action to bind to discovery service
@@ -81,8 +115,23 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
             });    
 	public final Context mAppContext;
 	private IRemoteAndroidManager mManager;
-	private static boolean noDiscoverPrivilege=false;
-	private ServiceConnection mServiceConnection;
+	private static boolean noDiscoverPrivilege=false; // FIXME: C'est quoi ?
+	private ServiceConnection mServiceConnection=new ServiceConnection()
+	{
+
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder remote)
+		{
+			mManager=IRemoteAndroidManager.Stub.asInterface(remote);
+		}
+
+		@Override
+		public void onServiceDisconnected(ComponentName name)
+		{
+			mManager=null; // FIXME: Consequence de la perte du manager
+		}
+		
+	};
 	private static final Intent sIntentRemoteAndroid=new Intent(ACTION_BIND_REMOTE_ANDROID);
 
 	@Override
@@ -95,34 +144,12 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 //	{
 //		mManager=manager;
 //	}
-	public RemoteAndroidManagerImpl(final Context applicationContext)
+	public RemoteAndroidManagerImpl(Context appContext,IRemoteAndroidManager manager)
 	{
-		mServiceConnection=new ServiceConnection()
-		{
-			
-			@Override
-			public void onServiceDisconnected(ComponentName name)
-			{
-				mManager=null;
-				// Auto reconnect
-				if (D) Log.d(TAG_CLIENT_BIND,"Loses remote android manage. Try to reconnect.");
-				applicationContext.bindService(sIntentRemoteAndroid, this, Context.BIND_AUTO_CREATE);
-			}
-			
-			@Override
-			public void onServiceConnected(ComponentName name, IBinder service)
-			{
-				mManager=IRemoteAndroidManager.Stub.asInterface(service);
-				if (mLastTimeToDiscover!=-1)
-				{
-					startDiscover(mLastFlag,mLastTimeToDiscover);
-					mLastTimeToDiscover=0;
-				}
-			}
-		};
+		mAppContext=appContext.getApplicationContext();
+		mManager=manager;
 		
-		mAppContext=applicationContext;
-		initAppInfo(applicationContext);
+		initAppInfo(mAppContext);
 		if (Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_ECLAIR)
 		{
 			// Verify wrapper
@@ -138,7 +165,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		try
 		{
 			// Don't forget to close the manager. 
-			boolean rc=applicationContext.bindService(sIntentRemoteAndroid,mServiceConnection, 
+			boolean rc=mAppContext.bindService(sIntentRemoteAndroid,mServiceConnection, 
 				Context.BIND_AUTO_CREATE|Context.BIND_NOT_FOREGROUND|Context.BIND_IMPORTANT); // FIXME: Les flags
 			if (rc==false)
 			{
@@ -492,7 +519,6 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	@Override
 	public void close()
 	{
-		// TODO Auto-generated method stub
 		mAppContext.unbindService(mServiceConnection);
 		mManager=null;
 	}
