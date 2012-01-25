@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -62,13 +64,13 @@ public class NetworkSocketBossSender implements BossSocketSender
     	// TODO: ne pas tanter si moi en global network et target en local network. Mais en vérifier toutes les ip
     	//if (Trusted.isLocalNetwork(Appl))
     	
-    	Socket socket=new Socket(mHost,mPort); // Note: for ipv6 linkLocalAddress, we must select the interface :-(
+    	Socket socket=new Socket();
+    	socket.connect(new InetSocketAddress(mHost,mPort),(int)TIMEOUT_CONNECT); // Note: for ipv6 linkLocalAddress, we must select the interface :-(
         //FIXME socket.setSoTimeout((int)TIMEOUT_CONNECT);
     	socket.setSoLinger(ETHERNET_SO_LINGER, ETHERNET_SO_LINGER_TIMEOUT);
         socket.setKeepAlive(true);
         socket.setTcpNoDelay(true);
         socket.setReuseAddress(true);
-        socket.setTrafficClass(4);
         socket.setPerformancePreferences(2, 3, 1);
         mChannel=new NetworkSocketChannel(socket);
 		

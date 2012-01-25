@@ -87,11 +87,18 @@ public class NetworkTools
 		
 		if (Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_GINGERBREAD_MR1)
 		{
-			NfcManager nfc=(NfcManager)context.getSystemService(Context.NFC_SERVICE);
-			if (nfc==null || nfc.getDefaultAdapter()==null || !nfc.getDefaultAdapter().isEnabled())
+			try
+			{
+				NfcManager nfc=(NfcManager)context.getSystemService(Context.NFC_SERVICE);
+				if (nfc==null || nfc.getDefaultAdapter()==null || !nfc.getDefaultAdapter().isEnabled())
+					activeNetwork&=~ACTIVE_NFC;
+				else
+					activeNetwork|=ACTIVE_NFC;
+			}
+			catch (SecurityException e)
+			{
 				activeNetwork&=~ACTIVE_NFC;
-			else
-				activeNetwork|=ACTIVE_NFC;
+			}
 		}
 		
 		boolean airplane=Settings.System.getInt(context.getContentResolver(),Settings.System.AIRPLANE_MODE_ON, 0) != 0;

@@ -14,8 +14,13 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.net.UnknownHostException;
+import java.text.Normalizer;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CancellationException;
 
@@ -36,11 +41,15 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.os.RemoteException;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.SparseArray;
 
 // NAT file:///home/pprados/Bureau/J%20ICE/index.html
 /** @hide */
@@ -183,7 +192,8 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 		Parcel reply = Parcel.obtain();
 		try
 		{
-			data.writeParcelable(intent, 0);
+			
+			NormalizeIntent.writeIntent(intent,data, 0);
 			data.writeInt(flags);
 			transactRemoteAndroid(connid, BIND_OID, data, reply, 0,timeout);
 			if (D) Log.d(TAG_CLIENT_BIND, PREFIX_LOG+"BindOID ok");
