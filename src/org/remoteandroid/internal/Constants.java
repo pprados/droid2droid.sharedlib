@@ -12,9 +12,9 @@ public class Constants
 	public static /*final*/ boolean D=true;
 	public static /*final*/ boolean V=true;
 
-	public static final String TAG_RA="Remote-A";
+	public static final String TAG_RA			="Remote-Android";
 
-	public static final int VERSION=0;
+	public static final int VERSION				=0; // TODO
 	
 	public static final String TAG_INSTALL 		= "Install";
 	public static final String TAG_PAIRING 		= "Pairing";

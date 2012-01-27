@@ -2,6 +2,7 @@ package org.remoteandroid.internal;
 
 import static org.remoteandroid.internal.Constants.*;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -24,7 +25,7 @@ public class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 {
 	private final Object mutex=this;
 	private ArrayList<RemoteAndroidInfo> mDiscoveredAndroid=new ArrayList<RemoteAndroidInfo>();
-	private RemoteAndroidManager mManager;
+	private WeakReference<RemoteAndroidManager> mManager;
 	private DiscoverListener mCallBack;
 
 	private final BroadcastReceiver mReceiver=new BroadcastReceiver()
@@ -56,13 +57,13 @@ public class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 	}
 	public ListRemoteAndroidInfoImpl(RemoteAndroidManager manager,DiscoverListener callback)
 	{
-		mManager=manager;
+		mManager=new WeakReference<RemoteAndroidManager>(manager);
 		mCallBack=callback;
 		IntentFilter filter=new IntentFilter();
 		filter.addAction(RemoteAndroidManager.ACTION_DISCOVER_ANDROID);
 		filter.addAction(RemoteAndroidManager.ACTION_START_DISCOVER_ANDROID);
 		filter.addAction(RemoteAndroidManager.ACTION_STOP_DISCOVER_ANDROID);
-		mManager.getContext().registerReceiver(mReceiver, 
+		manager.getContext().registerReceiver(mReceiver, 
 				filter,
 				RemoteAndroidManager.PERMISSION_DISCOVER_SEND,null
 				);
@@ -78,7 +79,11 @@ public class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 	public void close()
 	{
 		cancel();
-		mManager.getContext().unregisterReceiver(mReceiver);
+		RemoteAndroidManager manager=mManager.get();
+		if (manager!=null)
+		{
+			manager.getContext().unregisterReceiver(mReceiver);
+		}
 		mCallBack=null;
 	}
 	@Override
@@ -87,8 +92,9 @@ public class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 		super.finalize();
 		try
 		{
-			if (mReceiver!=null)
-				mManager.getContext().unregisterReceiver(mReceiver);
+			RemoteAndroidManager manager=mManager.get();
+			if (manager!=null && mReceiver!=null)
+				manager.getContext().unregisterReceiver(mReceiver);
 		}
 		catch (Exception e)
 		{
@@ -132,11 +138,17 @@ public class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 	}
 	public void start(int flag,long timeToDiscover)
 	{
-		mManager.startDiscover(flag,timeToDiscover);
+		RemoteAndroidManager manager=mManager.get();
+		if (manager!=null)
+			manager.startDiscover(flag,timeToDiscover);
+		else
+			Log.w(TAG_RA,"RemoteAndroidManager is disconbected");
 	}
 	public void cancel()
 	{
-		mManager.cancelDiscover();
+		RemoteAndroidManager manager=mManager.get();
+		if (manager!=null)
+			manager.cancelDiscover();
 	}
 
 	public boolean add(RemoteAndroidInfo object)

@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.util.SparseArray;
+import static org.remoteandroid.internal.Constants.*;
 
 public class NormalizeIntent
 {
@@ -52,18 +54,7 @@ public class NormalizeIntent
 			out.writeInt(0);
 		}
 		Bundle bundle = intent.getExtras();
-		if (bundle != null)
-		{
-			out.writeInt(bundle.size());
-			for (String key : bundle.keySet())
-			{
-				out.writeString(key);
-				writeValue(
-					out, bundle.get(key));
-			}
-		}
-		else
-			out.writeInt(0);
+		writeBundle(out,bundle);
 	}
 
 	public static Intent readIntent(Parcel in)
@@ -86,15 +77,9 @@ public class NormalizeIntent
 		{
 			intent.addCategory(in.readString());
 		}
-		size = in.readInt();
-		if (size != 0)
+		Bundle bundle=readBundle(in,Intent.class.getClassLoader());
+		if (bundle.size()!=0)
 		{
-			Bundle bundle = new Bundle();
-			for (int i = 0; i < size; ++i)
-			{
-				String key = in.readString();
-				readValue(in, Intent.class.getClassLoader());
-			}
 			intent.replaceExtras(bundle);
 		}
 		return intent;
@@ -150,6 +135,36 @@ public class NormalizeIntent
 
 	private static final int VAL_BOOLEANARRAY = 23;
 
+	
+	private static void writeBundle(Parcel out,Bundle bundle)
+	{
+		if (bundle != null)
+		{
+			out.writeInt(bundle.size());
+			for (String key : bundle.keySet())
+			{
+				out.writeString(key);
+				writeValue(
+					out, bundle.get(key));
+			}
+		}
+		else
+			out.writeInt(0);
+	}
+	private static Bundle readBundle(Parcel in,ClassLoader loader)
+	{
+		Bundle bundle=new Bundle();
+		int size = in.readInt();
+		if (size != 0)
+		{
+			for (int i = 0; i < size; ++i)
+			{
+				String key = in.readString();
+				readValue(in, loader);
+			}
+		}
+		return bundle;
+	}
 	private static void writeValue(Parcel out, Object v)
 	{
 		if (v == null)
@@ -175,10 +190,11 @@ public class NormalizeIntent
 		{
 			// Must be before Parcelable
 			out.writeInt(VAL_BUNDLE);
-			out.writeBundle((Bundle) v);
+			writeBundle(out,(Bundle) v);
 		}
 		else if (v instanceof Parcelable)
 		{
+			Log.w(TAG_RA,"Use a parcelable instance present a risk to be incompatible with differents versions of Androids. Use Serializable objects.");
 			out.writeInt(VAL_PARCELABLE);
 			out.writeParcelable(
 				(Parcelable) v, 0);
@@ -241,11 +257,14 @@ public class NormalizeIntent
 		}
 		else if (v instanceof IBinder)
 		{
-			out.writeInt(VAL_IBINDER);
-			out.writeStrongBinder((IBinder) v);
+			Log.e(TAG_RA,"It's not possible to send a Binder");
+			throw new IllegalArgumentException("It's not possible to send a Binder");
+//			out.writeInt(VAL_IBINDER);
+//			out.writeStrongBinder((IBinder) v);
 		}
 		else if (v instanceof Parcelable[])
 		{
+			Log.w(TAG_RA,"Use a parcelable instance present a risk to be incompatible with differents versions of Androids. Use Serializable objects.");
 			out.writeInt(VAL_PARCELABLEARRAY);
 			out.writeParcelableArray(
 				(Parcelable[]) v, 0);
@@ -306,6 +325,7 @@ public class NormalizeIntent
 				return in.readHashMap(loader);
 
 			case VAL_PARCELABLE:
+				Log.w(TAG_RA,"Use a parcelable instance present a risk to be incompatible with differents versions of Androids. Use Serializable objects.");
 				return in.readParcelable(loader);
 
 			case VAL_SHORT:
@@ -339,7 +359,8 @@ public class NormalizeIntent
 				return in.createStringArray();
 
 			case VAL_IBINDER:
-				return in.readStrongBinder(); // FIXME: remove ?
+				throw new IllegalArgumentException("It's not possible to send a Binder");
+//				return in.readStrongBinder();
 
 			case VAL_OBJECTARRAY:
 				return in.readArray(loader);
@@ -357,6 +378,7 @@ public class NormalizeIntent
 				return in.readSerializable();
 
 			case VAL_PARCELABLEARRAY:
+				Log.w(TAG_RA,"Use a parcelable instance present a risk to be incompatible with differents versions of Androids. Use Serializable objects.");
 				return in.readParcelableArray(loader);
 
 			case VAL_SPARSEARRAY:
@@ -366,7 +388,7 @@ public class NormalizeIntent
 				return in.readSparseBooleanArray();
 
 			case VAL_BUNDLE:
-				return in.readBundle(loader); // loading will be deferred
+				return readBundle(in,loader); // loading will be deferred
 
 			default:
 				throw new RuntimeException("Parcel " + in + ": Unmarshalling unknown type code " + type + " at offset "

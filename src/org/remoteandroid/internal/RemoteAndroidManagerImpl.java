@@ -50,40 +50,6 @@ import android.util.Log;
 
 public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 {
-	public static void bootStrap(final Context context,final RemoteAndroidManager.ManagerListener listener)
-	{
-		class Bootstrap
-		{
-			private RemoteAndroidManager mManager;
-			
-			Bootstrap(final Context context,final RemoteAndroidManager.ManagerListener listener)
-			{
-				context.bindService(sIntentRemoteAndroid, new ServiceConnection()
-				{
-					
-					@Override
-					public void onServiceConnected(ComponentName name, IBinder service)
-					{
-						mManager=new RemoteAndroidManagerImpl(context,IRemoteAndroidManager.Stub.asInterface(service));
-//						if (mManager.mLastTimeToDiscover!=-1)
-//						{
-//							mManagerstartDiscover(mLastFlag,mLastTimeToDiscover);
-//							mManagermLastTimeToDiscover=0;
-//						}
-						listener.bind(mManager);
-					}
-					
-					@Override
-					public void onServiceDisconnected(ComponentName name)
-					{
-						listener.unbind(mManager);					
-					}
-				},
-				Context.BIND_AUTO_CREATE|Context.BIND_NOT_FOREGROUND|Context.BIND_IMPORTANT); // FIXME: Les flags
-			}
-		}
-		new Bootstrap(context,listener);
-	}
 	public static ApplicationInfo sAppInfo;
 	
 	// Action to bind to discovery service
@@ -115,23 +81,8 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
             });    
 	public final Context mAppContext;
 	private IRemoteAndroidManager mManager;
-	private static boolean noDiscoverPrivilege=false; // FIXME: C'est quoi ?
-	private ServiceConnection mServiceConnection=new ServiceConnection()
-	{
-
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder remote)
-		{
-			mManager=IRemoteAndroidManager.Stub.asInterface(remote);
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name)
-		{
-			mManager=null; // FIXME: Consequence de la perte du manager
-		}
-		
-	};
+	private static boolean noDiscoverPrivilege=false; // Remember if the process has the privilege to discover devices.
+	private ServiceConnection mServiceConnection;
 	private static final Intent sIntentRemoteAndroid=new Intent(ACTION_BIND_REMOTE_ANDROID);
 
 	@Override
@@ -140,49 +91,66 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		return VERSION;
 	}
 	
-//	public void setManager(IRemoteAndroidManager manager)
-//	{
-//		mManager=manager;
-//	}
-	public RemoteAndroidManagerImpl(Context appContext,IRemoteAndroidManager manager)
+	public static void bootStrap(final Context context,final RemoteAndroidManager.ManagerListener listener)
+	{
+		new RemoteAndroidManagerImpl(context.getApplicationContext(),listener);
+	}
+
+	private RemoteAndroidManagerImpl(Context appContext)
 	{
 		mAppContext=appContext.getApplicationContext();
-		mManager=manager;
 		
 		initAppInfo(mAppContext);
-		if (Compatibility.VERSION_SDK_INT>=Compatibility.VERSION_ECLAIR)
+	}
+	// Constructor for server.
+	public RemoteAndroidManagerImpl(Context appContext,IRemoteAndroidManager manager)
+	{
+		this(appContext);
+		mManager=manager;
+	}
+	// Constructor for client.
+	public RemoteAndroidManagerImpl(Context appContext,final ManagerListener listener)
+	{
+		this(appContext);
+		
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.ECLAIR)
 		{
-			// Verify wrapper
-			new Runnable()
-			{
-				public void run() 
-				{
-					BluetoothAdapter.getDefaultAdapter();
-				}
-			}.run();
+			BluetoothAdapter.getDefaultAdapter();
 		}
-		setDeviceParameter();
-		try
+		mServiceConnection=new ServiceConnection()
 		{
-			// Don't forget to close the manager. 
-			boolean rc=mAppContext.bindService(sIntentRemoteAndroid,mServiceConnection, 
-				Context.BIND_AUTO_CREATE|Context.BIND_NOT_FOREGROUND|Context.BIND_IMPORTANT); // FIXME: Les flags
-			if (rc==false)
+			
+			@Override
+			public void onServiceConnected(ComponentName name, IBinder service)
 			{
-				if (E) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible"); // TODO: gestion du bind impossible sur l'app client
-				throw new Error("Remote android client package not found. Install with this application if you want discover something.");
+				mManager=IRemoteAndroidManager.Stub.asInterface(service);
+//				if (mManager.mLastTimeToDiscover!=-1)
+//				{
+//					mManagerstartDiscover(mLastFlag,mLastTimeToDiscover);
+//					mManagermLastTimeToDiscover=0;
+//				}
+				listener.bind(RemoteAndroidManagerImpl.this);
 			}
-		} catch (SecurityException e)
+			
+			@Override
+			public void onServiceDisconnected(ComponentName name)
+			{
+				mManager=null;
+				listener.unbind(RemoteAndroidManagerImpl.this);
+			}
+		};
+		appContext.bindService(sIntentRemoteAndroid,mServiceConnection,
+			Context.BIND_AUTO_CREATE|Context.BIND_NOT_FOREGROUND|Context.BIND_IMPORTANT);
+	}
+	
+	@Override
+	public void close()
+	{
+		if (mManager!=null && mServiceConnection!=null)
 		{
-			noDiscoverPrivilege=true;
-			if (E) Log.e(TAG_CLIENT_BIND,"Error "+e.getMessage(),e);
+			mAppContext.unbindService(mServiceConnection);
 		}
-		catch (AndroidRuntimeException e)
-		{
-			if (E && !D) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible");
-			if (D) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+" Bind impossible",e);
-			throw new Error("Remote android client package not found. Install with this application if you want discover something.");
-		}
+		mManager=null;
 	}
 
 	public static void initAppInfo(final Context applicationContext) throws Error
@@ -512,14 +480,4 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		if ((type & (1<<4))!=0) V=state;
 	}
 	
-	private static final void setDeviceParameter()
-	{
-	}
-
-	@Override
-	public void close()
-	{
-		mAppContext.unbindService(mServiceConnection);
-		mManager=null;
-	}
 }

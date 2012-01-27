@@ -1,5 +1,7 @@
 package org.remoteandroid.internal;
 
+import java.security.PrivilegedAction;
+
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -21,7 +23,7 @@ public class NetworkTools
 	public static final int ACTIVE_PHONE_SIM		=1<<6;
 	public static final int ACTIVE_NFC				=1<<7;
 
-	public static int getActiveNetwork(Context context)
+	public static int getActiveNetwork(final Context context)
 	{
 		int activeNetwork=0;
 		try
@@ -89,8 +91,20 @@ public class NetworkTools
 		{
 			try
 			{
-				NfcManager nfc=(NfcManager)context.getSystemService(Context.NFC_SERVICE);
-				if (nfc==null || nfc.getDefaultAdapter()==null || !nfc.getDefaultAdapter().isEnabled())
+				boolean rc=new PrivilegedAction<Boolean>() // TODO: Optimize with static
+				{
+
+					@Override
+					public Boolean run()
+					{
+						NfcManager nfc=(NfcManager)context.getSystemService(Context.NFC_SERVICE);
+						if (nfc==null || nfc.getDefaultAdapter()==null || !nfc.getDefaultAdapter().isEnabled())
+							return false;
+						else
+							return true;
+					}
+				}.run();
+				if (!rc)
 					activeNetwork&=~ACTIVE_NFC;
 				else
 					activeNetwork|=ACTIVE_NFC;
