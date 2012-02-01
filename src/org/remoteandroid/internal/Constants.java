@@ -22,6 +22,7 @@ public class Constants
 	public static final String TAG_PREFERENCE 	= "Preference";
 	public static final String TAG_CLIENT_BIND 	= "Client";
 	public static final String TAG_CANDIDATE 	= "Candidate";
+	public static final String TAG_NFC 			= "Nfc";
 
 	public static final String SCHEME_TCP						="ip";
 	

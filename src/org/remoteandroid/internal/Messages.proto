@@ -52,12 +52,11 @@ message BroadcastMsg
 {
 	enum Type
 	{
-		REQUEST=0;
-		RESPONSE=1;
+		EXPOSE=0;
+		CONNECT=1;
 	}
 	required Type		type		=1;
-	required int32		flags		=2;
-	optional Identity	identity	=3;
+	required Identity	identity	=3;
 }
 
 message Msg 

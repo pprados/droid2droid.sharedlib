@@ -1742,11 +1742,7 @@ public final class Messages {
     boolean hasType();
     org.remoteandroid.internal.Messages.BroadcastMsg.Type getType();
     
-    // required int32 flags = 2;
-    boolean hasFlags();
-    int getFlags();
-    
-    // optional .org.remoteandroid.internal.Identity identity = 3;
+    // required .org.remoteandroid.internal.Identity identity = 3;
     boolean hasIdentity();
     org.remoteandroid.internal.Messages.Identity getIdentity();
   }
@@ -1770,20 +1766,20 @@ public final class Messages {
     
     public enum Type
         implements com.google.protobuf.Internal.EnumLite {
-      REQUEST(0, 0),
-      RESPONSE(1, 1),
+      EXPOSE(0, 0),
+      CONNECT(1, 1),
       ;
       
-      public static final int REQUEST_VALUE = 0;
-      public static final int RESPONSE_VALUE = 1;
+      public static final int EXPOSE_VALUE = 0;
+      public static final int CONNECT_VALUE = 1;
       
       
       public final int getNumber() { return value; }
       
       public static Type valueOf(int value) {
         switch (value) {
-          case 0: return REQUEST;
-          case 1: return RESPONSE;
+          case 0: return EXPOSE;
+          case 1: return CONNECT;
           default: return null;
         }
       }
@@ -1820,29 +1816,18 @@ public final class Messages {
       return type_;
     }
     
-    // required int32 flags = 2;
-    public static final int FLAGS_FIELD_NUMBER = 2;
-    private int flags_;
-    public boolean hasFlags() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    public int getFlags() {
-      return flags_;
-    }
-    
-    // optional .org.remoteandroid.internal.Identity identity = 3;
+    // required .org.remoteandroid.internal.Identity identity = 3;
     public static final int IDENTITY_FIELD_NUMBER = 3;
     private org.remoteandroid.internal.Messages.Identity identity_;
     public boolean hasIdentity() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     public org.remoteandroid.internal.Messages.Identity getIdentity() {
       return identity_;
     }
     
     private void initFields() {
-      type_ = org.remoteandroid.internal.Messages.BroadcastMsg.Type.REQUEST;
-      flags_ = 0;
+      type_ = org.remoteandroid.internal.Messages.BroadcastMsg.Type.EXPOSE;
       identity_ = org.remoteandroid.internal.Messages.Identity.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -1854,7 +1839,7 @@ public final class Messages {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasFlags()) {
+      if (!hasIdentity()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -1869,9 +1854,6 @@ public final class Messages {
         output.writeEnum(1, type_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeInt32(2, flags_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeMessage(3, identity_);
       }
     }
@@ -1887,10 +1869,6 @@ public final class Messages {
           .computeEnumSize(1, type_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, flags_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, identity_);
       }
@@ -1996,12 +1974,10 @@ public final class Messages {
       
       public Builder clear() {
         super.clear();
-        type_ = org.remoteandroid.internal.Messages.BroadcastMsg.Type.REQUEST;
+        type_ = org.remoteandroid.internal.Messages.BroadcastMsg.Type.EXPOSE;
         bitField0_ = (bitField0_ & ~0x00000001);
-        flags_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000002);
         identity_ = org.remoteandroid.internal.Messages.Identity.getDefaultInstance();
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
       
@@ -2042,10 +2018,6 @@ public final class Messages {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.flags_ = flags_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
         result.identity_ = identity_;
         result.bitField0_ = to_bitField0_;
         return result;
@@ -2055,9 +2027,6 @@ public final class Messages {
         if (other == org.remoteandroid.internal.Messages.BroadcastMsg.getDefaultInstance()) return this;
         if (other.hasType()) {
           setType(other.getType());
-        }
-        if (other.hasFlags()) {
-          setFlags(other.getFlags());
         }
         if (other.hasIdentity()) {
           mergeIdentity(other.getIdentity());
@@ -2070,7 +2039,7 @@ public final class Messages {
           
           return false;
         }
-        if (!hasFlags()) {
+        if (!hasIdentity()) {
           
           return false;
         }
@@ -2103,11 +2072,6 @@ public final class Messages {
               }
               break;
             }
-            case 16: {
-              bitField0_ |= 0x00000002;
-              flags_ = input.readInt32();
-              break;
-            }
             case 26: {
               org.remoteandroid.internal.Messages.Identity.Builder subBuilder = org.remoteandroid.internal.Messages.Identity.newBuilder();
               if (hasIdentity()) {
@@ -2124,7 +2088,7 @@ public final class Messages {
       private int bitField0_;
       
       // required .org.remoteandroid.internal.BroadcastMsg.Type type = 1;
-      private org.remoteandroid.internal.Messages.BroadcastMsg.Type type_ = org.remoteandroid.internal.Messages.BroadcastMsg.Type.REQUEST;
+      private org.remoteandroid.internal.Messages.BroadcastMsg.Type type_ = org.remoteandroid.internal.Messages.BroadcastMsg.Type.EXPOSE;
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
@@ -2142,36 +2106,15 @@ public final class Messages {
       }
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = org.remoteandroid.internal.Messages.BroadcastMsg.Type.REQUEST;
+        type_ = org.remoteandroid.internal.Messages.BroadcastMsg.Type.EXPOSE;
         
         return this;
       }
       
-      // required int32 flags = 2;
-      private int flags_ ;
-      public boolean hasFlags() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public int getFlags() {
-        return flags_;
-      }
-      public Builder setFlags(int value) {
-        bitField0_ |= 0x00000002;
-        flags_ = value;
-        
-        return this;
-      }
-      public Builder clearFlags() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        flags_ = 0;
-        
-        return this;
-      }
-      
-      // optional .org.remoteandroid.internal.Identity identity = 3;
+      // required .org.remoteandroid.internal.Identity identity = 3;
       private org.remoteandroid.internal.Messages.Identity identity_ = org.remoteandroid.internal.Messages.Identity.getDefaultInstance();
       public boolean hasIdentity() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       public org.remoteandroid.internal.Messages.Identity getIdentity() {
         return identity_;
@@ -2182,18 +2125,18 @@ public final class Messages {
         }
         identity_ = value;
         
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000002;
         return this;
       }
       public Builder setIdentity(
           org.remoteandroid.internal.Messages.Identity.Builder builderForValue) {
         identity_ = builderForValue.build();
         
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000002;
         return this;
       }
       public Builder mergeIdentity(org.remoteandroid.internal.Messages.Identity value) {
-        if (((bitField0_ & 0x00000004) == 0x00000004) &&
+        if (((bitField0_ & 0x00000002) == 0x00000002) &&
             identity_ != org.remoteandroid.internal.Messages.Identity.getDefaultInstance()) {
           identity_ =
             org.remoteandroid.internal.Messages.Identity.newBuilder(identity_).mergeFrom(value).buildPartial();
@@ -2201,13 +2144,13 @@ public final class Messages {
           identity_ = value;
         }
         
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000002;
         return this;
       }
       public Builder clearIdentity() {
         identity_ = org.remoteandroid.internal.Messages.Identity.getDefaultInstance();
         
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
       
