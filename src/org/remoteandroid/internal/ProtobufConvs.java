@@ -26,17 +26,32 @@ import com.google.protobuf.ByteString;
 public class ProtobufConvs
 {
 
+	private static byte[] fromUUID(UUID uuid)
+	{
+		long longOne = uuid.getMostSignificantBits();
+		long longTwo = uuid.getLeastSignificantBits();
+
+		return new byte[]
+		{ (byte) (longOne >>> 56), (byte) (longOne >>> 48), (byte) (longOne >>> 40), (byte) (longOne >>> 32),
+				(byte) (longOne >>> 24), (byte) (longOne >>> 16), (byte) (longOne >>> 8), (byte) longOne,
+				(byte) (longTwo >>> 56), (byte) (longTwo >>> 48), (byte) (longTwo >>> 40), (byte) (longTwo >>> 32),
+				(byte) (longTwo >>> 24), (byte) (longTwo >>> 16), (byte) (longTwo >>> 8), (byte) longTwo };
+	}
+	private static UUID toUUID(byte[] data)
+	{
+		return UUID.nameUUIDFromBytes(data);
+	}
 	public static Messages.Identity toIdentity(RemoteAndroidInfo i)
 	{
+		
 		RemoteAndroidInfoImpl info = (RemoteAndroidInfoImpl) i;
 		Messages.Identity.Builder identityBuilder = Messages.Identity.newBuilder();
-		identityBuilder.setUuid(
-			info.uuid.toString()).setName(
-			info.name).setPublicKey(
-			ByteString.copyFrom(info.publicKey.getEncoded())).setVersion(
-			info.version).setOs(
-			info.os).setCapability(
-			info.feature);
+		identityBuilder.setUuid(ByteString.copyFrom(fromUUID(info.uuid)))
+			.setName(info.name)
+			.setPublicKey(ByteString.copyFrom(info.publicKey.getEncoded()))
+			.setVersion(info.version)
+			.setOs(info.os)
+			.setCapability(info.feature);
 
 		identityBuilder.setCandidates(toCandidates(info));
 		return identityBuilder.build();
@@ -88,7 +103,7 @@ public class ProtobufConvs
 		try
 		{
 			RemoteAndroidInfoImpl info = new RemoteAndroidInfoImpl();
-			info.uuid = UUID.fromString(identity.getUuid());
+			info.uuid = toUUID(identity.getUuid().toByteArray());
 			info.name = identity.getName();
 			byte[] pubBytes = identity.getPublicKey().toByteArray();
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(pubBytes);

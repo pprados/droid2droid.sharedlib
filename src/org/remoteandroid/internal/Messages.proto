@@ -37,7 +37,7 @@ message Candidates
 
 message Identity 
 {
-	optional string uuid 			= 10;
+	optional bytes uuid 			= 10;
 	optional string name 			= 11;
 	optional bytes publicKey 		= 12;
 	optional int32 version			= 13;

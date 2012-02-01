@@ -950,9 +950,9 @@ public final class Messages {
   public interface IdentityOrBuilder
       extends com.google.protobuf.MessageLiteOrBuilder {
     
-    // optional string uuid = 10;
+    // optional bytes uuid = 10;
     boolean hasUuid();
-    String getUuid();
+    com.google.protobuf.ByteString getUuid();
     
     // optional string name = 11;
     boolean hasName();
@@ -1001,36 +1001,14 @@ public final class Messages {
     }
     
     private int bitField0_;
-    // optional string uuid = 10;
+    // optional bytes uuid = 10;
     public static final int UUID_FIELD_NUMBER = 10;
-    private java.lang.Object uuid_;
+    private com.google.protobuf.ByteString uuid_;
     public boolean hasUuid() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getUuid() {
-      java.lang.Object ref = uuid_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          uuid_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getUuidBytes() {
-      java.lang.Object ref = uuid_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        uuid_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.protobuf.ByteString getUuid() {
+      return uuid_;
     }
     
     // optional string name = 11;
@@ -1148,7 +1126,7 @@ public final class Messages {
     }
     
     private void initFields() {
-      uuid_ = "";
+      uuid_ = com.google.protobuf.ByteString.EMPTY;
       name_ = "";
       publicKey_ = com.google.protobuf.ByteString.EMPTY;
       version_ = 0;
@@ -1170,7 +1148,7 @@ public final class Messages {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(10, getUuidBytes());
+        output.writeBytes(10, uuid_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(11, getNameBytes());
@@ -1203,7 +1181,7 @@ public final class Messages {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(10, getUuidBytes());
+          .computeBytesSize(10, uuid_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1335,7 +1313,7 @@ public final class Messages {
       
       public Builder clear() {
         super.clear();
-        uuid_ = "";
+        uuid_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000001);
         name_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -1520,22 +1498,15 @@ public final class Messages {
       
       private int bitField0_;
       
-      // optional string uuid = 10;
-      private java.lang.Object uuid_ = "";
+      // optional bytes uuid = 10;
+      private com.google.protobuf.ByteString uuid_ = com.google.protobuf.ByteString.EMPTY;
       public boolean hasUuid() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getUuid() {
-        java.lang.Object ref = uuid_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          uuid_ = s;
-          return s;
-        } else {
-          return (String) ref;
-        }
+      public com.google.protobuf.ByteString getUuid() {
+        return uuid_;
       }
-      public Builder setUuid(String value) {
+      public Builder setUuid(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1549,11 +1520,6 @@ public final class Messages {
         uuid_ = getDefaultInstance().getUuid();
         
         return this;
-      }
-      void setUuid(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
-        uuid_ = value;
-        
       }
       
       // optional string name = 11;
