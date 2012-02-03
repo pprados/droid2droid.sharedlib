@@ -970,9 +970,9 @@ public final class Messages {
     boolean hasOs();
     String getOs();
     
-    // optional int32 capability = 15;
+    // optional int64 capability = 15;
     boolean hasCapability();
-    int getCapability();
+    long getCapability();
     
     // optional bool bounded = 16;
     boolean hasBounded();
@@ -1095,13 +1095,13 @@ public final class Messages {
       }
     }
     
-    // optional int32 capability = 15;
+    // optional int64 capability = 15;
     public static final int CAPABILITY_FIELD_NUMBER = 15;
-    private int capability_;
+    private long capability_;
     public boolean hasCapability() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
-    public int getCapability() {
+    public long getCapability() {
       return capability_;
     }
     
@@ -1131,7 +1131,7 @@ public final class Messages {
       publicKey_ = com.google.protobuf.ByteString.EMPTY;
       version_ = 0;
       os_ = "";
-      capability_ = 0;
+      capability_ = 0L;
       bounded_ = false;
       candidates_ = org.remoteandroid.internal.Messages.Candidates.getDefaultInstance();
     }
@@ -1163,7 +1163,7 @@ public final class Messages {
         output.writeBytes(14, getOsBytes());
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeInt32(15, capability_);
+        output.writeInt64(15, capability_);
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         output.writeBool(16, bounded_);
@@ -1201,7 +1201,7 @@ public final class Messages {
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(15, capability_);
+          .computeInt64Size(15, capability_);
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1323,7 +1323,7 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000008);
         os_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
-        capability_ = 0;
+        capability_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000020);
         bounded_ = false;
         bitField0_ = (bitField0_ & ~0x00000040);
@@ -1475,7 +1475,7 @@ public final class Messages {
             }
             case 120: {
               bitField0_ |= 0x00000020;
-              capability_ = input.readInt32();
+              capability_ = input.readInt64();
               break;
             }
             case 128: {
@@ -1639,15 +1639,15 @@ public final class Messages {
         
       }
       
-      // optional int32 capability = 15;
-      private int capability_ ;
+      // optional int64 capability = 15;
+      private long capability_ ;
       public boolean hasCapability() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
-      public int getCapability() {
+      public long getCapability() {
         return capability_;
       }
-      public Builder setCapability(int value) {
+      public Builder setCapability(long value) {
         bitField0_ |= 0x00000020;
         capability_ = value;
         
@@ -1655,7 +1655,7 @@ public final class Messages {
       }
       public Builder clearCapability() {
         bitField0_ = (bitField0_ & ~0x00000020);
-        capability_ = 0;
+        capability_ = 0L;
         
         return this;
       }

@@ -35,7 +35,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	public int				version;
 
 	/** Capability. */
-	public int				feature;
+	public long				feature;
 	
 	public boolean			isBonded;
 	
@@ -44,6 +44,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	public boolean			isDiscoverBT;
 	public boolean			isDiscoverEthernet;
 	public boolean			isDiscoverGSM;
+	public boolean			isDiscoverNFC;
 	
 	public ArrayList<String> uris=new ArrayList<String>(0);
 	
@@ -176,7 +177,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int getFeature()
+	public long getFeature()
 	{
 		return feature;
 	}
@@ -196,7 +197,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	@Override
 	public boolean isDiscover()
 	{
-		return isDiscoverBT || isDiscoverEthernet || isDiscoverGSM;
+		return isDiscoverBT || isDiscoverEthernet || isDiscoverGSM || isDiscoverNFC;
 	}
 	
 	/**
@@ -323,7 +324,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 		dest.writeByteArray(publicKey.getEncoded());
 		dest.writeInt(version);
 		dest.writeString(os);
-		dest.writeInt(feature);
+		dest.writeLong(feature);
 		dest.writeStringList(uris);
 		dest.writeByte((byte) (isBonded ? 1 : 0));
 		dest.writeByte((byte) (isDiscoverEthernet ? 1 : 0));
@@ -342,7 +343,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 			publicKey = KeyFactory.getInstance("RSA").generatePublic(pubKeySpec);
 			version = parcel.readInt();
 			os=parcel.readString();
-			feature=parcel.readInt();
+			feature=parcel.readLong();
 			uris=parcel.createStringArrayList();
 			if (uris==null) uris=new ArrayList<String>(0);
 			else

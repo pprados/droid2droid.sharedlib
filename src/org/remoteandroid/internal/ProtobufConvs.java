@@ -39,12 +39,13 @@ public class ProtobufConvs
 	}
 	private static UUID toUUID(byte[] data)
 	{
-		return UUID.nameUUIDFromBytes(data);
+		return new UUID(Tools.byteArrayToLong(data,0),Tools.byteArrayToLong(data,8));
 	}
 	public static Messages.Identity toIdentity(RemoteAndroidInfo i)
 	{
 		
 		RemoteAndroidInfoImpl info = (RemoteAndroidInfoImpl) i;
+		
 		Messages.Identity.Builder identityBuilder = Messages.Identity.newBuilder();
 		identityBuilder.setUuid(ByteString.copyFrom(fromUUID(info.uuid)))
 			.setName(info.name)

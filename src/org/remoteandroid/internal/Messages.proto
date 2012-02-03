@@ -42,7 +42,7 @@ message Identity
 	optional bytes publicKey 		= 12;
 	optional int32 version			= 13;
 	optional string os				= 14;
-	optional int32 capability		= 15;
+	optional int64 capability		= 15;
 	optional bool bounded			= 16;
 
 	optional Candidates candidates  = 20;

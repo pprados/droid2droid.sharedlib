@@ -162,15 +162,32 @@ public class Tools
                 + (b[3] & 0xFF);
 	}
 	
-	public static final long byteArrayToLong(byte [] b) 
+	public static final long byteArrayToLong(byte [] b)
+	{
+		return byteArrayToLong(b,0);
+	}
+	public static final long byteArrayToLong(byte [] b,int start) 
 	{
 		long value = 0;
-		for (int i = 0; i < b.length; i++)
+		for (int i = start; i < start+8; i++)
 		{
 		   value = (value << 8) + (b[i] & 0xff);
 		}
 		return value;
 	}
 	
+	public static byte[] longToByteArray(long data) 
+	{
+		return new byte[] {
+			(byte)((data >> 56) & 0xff),
+			(byte)((data >> 48) & 0xff),
+			(byte)((data >> 40) & 0xff),
+			(byte)((data >> 32) & 0xff),
+			(byte)((data >> 24) & 0xff),
+			(byte)((data >> 16) & 0xff),
+			(byte)((data >> 8 ) & 0xff),
+			(byte)((data >> 0) & 0xff),
+			};
+	}
 
 }
