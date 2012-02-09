@@ -9,7 +9,7 @@ import static org.remoteandroid.internal.Constants.I;
 import static org.remoteandroid.internal.Constants.PREFIX_LOG;
 import static org.remoteandroid.internal.Constants.SCHEME_TCP;
 import static org.remoteandroid.internal.Constants.TAG_CLIENT_BIND;
-import static org.remoteandroid.internal.Constants.TIMEOUT_CONNECT;
+import static org.remoteandroid.internal.Constants.TIMEOUT_CONNECT_WIFI;
 import static org.remoteandroid.internal.Constants.TIME_MAX_TO_DISCOVER;
 import static org.remoteandroid.internal.Constants.V;
 import static org.remoteandroid.internal.Constants.VERSION;
@@ -306,7 +306,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			if (driver==null)
 				throw new MalformedURLException("Unknown "+uri);
 			binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
-			return binder.connectWithAuthent(TIMEOUT_CONNECT);
+			return binder.connectWithAuthent(TIMEOUT_CONNECT_WIFI);
 		}
 		catch (SecurityException e)
 		{
@@ -361,7 +361,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
     				AbstractRemoteAndroidImpl binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
     					
     				final AbstractRemoteAndroidImpl fbinder=binder;
-    				binder.connect(forPairing,TIMEOUT_CONNECT);
+    				binder.connect(forPairing,TIMEOUT_CONNECT_WIFI);
     				binder.linkToDeath(new IBinder.DeathRecipient()
 					{
 						

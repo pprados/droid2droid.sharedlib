@@ -65,7 +65,7 @@ public class NetworkSocketBossSender implements BossSocketSender
     	//if (Trusted.isLocalNetwork(Appl))
     	
     	Socket socket=new Socket();
-    	socket.connect(new InetSocketAddress(mHost,mPort),(int)TIMEOUT_CONNECT); // Note: for ipv6 linkLocalAddress, we must select the interface :-(
+    	socket.connect(new InetSocketAddress(mHost,mPort),(int)TIMEOUT_CONNECT_WIFI); // Note: for ipv6 linkLocalAddress, we must select the interface :-(
         //FIXME socket.setSoTimeout((int)TIMEOUT_CONNECT);
     	socket.setSoLinger(ETHERNET_SO_LINGER, ETHERNET_SO_LINGER_TIMEOUT);
         socket.setKeepAlive(true);

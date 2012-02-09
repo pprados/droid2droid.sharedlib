@@ -18,10 +18,11 @@ public class NetworkTools
 	public static final int ACTIVE_NETWORK			=1<<1;
 	public static final int ACTIVE_LOCAL_NETWORK	=1<<2;
 	public static final int ACTIVE_GLOBAL_NETWORK	=1<<3;
-	public static final int ACTIVE_BLUETOOTH		=1<<4;
-	public static final int ACTIVE_PHONE_DATA		=1<<5;
-	public static final int ACTIVE_PHONE_SIM		=1<<6;
-	public static final int ACTIVE_NFC				=1<<7;
+	public static final int ACTIVE_INTERNET_NETWORK	=1<<4;
+	public static final int ACTIVE_BLUETOOTH		=1<<5;
+	public static final int ACTIVE_PHONE_DATA		=1<<6;
+	public static final int ACTIVE_PHONE_SIM		=1<<7;
+	public static final int ACTIVE_NFC				=1<<8;
 
 	public static int getActiveNetwork(final Context context)
 	{

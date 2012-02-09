@@ -15,10 +15,11 @@ public final class Messages {
     CONNECT_FOR_DISCOVERING(2, 11),
     CONNECT_FOR_COOKIE(3, 12),
     CONNECT_FOR_PAIRING(4, 13),
-    PAIRING_CHALENGE(5, 20),
-    TRANSACT_RemoteAndroid(6, 40),
-    TRANSACT_Binder(7, 41),
-    TRANSACT_Apk(8, 42),
+    CONNECT_FOR_BROADCAST(5, 14),
+    PAIRING_CHALENGE(6, 20),
+    TRANSACT_RemoteAndroid(7, 40),
+    TRANSACT_Binder(8, 41),
+    TRANSACT_Apk(9, 42),
     ;
     
     public static final int PING_VALUE = 0;
@@ -26,6 +27,7 @@ public final class Messages {
     public static final int CONNECT_FOR_DISCOVERING_VALUE = 11;
     public static final int CONNECT_FOR_COOKIE_VALUE = 12;
     public static final int CONNECT_FOR_PAIRING_VALUE = 13;
+    public static final int CONNECT_FOR_BROADCAST_VALUE = 14;
     public static final int PAIRING_CHALENGE_VALUE = 20;
     public static final int TRANSACT_RemoteAndroid_VALUE = 40;
     public static final int TRANSACT_Binder_VALUE = 41;
@@ -41,6 +43,7 @@ public final class Messages {
         case 11: return CONNECT_FOR_DISCOVERING;
         case 12: return CONNECT_FOR_COOKIE;
         case 13: return CONNECT_FOR_PAIRING;
+        case 14: return CONNECT_FOR_BROADCAST;
         case 20: return PAIRING_CHALENGE;
         case 40: return TRANSACT_RemoteAndroid;
         case 41: return TRANSACT_Binder;
