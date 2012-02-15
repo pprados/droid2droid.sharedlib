@@ -12,7 +12,7 @@ public class Constants
 	public static /*final*/ boolean D=true;
 	public static /*final*/ boolean V=true;
 
-	public static final String TAG_RA			="Remote-Android";
+	public static final String TAG_RA			="RA";
 
 	public static final int VERSION				=0; // TODO
 	
@@ -22,6 +22,7 @@ public class Constants
 	public static final String TAG_PREFERENCE 	= "Preference";
 	public static final String TAG_CLIENT_BIND 	= "Client";
 	public static final String TAG_CANDIDATE 	= "Candidate";
+	public static final String TAG_PROVIDER 	= "Provider";
 	public static final String TAG_NFC 			= "Nfc";
 
 	public static final String SCHEME_TCP						="ip";

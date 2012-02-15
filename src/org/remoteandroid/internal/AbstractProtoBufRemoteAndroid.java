@@ -43,8 +43,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 		try
 		{
 			final long threadid = Thread.currentThread().getId();
-			Msg msg = Msg.newBuilder().setType(
-				Type.PING).setThreadid(
+			Msg msg = Msg.newBuilder().setType(Type.PING).setThreadid(
 				threadid).build();
 			Msg resp = sendRequestAndReadResponse(msg,TIMEOUT_PING_BINDER);
 			return (resp != null && resp.getType() == Type.PING);
@@ -294,8 +293,22 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 	
 	// Connection avec exploitation d'un cookie
 	@Override
-	public boolean connect(boolean forPairing,long timeout) throws UnknownHostException, IOException, RemoteException, SecurityException
+	public boolean connect(ConnectionMode type,long cookie,long timeout) throws UnknownHostException, IOException, RemoteException, SecurityException
 	{
+		org.remoteandroid.internal.Messages.Type conType;
+		switch (type)
+		{
+			case FOR_PAIRING:
+				conType=org.remoteandroid.internal.Messages.Type.CONNECT_FOR_PAIRING;
+				break;
+			case FOR_BROADCAST:
+				conType=org.remoteandroid.internal.Messages.Type.CONNECT_FOR_BROADCAST;
+				break;
+			default:
+				conType=org.remoteandroid.internal.Messages.Type.CONNECT;
+				break;
+				
+		}
 		final long threadid = Thread.currentThread().getId();
 		Msg resp;
 		boolean cookieAlive;
@@ -305,10 +318,9 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 			do
 			{
 				// 1. Ask a cookie
-				long cookie=0;
 				if (SECURITY)
 				{
-					if (!forPairing)
+					if (type==ConnectionMode.NORMAL)
 					{
 						cookie=((RemoteAndroidManagerImpl)mManager).getCookie(mUri.toString());
 						if (cookie==-1)
@@ -322,7 +334,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 				
 				// 2. Use the cookie
 				Msg msg = Msg.newBuilder()
-					.setType(forPairing ? Type.CONNECT_FOR_PAIRING : Type.CONNECT)
+					.setType(conType)
 					.setThreadid(threadid)
 					.setCookie(cookie)
 					.setIdentity(ProtobufConvs.toIdentity(mManager.getInfos())) // My identity
@@ -340,7 +352,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 			if (!refuse && resp.getStatus()==AbstractRemoteAndroidImpl.STATUS_REFUSE_ANONYMOUS)
 			{
 				refuse=true;
-				forPairing=true;
+				conType=org.remoteandroid.internal.Messages.Type.CONNECT_FOR_PAIRING;
 				((RemoteAndroidManagerImpl)mManager).removeCookie(mUri.toString());
 			}
 			else
@@ -354,7 +366,12 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 			((RemoteAndroidManagerImpl)mManager).removeCookie(mUri.toString());
 		}
 		checkStatus(resp.getStatus());
-		mInfo=ProtobufConvs.toRemoteAndroidInfo(mManager.getContext(),resp.getIdentity());
+		if (resp.hasIdentity())
+		{
+			mInfo=ProtobufConvs.toRemoteAndroidInfo(mManager.getContext(),resp.getIdentity());
+		}
+		else
+			mInfo=null;
 		return true;
 	}
 	

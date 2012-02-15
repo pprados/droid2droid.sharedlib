@@ -1745,6 +1745,10 @@ public final class Messages {
     boolean hasType();
     org.remoteandroid.internal.Messages.BroadcastMsg.Type getType();
     
+    // required int64 cookie = 2;
+    boolean hasCookie();
+    long getCookie();
+    
     // required .org.remoteandroid.internal.Identity identity = 3;
     boolean hasIdentity();
     org.remoteandroid.internal.Messages.Identity getIdentity();
@@ -1819,11 +1823,21 @@ public final class Messages {
       return type_;
     }
     
+    // required int64 cookie = 2;
+    public static final int COOKIE_FIELD_NUMBER = 2;
+    private long cookie_;
+    public boolean hasCookie() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public long getCookie() {
+      return cookie_;
+    }
+    
     // required .org.remoteandroid.internal.Identity identity = 3;
     public static final int IDENTITY_FIELD_NUMBER = 3;
     private org.remoteandroid.internal.Messages.Identity identity_;
     public boolean hasIdentity() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     public org.remoteandroid.internal.Messages.Identity getIdentity() {
       return identity_;
@@ -1831,6 +1845,7 @@ public final class Messages {
     
     private void initFields() {
       type_ = org.remoteandroid.internal.Messages.BroadcastMsg.Type.EXPOSE;
+      cookie_ = 0L;
       identity_ = org.remoteandroid.internal.Messages.Identity.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -1839,6 +1854,10 @@ public final class Messages {
       if (isInitialized != -1) return isInitialized == 1;
       
       if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasCookie()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -1857,6 +1876,9 @@ public final class Messages {
         output.writeEnum(1, type_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt64(2, cookie_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeMessage(3, identity_);
       }
     }
@@ -1872,6 +1894,10 @@ public final class Messages {
           .computeEnumSize(1, type_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, cookie_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, identity_);
       }
@@ -1979,8 +2005,10 @@ public final class Messages {
         super.clear();
         type_ = org.remoteandroid.internal.Messages.BroadcastMsg.Type.EXPOSE;
         bitField0_ = (bitField0_ & ~0x00000001);
-        identity_ = org.remoteandroid.internal.Messages.Identity.getDefaultInstance();
+        cookie_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000002);
+        identity_ = org.remoteandroid.internal.Messages.Identity.getDefaultInstance();
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       
@@ -2021,6 +2049,10 @@ public final class Messages {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
+        result.cookie_ = cookie_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
         result.identity_ = identity_;
         result.bitField0_ = to_bitField0_;
         return result;
@@ -2031,6 +2063,9 @@ public final class Messages {
         if (other.hasType()) {
           setType(other.getType());
         }
+        if (other.hasCookie()) {
+          setCookie(other.getCookie());
+        }
         if (other.hasIdentity()) {
           mergeIdentity(other.getIdentity());
         }
@@ -2039,6 +2074,10 @@ public final class Messages {
       
       public final boolean isInitialized() {
         if (!hasType()) {
+          
+          return false;
+        }
+        if (!hasCookie()) {
           
           return false;
         }
@@ -2073,6 +2112,11 @@ public final class Messages {
                 bitField0_ |= 0x00000001;
                 type_ = value;
               }
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              cookie_ = input.readInt64();
               break;
             }
             case 26: {
@@ -2114,10 +2158,31 @@ public final class Messages {
         return this;
       }
       
+      // required int64 cookie = 2;
+      private long cookie_ ;
+      public boolean hasCookie() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public long getCookie() {
+        return cookie_;
+      }
+      public Builder setCookie(long value) {
+        bitField0_ |= 0x00000002;
+        cookie_ = value;
+        
+        return this;
+      }
+      public Builder clearCookie() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        cookie_ = 0L;
+        
+        return this;
+      }
+      
       // required .org.remoteandroid.internal.Identity identity = 3;
       private org.remoteandroid.internal.Messages.Identity identity_ = org.remoteandroid.internal.Messages.Identity.getDefaultInstance();
       public boolean hasIdentity() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       public org.remoteandroid.internal.Messages.Identity getIdentity() {
         return identity_;
@@ -2128,18 +2193,18 @@ public final class Messages {
         }
         identity_ = value;
         
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         return this;
       }
       public Builder setIdentity(
           org.remoteandroid.internal.Messages.Identity.Builder builderForValue) {
         identity_ = builderForValue.build();
         
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         return this;
       }
       public Builder mergeIdentity(org.remoteandroid.internal.Messages.Identity value) {
-        if (((bitField0_ & 0x00000002) == 0x00000002) &&
+        if (((bitField0_ & 0x00000004) == 0x00000004) &&
             identity_ != org.remoteandroid.internal.Messages.Identity.getDefaultInstance()) {
           identity_ =
             org.remoteandroid.internal.Messages.Identity.newBuilder(identity_).mergeFrom(value).buildPartial();
@@ -2147,13 +2212,13 @@ public final class Messages {
           identity_ = value;
         }
         
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         return this;
       }
       public Builder clearIdentity() {
         identity_ = org.remoteandroid.internal.Messages.Identity.getDefaultInstance();
         
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       

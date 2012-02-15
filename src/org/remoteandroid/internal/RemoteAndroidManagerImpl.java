@@ -30,6 +30,7 @@ import org.remoteandroid.ListRemoteAndroidInfo;
 import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
+import org.remoteandroid.internal.IRemoteAndroid.ConnectionMode;
 import org.remoteandroid.internal.socket.ip.NetworkSocketRemoteAndroid;
 
 import android.bluetooth.BluetoothAdapter;
@@ -361,7 +362,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
     				AbstractRemoteAndroidImpl binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
     					
     				final AbstractRemoteAndroidImpl fbinder=binder;
-    				binder.connect(forPairing,TIMEOUT_CONNECT_WIFI);
+    				binder.connect(ConnectionMode.FOR_PAIRING,0,TIMEOUT_CONNECT_WIFI);
     				binder.linkToDeath(new IBinder.DeathRecipient()
 					{
 						

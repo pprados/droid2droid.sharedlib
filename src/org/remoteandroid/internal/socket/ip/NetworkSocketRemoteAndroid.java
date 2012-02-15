@@ -24,13 +24,6 @@ public class NetworkSocketRemoteAndroid extends AbstractSocketRemoteAndroid<Netw
 		mConnectivityManager=(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	}
 	@Override
-	public boolean connect(boolean forPairing,long timeout) throws UnknownHostException, IOException, RemoteException
-	{
-		//FIXME: pb de secu if (!mConnectivityManager.getActiveNetworkInfo().isConnected()) return false;
-		return super.connect(forPairing,timeout);
-	}
-	
-	@Override
 	protected void initBootstrap() throws UnknownHostException, IOException
 	{
 		//FIXME: pb de secu if (!mConnectivityManager.getActiveNetworkInfo().isConnected()) return;
