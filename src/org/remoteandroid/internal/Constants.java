@@ -63,7 +63,7 @@ public class Constants
 	public static final long TIMEOUT_PING_BINDER				=5000L; // second
 
 	/** Timeout for connect to remote android. */
-	public static final long TIMEOUT_CONNECT_WIFI				=1500L; // FIXME second
+	public static final long TIMEOUT_CONNECT_WIFI				=3000L; // FIXME second
     /** Flush current data before close the socket. */
     public static final boolean ETHERNET_SO_LINGER				=true; 	// Vide les derniers paquets avant la fermeture du socket
     /** Timeout to flush the last datas. */

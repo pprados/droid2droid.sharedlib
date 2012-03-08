@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.AbstractProtoBufRemoteAndroid;
 import org.remoteandroid.internal.Login;
+import org.remoteandroid.internal.Messages.Type;
 import org.remoteandroid.internal.Pair;
 import org.remoteandroid.internal.RemoteAndroidInfoImpl;
 import org.remoteandroid.internal.Messages.Msg;
@@ -114,7 +115,8 @@ public abstract class AbstractSocketRemoteAndroid<T extends BossSocketSender> ex
     	final ReadWait rw=new ReadWait();
     	mLocks.put(threadid, rw);
 
-    	if (!isBinderAlive())
+    	Type t=msg.getType();
+    	if ((t!=Type.CONNECT_FOR_BROADCAST) && !isBinderAlive())
     	{
     		if (E) Log.e(TAG_CLIENT_BIND,PREFIX_LOG+"Binder is not alive");
     		throw new RemoteException();
