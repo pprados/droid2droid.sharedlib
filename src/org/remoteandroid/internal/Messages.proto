@@ -57,8 +57,8 @@ message BroadcastMsg
 		CONNECT=1;
 	}
 	required Type		type		=1;
-	required int64		cookie		=2;
-	required Identity	identity	=3;
+	required Identity	identity	=2;
+	optional int64		cookie		=3;
 }
 
 message Msg 
