@@ -362,7 +362,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
     				AbstractRemoteAndroidImpl binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
     					
     				final AbstractRemoteAndroidImpl fbinder=binder;
-    				binder.connect(ConnectionMode.FOR_PAIRING,0,TIMEOUT_CONNECT_WIFI);
+    				binder.connect(ConnectionMode.NORMAL,0,TIMEOUT_CONNECT_WIFI);
     				binder.linkToDeath(new IBinder.DeathRecipient()
 					{
 						

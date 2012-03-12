@@ -110,9 +110,7 @@ public class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 			RemoteAndroidInfoImpl and=(RemoteAndroidInfoImpl)a;
 			if (and.uuid.equals(android.uuid))
 			{
-				boolean propagate=and.merge(android);
-				if ((mCallBack!=null) && propagate)
-					mCallBack.onDiscover(and, true);
+				and.merge(android);
 				return;
 			}
 		}
@@ -121,6 +119,7 @@ public class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 		if (callBack!=null)
 			callBack.onDiscover(android, false);
 	}
+	
 	private void processOnStart()
 	{
 		if (mCallBack!=null)
