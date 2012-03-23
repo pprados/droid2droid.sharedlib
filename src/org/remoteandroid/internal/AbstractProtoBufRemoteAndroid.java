@@ -293,22 +293,8 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 	
 	// Connection avec exploitation d'un cookie
 	@Override
-	public boolean connect(ConnectionMode type,long cookie,long timeout) throws UnknownHostException, IOException, RemoteException, SecurityException
+	public boolean connect(Type conType,long cookie,long timeout) throws UnknownHostException, IOException, RemoteException, SecurityException
 	{
-		org.remoteandroid.internal.Messages.Type conType;
-		switch (type)
-		{
-			case FOR_PAIRING:
-				conType=org.remoteandroid.internal.Messages.Type.CONNECT_FOR_PAIRING;
-				break;
-			case FOR_BROADCAST:
-				conType=org.remoteandroid.internal.Messages.Type.CONNECT_FOR_BROADCAST;
-				break;
-			default:
-				conType=org.remoteandroid.internal.Messages.Type.CONNECT;
-				break;
-				
-		}
 		final long threadid = Thread.currentThread().getId();
 		Msg resp;
 		boolean cookieAlive;
@@ -320,13 +306,13 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 				// 1. Ask a cookie
 				if (SECURITY)
 				{
-					if (type==ConnectionMode.NORMAL)
+					if (conType==Type.CONNECT)
 					{
 						cookie=((RemoteAndroidManagerImpl)mManager).getCookie(mUri.toString());
-						if (cookie==-1)
+						if (cookie==COOKIE_EXCEPTION)
 							throw new IOException("Impossible to get cookie with "+mUri); // TODO: Avec Motorola Milestone et IPV6, java.net.SocketException: The socket level is invalid
 	
-						if (cookie==0)
+						if (cookie==COOKIE_NO)
 							throw new SecurityException("Can't find a cookie with "+mUri);
 					}
 				}
@@ -340,8 +326,11 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 					.setIdentity(ProtobufConvs.toIdentity(mManager.getInfos())) // My identity
 					.build();
 				resp = sendRequestAndReadResponse(msg,timeout);
+				// Unpair
+				if (conType==Type.CONNECT_FOR_PAIRING && cookie==-1)
+					return true;
 				// If invalide cookie, ask a new one and retry
-	
+				
 				cookieAlive=resp.getStatus()!=AbstractRemoteAndroidImpl.STATUS_INVALIDE_COOKIE;
 				if (!cookieAlive)
 				{

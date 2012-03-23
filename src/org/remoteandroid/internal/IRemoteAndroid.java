@@ -3,6 +3,8 @@ package org.remoteandroid.internal;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import org.remoteandroid.internal.Messages.Type;
+
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Parcel;
@@ -12,8 +14,6 @@ import android.os.RemoteException;
 // Les méthodes de plus au context, pour déléguer les Binders et autres traitements
 public interface IRemoteAndroid
 {
-	public enum ConnectionMode { NORMAL,FOR_PAIRING, FOR_BROADCAST};
-	
     int bindOID(int connid,Intent intent,int flags,ComponentName[] name,long timeout) throws RemoteException;
     void finalizeOID(int connid, int oid,long timeout);
     boolean isBinderAlive(int connid,int oid,long timeout) throws RemoteException;
@@ -29,5 +29,5 @@ public interface IRemoteAndroid
     
     void close();
     void disconnect(int connid);
-    boolean connect(ConnectionMode mode,long cookie,long timeout) throws UnknownHostException, IOException, RemoteException;
+    boolean connect(Type mode,long cookie,long timeout) throws UnknownHostException, IOException, RemoteException;
 }

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import org.remoteandroid.internal.Messages.Msg;
+import org.remoteandroid.internal.Messages.Type;
 
+import android.net.Uri;
 import android.os.RemoteException;
 
 public abstract class Login
@@ -14,6 +16,10 @@ public abstract class Login
 	{
 		return sLogin;
 	}
-	public abstract Pair<RemoteAndroidInfoImpl,Long> client(AbstractProtoBufRemoteAndroid android,long timeout) throws UnknownHostException, IOException, RemoteException;
+	public abstract Pair<RemoteAndroidInfoImpl,Long> client(
+		AbstractProtoBufRemoteAndroid android,
+		Uri uri,
+		Type type,
+		long timeout) throws UnknownHostException, IOException, RemoteException;
 	public abstract Msg server(Object conContext,Msg req,long cookie);
 }

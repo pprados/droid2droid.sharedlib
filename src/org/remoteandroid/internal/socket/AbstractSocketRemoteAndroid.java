@@ -101,10 +101,10 @@ public abstract class AbstractSocketRemoteAndroid<T extends BossSocketSender> ex
 	}
 
 	@Override
-	public Pair<RemoteAndroidInfoImpl,Long> connectWithAuthent(long timeout) throws UnknownHostException, IOException, RemoteException
+	public Pair<RemoteAndroidInfoImpl,Long> connectWithAuthent(Uri uri,Type type,long timeout) throws UnknownHostException, IOException, RemoteException
 	{
 		initBootstrap();
-		return Login.getLogin().client(this, timeout);
+		return Login.getLogin().client(this, uri,type,timeout);
 	}
 	
 

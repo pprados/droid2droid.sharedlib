@@ -1,10 +1,11 @@
 package org.remoteandroid.internal;
 
-import static org.remoteandroid.internal.Constants.*;
+import static org.remoteandroid.internal.Constants.BINDING_NB_RETRY;
 import static org.remoteandroid.internal.Constants.BINDING_TIMEOUT_WAIT;
 import static org.remoteandroid.internal.Constants.D;
 import static org.remoteandroid.internal.Constants.E;
 import static org.remoteandroid.internal.Constants.ETHERNET;
+import static org.remoteandroid.internal.Constants.HACK_DEAD_LOCK;
 import static org.remoteandroid.internal.Constants.I;
 import static org.remoteandroid.internal.Constants.PREFIX_LOG;
 import static org.remoteandroid.internal.Constants.SCHEME_TCP;
@@ -30,7 +31,7 @@ import org.remoteandroid.ListRemoteAndroidInfo;
 import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
-import org.remoteandroid.internal.IRemoteAndroid.ConnectionMode;
+import org.remoteandroid.internal.Messages.Type;
 import org.remoteandroid.internal.socket.ip.NetworkSocketRemoteAndroid;
 
 import android.bluetooth.BluetoothAdapter;
@@ -45,7 +46,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.AndroidRuntimeException;
 import android.util.Log;
 
 
@@ -291,11 +291,19 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	}
 	public long askCookie(Uri uri) throws SecurityException, IOException
 	{
-		Pair<RemoteAndroidInfoImpl,Long> msg=askMsgCookie(uri);
+		return askCookie(uri,Type.CONNECT_FOR_COOKIE);
+	}
+	public long askCookie(Uri uri,Type type) throws SecurityException, IOException
+	{
+		Pair<RemoteAndroidInfoImpl,Long> msg=askMsgCookie(uri,type);
 		if (msg==null) return 0;
 		return msg.second;
 	}
 	public Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri) throws IOException, SecurityException
+	{
+		return askMsgCookie(uri,Type.CONNECT_FOR_COOKIE);
+	}
+	public Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri,Type type) throws IOException, SecurityException
 	{
 		AbstractRemoteAndroidImpl binder=null;
 		try
@@ -307,31 +315,31 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			if (driver==null)
 				throw new MalformedURLException("Unknown "+uri);
 			binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
-			return binder.connectWithAuthent(TIMEOUT_CONNECT_WIFI);
+			return binder.connectWithAuthent(uri,type,TIMEOUT_CONNECT_WIFI);
 		}
 		catch (SecurityException e)
 		{
 			if (W && !D) Log.w(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.");
 			if (D) Log.d(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.",e);
-			throw (SecurityException)e.fillInStackTrace();
+			throw e;
 		}
 		catch (SocketException e)
 		{
 			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie. Imcompatible with ipv6? ("+e.getMessage()+")");
 			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible for ask cookie. Imcompatible with ipv6?",e);
-			throw (IOException)e.fillInStackTrace();
+			throw new SocketException(e.getMessage());
 		}
 		catch (IOException e)
 		{
 			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie ("+e.getMessage()+")");
 			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible for ask cookie.",e);
-			throw (IOException)e.fillInStackTrace();
+			throw new IOException(e.getMessage(),e);
 		}
 		catch (Exception e)
 		{
 			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie ("+e.getMessage()+")");
 			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible for ask cookie.",e);
-			return null;
+			throw new IOException("Connection impossible for ask cookie");
 		}
 		finally
 		{
@@ -347,7 +355,6 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			int flags)
 	{
     	final Uri uri=service.getData();
-    	final boolean forPairing=service.getBooleanExtra(AbstractRemoteAndroidImpl.EXTRA_FOR_PAIRING, false);
     	final ComponentName name=new ComponentName(RemoteAndroidManager.class.getName(),uri.toString());
     	sExecutor.execute(new Runnable()
     	{
@@ -362,7 +369,7 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
     				AbstractRemoteAndroidImpl binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
     					
     				final AbstractRemoteAndroidImpl fbinder=binder;
-    				binder.connect(ConnectionMode.NORMAL,0,TIMEOUT_CONNECT_WIFI);
+    				binder.connect(Type.CONNECT,0,TIMEOUT_CONNECT_WIFI);
     				binder.linkToDeath(new IBinder.DeathRecipient()
 					{
 						

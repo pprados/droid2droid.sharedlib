@@ -105,11 +105,12 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 			merged=true;
 			uris.clear();
 		}
-		if (!isBonded)
+		if (isBonded!=info.isBonded)
 		{
 			merged=true;
 			isBonded=info.isBonded;
 		}
+		
 		if (isDiscoverBT!=info.isDiscoverBT && info.isDiscoverBT)
 		{
 			merged=true;

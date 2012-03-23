@@ -29,6 +29,7 @@ import org.remoteandroid.RemoteAndroid;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.Messages.Msg;
+import org.remoteandroid.internal.Messages.Type;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -62,8 +63,6 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 	public static final int PING_BINDER = 3;
 
 	public static final int IS_BINDER_ALIVE = 4;
-	
-	public static final String EXTRA_FOR_PAIRING="forPairing";
 	
 	public static final int STATUS_REFUSE_CONNECTION_MODE=-1;
 	public static final int STATUS_REFUSE_ANONYMOUS=-2;
@@ -342,7 +341,7 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 		return true;
 	}
 	
-	public abstract Pair<RemoteAndroidInfoImpl,Long> connectWithAuthent(long timeout) throws UnknownHostException, IOException, RemoteException;
+	public abstract Pair<RemoteAndroidInfoImpl,Long> connectWithAuthent(Uri uri,Type type,long timeout) throws UnknownHostException, IOException, RemoteException;
 	
 	private static final void postPublishProgress(final PublishListener listener,final int progress)
 	{
