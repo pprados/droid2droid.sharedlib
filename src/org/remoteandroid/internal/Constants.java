@@ -1,16 +1,17 @@
 package org.remoteandroid.internal;
 
+import org.remoteandroid.BuildConfig;
 import org.remoteandroid.Friend;
 
 import android.os.Build;
 
-public class Constants
+public final class Constants
 {
-	public static /*final*/ boolean E=true; // FIXME: Must be false by default for public version.
-	public static /*final*/ boolean W=true;
-	public static /*final*/ boolean I=true;
-	public static /*final*/ boolean D=true;
-	public static /*final*/ boolean V=true;
+	public static /*final*/ boolean E=BuildConfig.DEBUG; // FIXME: Must be false by default for public version.
+	public static /*final*/ boolean W=E;
+	public static /*final*/ boolean I=W;
+	public static /*final*/ boolean D=I;
+	public static /*final*/ boolean V=D;
 
 	public static final String TAG_RA			="RA";
 
@@ -72,7 +73,7 @@ public class Constants
     /** Timeout to flush the last datas. */
     public static final int ETHERNET_SO_LINGER_TIMEOUT			=2000; // FIXME Delay for flush last packets
 	/** Timeout to detect if binder is alive. */
-	public static final long TIMEOUT_IS_BINDER_ALIVE			=200L; // FIXME second
+	public static final long TIMEOUT_IS_BINDER_ALIVE			=1000L; // FIXME second
 	/** Timeout to inform the finalize of binder. */
 	public static final long TIMEOUT_FINALIZE					=2000L; // FIXME second
 	
@@ -85,5 +86,7 @@ public class Constants
 	/** Number of probe sent */
 	public static final int PROBE_SENT = 2;
 
+	public static final byte[] NDEF_MIME_TYPE					="application/org.remoteandroid".getBytes();//Charset.forName("US-ASCII"));
+	
 	public static final boolean HACK_DEAD_LOCK=false;
 }

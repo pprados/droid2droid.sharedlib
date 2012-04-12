@@ -5,7 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 
-public class Compatibility
+public final class Compatibility
 {
     public static String MANUFACTURER;
     public static int VERSION_SDK_INT;

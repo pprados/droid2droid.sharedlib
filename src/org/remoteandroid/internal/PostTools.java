@@ -5,7 +5,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 /** @hide */
-public class PostTools
+public final class PostTools
 {
 	static void postServiceConnected(final ServiceConnection conn,final ComponentName name,final IBinder service)
 	{

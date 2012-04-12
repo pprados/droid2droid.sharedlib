@@ -31,7 +31,7 @@ import android.os.Process;
 import android.util.Log;
 
 
-public class NetworkSocketBossSender implements BossSocketSender
+public final class NetworkSocketBossSender implements BossSocketSender
 {
 	private static AtomicInteger sId=new AtomicInteger();
 

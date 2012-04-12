@@ -16,7 +16,7 @@ import android.net.Uri;
 import android.util.Log;
 import static org.remoteandroid.RemoteAndroidInfo.*;
 
-public class Tools
+public final class Tools
 {
 	public static String uriGetHostIPV6(Uri uri)
 	{

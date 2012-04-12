@@ -15,7 +15,7 @@ import org.remoteandroid.RemoteAndroidInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
+public final class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 {
 	private static String	TAG	= "DiscoverAndroid";
 
@@ -187,7 +187,7 @@ public class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isBonded()
+	public boolean isBound()
 	{
 		return isBonded;
 	}

@@ -16,7 +16,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import static org.remoteandroid.internal.Constants.*;
 
-public class NormalizeIntent
+public final class NormalizeIntent
 {
 	public static void writeIntent(Intent intent, Parcel out, int flags)
 	{

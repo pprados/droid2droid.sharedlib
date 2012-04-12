@@ -21,7 +21,7 @@ import android.util.Log;
 
 
 // FIXME: a laiser dans sharedlib ?
-public class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
+public final class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 {
 	private final Object mutex=this;
 	private ArrayList<RemoteAndroidInfo> mDiscoveredAndroid=new ArrayList<RemoteAndroidInfo>();

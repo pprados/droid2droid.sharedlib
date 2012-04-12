@@ -10,15 +10,17 @@ import static org.remoteandroid.internal.Constants.I;
 import static org.remoteandroid.internal.Constants.PREFIX_LOG;
 import static org.remoteandroid.internal.Constants.SCHEME_TCP;
 import static org.remoteandroid.internal.Constants.TAG_CLIENT_BIND;
+import static org.remoteandroid.internal.Constants.TAG_NFC;
 import static org.remoteandroid.internal.Constants.TIMEOUT_CONNECT_WIFI;
 import static org.remoteandroid.internal.Constants.TIME_MAX_TO_DISCOVER;
 import static org.remoteandroid.internal.Constants.V;
-import static org.remoteandroid.internal.Constants.VERSION;
+import static org.remoteandroid.internal.Constants.*;
 import static org.remoteandroid.internal.Constants.W;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -34,6 +36,9 @@ import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.Messages.Type;
 import org.remoteandroid.internal.socket.ip.NetworkSocketRemoteAndroid;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.UninitializedMessageException;
+
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
@@ -42,14 +47,18 @@ import android.content.ServiceConnection;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.os.RemoteException;
 import android.util.Log;
 
 
-public class RemoteAndroidManagerImpl extends RemoteAndroidManager
+public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 {
 	public static ApplicationInfo sAppInfo;
 	
@@ -458,6 +467,8 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
 				throw new IllegalStateException("Service Remote android not found");
 		}
 	}
+	
+	@Override
     public ListRemoteAndroidInfo newDiscoveredAndroid(DiscoverListener callback)
     {
 		if (noDiscoverPrivilege)
@@ -465,6 +476,53 @@ public class RemoteAndroidManagerImpl extends RemoteAndroidManager
     	return new ListRemoteAndroidInfoImpl(this,callback);
     }
 
+	@Override
+	public NdefMessage createNdefMessage()
+	{
+		try
+		{
+			return mManager.createNdefMessage();
+		}
+		catch (RemoteException e)
+		{
+			if (W) Log.w(TAG_CLIENT_BIND,"Can't create ndef",e);
+			return null;
+		}
+	}
+	
+	@Override
+    public RemoteAndroidInfo parseNfcRawMessages(Context context,Parcelable[] rawMessages)
+	{
+        if (rawMessages != null) 
+        {
+        	for (int i = 0; i < rawMessages.length; i++) 
+            {
+        		NdefMessage msg = (NdefMessage) rawMessages[i];
+				for (NdefRecord record:msg.getRecords())
+				{
+					if ((record.getTnf()==NdefRecord.TNF_MIME_MEDIA)
+							&& Arrays.equals(NDEF_MIME_TYPE, record.getType()))
+					{
+						try
+						{
+		    				Messages.BroadcastMsg bmsg=Messages.BroadcastMsg.newBuilder().mergeFrom(record.getPayload()).build();
+		    				return ProtobufConvs.toRemoteAndroidInfo(context,bmsg.getIdentity());
+						}
+						catch (InvalidProtocolBufferException e)
+						{
+							if (W) Log.d(TAG_NFC,PREFIX_LOG+"Invalide data");
+						}
+						catch (UninitializedMessageException e)
+						{
+							if (W) Log.d(TAG_NFC,PREFIX_LOG+"Invalide data");
+						}
+					}
+				}
+            }
+        }
+		return null;
+	}
+    
 	@Override
 	public void setLog(int type, boolean state)
 	{

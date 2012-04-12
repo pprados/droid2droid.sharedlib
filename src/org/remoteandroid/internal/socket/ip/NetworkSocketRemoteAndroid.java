@@ -13,7 +13,7 @@ import android.net.Uri;
 import android.os.RemoteException;
 
 
-public class NetworkSocketRemoteAndroid extends AbstractSocketRemoteAndroid<NetworkSocketBossSender>
+public final class NetworkSocketRemoteAndroid extends AbstractSocketRemoteAndroid<NetworkSocketBossSender>
 {
 	Context mContext;
 	ConnectivityManager mConnectivityManager;

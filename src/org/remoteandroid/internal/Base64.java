@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 
 /** @hide */
-public class Base64 
+public final class Base64 
 {
     /**
      * Default values for encoder/decoder flags.

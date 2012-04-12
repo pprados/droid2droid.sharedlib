@@ -6,7 +6,7 @@ import java.net.Socket;
 import org.remoteandroid.internal.Messages.Msg;
 import org.remoteandroid.internal.socket.Channel;
 
-public class NetworkSocketChannel extends Channel
+public final class NetworkSocketChannel extends Channel
 {
 	private Socket mSocket;
 	

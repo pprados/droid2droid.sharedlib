@@ -10,7 +10,7 @@ import android.os.IInterface;
 import android.os.Parcel;
 import android.os.RemoteException;
 
-public class BridgeProxyStub implements IBinder
+public final class BridgeProxyStub implements IBinder
 {
 	Binder mBinder;
 

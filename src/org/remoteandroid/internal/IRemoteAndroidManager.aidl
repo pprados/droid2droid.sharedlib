@@ -1,6 +1,7 @@
 package org.remoteandroid.internal;
 
 import org.remoteandroid.internal.RemoteAndroidInfoImpl;
+import android.nfc.NdefMessage;
 interface IRemoteAndroidManager
 {
 
@@ -12,5 +13,6 @@ interface IRemoteAndroidManager
 	List<RemoteAndroidInfoImpl> getBoundedDevices();
 	long getCookie(String uri);
 	void removeCookie(String uri);
+	NdefMessage createNdefMessage();
 	void setLog(int type,boolean state);
 }

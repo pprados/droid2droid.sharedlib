@@ -109,6 +109,20 @@ this.removeCookie(_arg0);
 reply.writeNoException();
 return true;
 }
+case TRANSACTION_createNdefMessage:
+{
+data.enforceInterface(DESCRIPTOR);
+android.nfc.NdefMessage _result = this.createNdefMessage();
+reply.writeNoException();
+if ((_result!=null)) {
+reply.writeInt(1);
+_result.writeToParcel(reply, android.os.Parcelable.PARCELABLE_WRITE_RETURN_VALUE);
+}
+else {
+reply.writeInt(0);
+}
+return true;
+}
 case TRANSACTION_setLog:
 {
 data.enforceInterface(DESCRIPTOR);
@@ -257,6 +271,28 @@ _reply.recycle();
 _data.recycle();
 }
 }
+public android.nfc.NdefMessage createNdefMessage() throws android.os.RemoteException
+{
+android.os.Parcel _data = android.os.Parcel.obtain();
+android.os.Parcel _reply = android.os.Parcel.obtain();
+android.nfc.NdefMessage _result;
+try {
+_data.writeInterfaceToken(DESCRIPTOR);
+mRemote.transact(Stub.TRANSACTION_createNdefMessage, _data, _reply, 0);
+_reply.readException();
+if ((0!=_reply.readInt())) {
+_result = android.nfc.NdefMessage.CREATOR.createFromParcel(_reply);
+}
+else {
+_result = null;
+}
+}
+finally {
+_reply.recycle();
+_data.recycle();
+}
+return _result;
+}
 public void setLog(int type, boolean state) throws android.os.RemoteException
 {
 android.os.Parcel _data = android.os.Parcel.obtain();
@@ -281,7 +317,8 @@ static final int TRANSACTION_isDiscovering = (android.os.IBinder.FIRST_CALL_TRAN
 static final int TRANSACTION_getBoundedDevices = (android.os.IBinder.FIRST_CALL_TRANSACTION + 4);
 static final int TRANSACTION_getCookie = (android.os.IBinder.FIRST_CALL_TRANSACTION + 5);
 static final int TRANSACTION_removeCookie = (android.os.IBinder.FIRST_CALL_TRANSACTION + 6);
-static final int TRANSACTION_setLog = (android.os.IBinder.FIRST_CALL_TRANSACTION + 7);
+static final int TRANSACTION_createNdefMessage = (android.os.IBinder.FIRST_CALL_TRANSACTION + 7);
+static final int TRANSACTION_setLog = (android.os.IBinder.FIRST_CALL_TRANSACTION + 8);
 }
 public org.remoteandroid.internal.RemoteAndroidInfoImpl getInfo() throws android.os.RemoteException;
 public void startDiscover(int flags, long timeToDiscover) throws android.os.RemoteException;
@@ -290,5 +327,6 @@ public boolean isDiscovering() throws android.os.RemoteException;
 public java.util.List<org.remoteandroid.internal.RemoteAndroidInfoImpl> getBoundedDevices() throws android.os.RemoteException;
 public long getCookie(java.lang.String uri) throws android.os.RemoteException;
 public void removeCookie(java.lang.String uri) throws android.os.RemoteException;
+public android.nfc.NdefMessage createNdefMessage() throws android.os.RemoteException;
 public void setLog(int type, boolean state) throws android.os.RemoteException;
 }

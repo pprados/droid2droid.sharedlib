@@ -12,7 +12,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import static org.remoteandroid.internal.Constants.*;
 
-public class NetworkTools
+public final class NetworkTools
 {
 	public static final int ACTIVE_REMOTE_ANDROID	=1<<0;
 	public static final int ACTIVE_NOAIRPLANE		=1<<1;

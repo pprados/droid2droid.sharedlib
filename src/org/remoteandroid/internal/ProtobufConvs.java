@@ -23,7 +23,7 @@ import android.util.Log;
 
 import com.google.protobuf.ByteString;
 
-public class ProtobufConvs
+public final class ProtobufConvs
 {
 
 	private static byte[] fromUUID(UUID uuid)
