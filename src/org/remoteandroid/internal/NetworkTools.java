@@ -7,6 +7,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcManager;
+import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -34,6 +35,9 @@ public final class NetworkTools
 			if (conn!=null && conn.getActiveNetworkInfo()!=null)
 			{
 				int type=conn.getActiveNetworkInfo().getType();
+				// If emulator
+				if (Build.MANUFACTURER.equals("unknown"))
+					type=ConnectivityManager.TYPE_ETHERNET;
 				switch (type)
 				{
 					case ConnectivityManager.TYPE_MOBILE:
