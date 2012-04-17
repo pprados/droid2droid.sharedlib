@@ -20,6 +20,7 @@ public abstract class Login
 		AbstractProtoBufRemoteAndroid android,
 		Uri uri,
 		Type type,
+		int flags,
 		long timeout) throws UnknownHostException, IOException, RemoteException;
 	public abstract Msg server(Object conContext,Msg req,long cookie);
 }

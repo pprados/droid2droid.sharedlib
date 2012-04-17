@@ -11,7 +11,7 @@ interface IRemoteAndroidManager
 	boolean isDiscovering();
 	
 	List<RemoteAndroidInfoImpl> getBoundedDevices();
-	long getCookie(String uri);
+	long getCookie(int flags,String uri);
 	void removeCookie(String uri);
 	NdefMessage createNdefMessage();
 	void setLog(int type,boolean state);

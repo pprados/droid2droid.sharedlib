@@ -29,5 +29,5 @@ public interface IRemoteAndroid
     
     void close();
     void disconnect(int connid);
-    boolean connect(Type mode,long cookie,long timeout) throws UnknownHostException, IOException, RemoteException;
+    boolean connect(Type mode,int flags,long cookie,long timeout) throws UnknownHostException, IOException, RemoteException;
 }

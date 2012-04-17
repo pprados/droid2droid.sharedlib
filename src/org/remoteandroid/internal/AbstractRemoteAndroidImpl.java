@@ -341,7 +341,7 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 		return true;
 	}
 	
-	public abstract Pair<RemoteAndroidInfoImpl,Long> connectWithAuthent(Uri uri,Type type,long timeout) throws UnknownHostException, IOException, RemoteException;
+	public abstract Pair<RemoteAndroidInfoImpl,Long> connectWithAuthent(Uri uri,Type type,int flags,long timeout) throws UnknownHostException, IOException, RemoteException;
 	
 	private static final void postPublishProgress(final PublishListener listener,final int progress)
 	{

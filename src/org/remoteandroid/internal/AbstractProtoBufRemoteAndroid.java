@@ -293,7 +293,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 	
 	// Connection avec exploitation d'un cookie
 	@Override
-	public boolean connect(Type conType,long cookie,long timeout) throws UnknownHostException, IOException, RemoteException, SecurityException
+	public boolean connect(Type conType,int flags,long cookie,long timeout) throws UnknownHostException, IOException, RemoteException, SecurityException
 	{
 		final long threadid = Thread.currentThread().getId();
 		Msg resp;
@@ -308,9 +308,11 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 				{
 					if (conType==Type.CONNECT)
 					{
-						cookie=((RemoteAndroidManagerImpl)mManager).getCookie(mUri.toString());
+						cookie=((RemoteAndroidManagerImpl)mManager).getCookie(flags,mUri.toString());
+						if (cookie==COOKIE_SECURITY)
+							throw new SecurityException("Impossible to get cookie with "+mUri+". Add the flag FLAG_PROPOSE_PAIRING ?");
 						if (cookie==COOKIE_EXCEPTION)
-							throw new IOException("Impossible to get cookie with "+mUri); // TODO: Avec Motorola Milestone et IPV6, java.net.SocketException: The socket level is invalid
+							throw new IOException("Impossible to get cookie with "+mUri+"."); // TODO: Avec Motorola Milestone et IPV6, java.net.SocketException: The socket level is invalid
 	
 						if (cookie==COOKIE_NO)
 							throw new SecurityException("Can't find a cookie with "+mUri);
@@ -326,6 +328,12 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 					.setIdentity(ProtobufConvs.toIdentity(mManager.getInfos())) // My identity
 					.build();
 				resp = sendRequestAndReadResponse(msg,timeout);
+				if (resp.getStatus()==AbstractRemoteAndroidImpl.STATUS_REFUSE_ANONYMOUS)
+				{
+					close();
+					((RemoteAndroidManagerImpl)mManager).removeCookie(mUri.toString());
+					throw new SecurityException("Refuse anonymous. Use FLAG_PROPOSE_PAIRING ?");
+				}
 				// Unpair
 				if (conType==Type.CONNECT_FOR_PAIRING && cookie==-1)
 					return true;

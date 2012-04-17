@@ -262,30 +262,31 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		return false;
 	}
 	
-	public boolean isInit()
+	public final boolean isInit()
 	{
 		return mManager!=null;
 	}
 	
-	public long getCookie(String uri)
+	public final long getCookie(int flags,String uri)
 	{
 		waitBinding(); // TODO: reconnection si necessaire
 		try
 		{
-			return mManager.getCookie(uri);
+			return mManager.getCookie(flags,uri);
 		}
 		catch (SecurityException e)
 		{
 			if (W) Log.w(TAG_CLIENT_BIND,PREFIX_LOG+"Impossible to get cookie (pairing rejected).");
+			return COOKIE_SECURITY;
 		}
 		catch (RemoteException e)
 		{
 			if (W) Log.w(TAG_CLIENT_BIND,PREFIX_LOG+"Impossible to get cookie.");
+			return COOKIE_EXCEPTION;
 		}
-		return 0;
 	}
 
-	public void removeCookie(String uri)
+	public final void removeCookie(String uri)
 	{
 		waitBinding();
 		try
@@ -298,21 +299,17 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			// Ignore
 		}
 	}
-	public long askCookie(Uri uri) throws SecurityException, IOException
+	public final long askCookie(Uri uri,Type type,int flags) throws SecurityException, IOException
 	{
-		return askCookie(uri,Type.CONNECT_FOR_COOKIE);
-	}
-	public long askCookie(Uri uri,Type type) throws SecurityException, IOException
-	{
-		Pair<RemoteAndroidInfoImpl,Long> msg=askMsgCookie(uri,type);
+		Pair<RemoteAndroidInfoImpl,Long> msg=askMsgCookie(uri,type,flags);
 		if (msg==null) return 0;
 		return msg.second;
 	}
-	public Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri) throws IOException, SecurityException
+	public final Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri,int flags) throws IOException, SecurityException
 	{
-		return askMsgCookie(uri,Type.CONNECT_FOR_COOKIE);
+		return askMsgCookie(uri,Type.CONNECT_FOR_COOKIE,flags);
 	}
-	public Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri,Type type) throws IOException, SecurityException
+	public final Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri,Type type,int flags) throws IOException, SecurityException
 	{
 		AbstractRemoteAndroidImpl binder=null;
 		try
@@ -324,13 +321,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			if (driver==null)
 				throw new MalformedURLException("Unknown "+uri);
 			binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
-			return binder.connectWithAuthent(uri,type,TIMEOUT_CONNECT_WIFI);
-		}
-		catch (SecurityException e)
-		{
-			if (W && !D) Log.w(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.");
-			if (D) Log.d(TAG_CLIENT_BIND,"Remote device refuse anonymous connection.",e);
-			throw e;
+			return binder.connectWithAuthent(uri,type,flags,TIMEOUT_CONNECT_WIFI);
 		}
 		catch (SocketException e)
 		{
@@ -361,7 +352,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	
 	@Override
 	public boolean bindRemoteAndroid(Intent service, final ServiceConnection conn,
-			int flags)
+			final int flags)
 	{
     	final Uri uri=service.getData();
     	final ComponentName name=new ComponentName(RemoteAndroidManager.class.getName(),uri.toString());
@@ -378,7 +369,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
     				AbstractRemoteAndroidImpl binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
     					
     				final AbstractRemoteAndroidImpl fbinder=binder;
-    				binder.connect(Type.CONNECT,0,TIMEOUT_CONNECT_WIFI);
+    				binder.connect(Type.CONNECT,flags,0,TIMEOUT_CONNECT_WIFI);
     				binder.linkToDeath(new IBinder.DeathRecipient()
 					{
 						
@@ -448,7 +439,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		return rc; 
     }
     
-	private void waitBinding() //TODO: reconnection
+	private final void waitBinding() //TODO: reconnection
 	{
 		int cnt=0;
 		while (mManager==null)
@@ -505,8 +496,8 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 					{
 						try
 						{
-		    				Messages.BroadcastMsg bmsg=Messages.BroadcastMsg.newBuilder().mergeFrom(record.getPayload()).build();
-		    				return ProtobufConvs.toRemoteAndroidInfo(context,bmsg.getIdentity());
+							Messages.Identity identity=Messages.Identity.newBuilder().mergeFrom(record.getPayload()).build();
+		    				return ProtobufConvs.toRemoteAndroidInfo(context,identity);
 						}
 						catch (InvalidProtocolBufferException e)
 						{

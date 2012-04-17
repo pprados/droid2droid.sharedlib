@@ -7,24 +7,24 @@ import android.os.Build;
 
 public final class Constants
 {
-	public static /*final*/ boolean E=BuildConfig.DEBUG; // FIXME: Must be false by default for public version.
+	public static /*final*/ boolean E=BuildConfig.DEBUG;
 	public static /*final*/ boolean W=E;
 	public static /*final*/ boolean I=W;
 	public static /*final*/ boolean D=I;
 	public static /*final*/ boolean V=D;
 
-	public static final String TAG_RA			="RA";
+	public static final String TAG_RA							="RA";
 
-	public static final int VERSION				=0; // TODO
+	public static final int VERSION								=0; // TODO
 	
-	public static final String TAG_INSTALL 		= "Install";
-	public static final String TAG_PAIRING 		= "Pairing";
-	public static final String TAG_SECURITY		= "Security";
-	public static final String TAG_PREFERENCE 	= "Preference";
-	public static final String TAG_CLIENT_BIND 	= "Client";
-	public static final String TAG_CANDIDATE 	= "Candidate";
-	public static final String TAG_PROVIDER 	= "Provider";
-	public static final String TAG_NFC 			= "Nfc";
+	public static final String TAG_INSTALL 						= "Install";
+	public static final String TAG_PAIRING 						= "Pairing";
+	public static final String TAG_SECURITY						= "Security";
+	public static final String TAG_PREFERENCE 					= "Preference";
+	public static final String TAG_CLIENT_BIND 					= "Client";
+	public static final String TAG_CANDIDATE 					= "Candidate";
+	public static final String TAG_PROVIDER 					= "Provider";
+	public static final String TAG_NFC 							= "Nfc";
 
 	public static final String SCHEME_TCP						="ip";
 	
@@ -34,14 +34,15 @@ public final class Constants
 	public static final int BINDING_TIMEOUT_WAIT				=10000; // FIXME: remove
 	public static final int BINDING_NB_RETRY					=3;
 	
-	public static final long COOKIE_NO=0;
-	public static final long COOKIE_EXCEPTION=-1;
+	public static final long COOKIE_NO							=0;
+	public static final long COOKIE_EXCEPTION					=-1;
+	public static final long COOKIE_SECURITY					=-2;
 	
 	/** Buffer size for down load */
-	public static final int BUFFER_SIZE_FOR_DOWNLOAD = 1024 * 10;
+	public static final int BUFFER_SIZE_FOR_DOWNLOAD 			= 1024 * 10;
 
 	/** Patch parcel for compatibility between different versions of Android */
-	public static final boolean UPDATE_PARCEL = true;
+	public static final boolean UPDATE_PARCEL 					= true;
 
     /** Delay to discover others remote androids. */
 	public static final long TIME_MAX_TO_DISCOVER				=20000L;
@@ -52,16 +53,16 @@ public final class Constants
     public static final boolean ETHERNET_ONLY_IPV4 				=true; // FIXME 
 
     /** Order uris with IPV4 before IPV6 */
-	public static final boolean ETHERNET_IPV4_FIRST = false;
+	public static final boolean ETHERNET_IPV4_FIRST 			= false;
 
 	/** Use Mobile network */
-	public static final boolean WAN = false;
+	public static final boolean WAN 							= false;
 
 	/** Check security. */
-	public static final boolean SECURITY = true;
+	public static final boolean SECURITY 						= true;
 
 	/** Prefix for log */
-	public static final String PREFIX_LOG='['/*+Build.DEVICE+' '*/+Build.MODEL+"] ";
+	public static final String PREFIX_LOG						='['+Build.MODEL+"] ";
 
 	/** Timeout for ping remote binder. */
 	public static final long TIMEOUT_PING_BINDER				=5000L; // second
