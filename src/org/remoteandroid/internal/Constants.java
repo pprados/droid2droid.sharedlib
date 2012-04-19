@@ -4,13 +4,14 @@ import org.remoteandroid.BuildConfig;
 import org.remoteandroid.Friend;
 
 import android.os.Build;
+import android.os.Debug;
 
 public final class Constants
 {
 	public static /*final*/ boolean E=BuildConfig.DEBUG;
 	public static /*final*/ boolean W=E;
 	public static /*final*/ boolean I=W;
-	public static /*final*/ boolean D=I;
+	public static /*final*/ boolean D=Debug.isDebuggerConnected();
 	public static /*final*/ boolean V=D;
 
 	public static final String TAG_RA							="RA";

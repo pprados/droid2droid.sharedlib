@@ -2,11 +2,14 @@ package org.remoteandroid.internal;
 
 import static org.remoteandroid.internal.Constants.BINDING_NB_RETRY;
 import static org.remoteandroid.internal.Constants.BINDING_TIMEOUT_WAIT;
+import static org.remoteandroid.internal.Constants.COOKIE_EXCEPTION;
+import static org.remoteandroid.internal.Constants.COOKIE_SECURITY;
 import static org.remoteandroid.internal.Constants.D;
 import static org.remoteandroid.internal.Constants.E;
 import static org.remoteandroid.internal.Constants.ETHERNET;
 import static org.remoteandroid.internal.Constants.HACK_DEAD_LOCK;
 import static org.remoteandroid.internal.Constants.I;
+import static org.remoteandroid.internal.Constants.NDEF_MIME_TYPE;
 import static org.remoteandroid.internal.Constants.PREFIX_LOG;
 import static org.remoteandroid.internal.Constants.SCHEME_TCP;
 import static org.remoteandroid.internal.Constants.TAG_CLIENT_BIND;
@@ -14,7 +17,7 @@ import static org.remoteandroid.internal.Constants.TAG_NFC;
 import static org.remoteandroid.internal.Constants.TIMEOUT_CONNECT_WIFI;
 import static org.remoteandroid.internal.Constants.TIME_MAX_TO_DISCOVER;
 import static org.remoteandroid.internal.Constants.V;
-import static org.remoteandroid.internal.Constants.*;
+import static org.remoteandroid.internal.Constants.VERSION;
 import static org.remoteandroid.internal.Constants.W;
 
 import java.io.IOException;
@@ -31,13 +34,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.remoteandroid.ListRemoteAndroidInfo;
 import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
+import org.remoteandroid.RemoteAndroidNfcHelper;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.Messages.Type;
 import org.remoteandroid.internal.socket.ip.NetworkSocketRemoteAndroid;
-
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.UninitializedMessageException;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
@@ -49,13 +50,15 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
-import android.nfc.NfcAdapter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.os.RemoteException;
 import android.util.Log;
+
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.UninitializedMessageException;
 
 
 public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
@@ -91,7 +94,6 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
             });    
 	public final Context mAppContext;
 	private IRemoteAndroidManager mManager;
-	private static boolean noDiscoverPrivilege=false; // Remember if the process has the privilege to discover devices.
 	private ServiceConnection mServiceConnection;
 	private static final Intent sIntentRemoteAndroid=new Intent(ACTION_BIND_REMOTE_ANDROID);
 
@@ -99,11 +101,6 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	public int getVersion()
 	{
 		return VERSION;
-	}
-	
-	public static void bootStrap(final Context context,final RemoteAndroidManager.ManagerListener listener)
-	{
-		new RemoteAndroidManagerImpl(context.getApplicationContext(),listener);
 	}
 
 	private RemoteAndroidManagerImpl(Context appContext)
@@ -205,8 +202,6 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	@Override
 	public synchronized void startDiscover(int flags,long timeToDiscover)
     {
-		if (noDiscoverPrivilege)
-			throw new IllegalStateException(MSG_SECURITY);
 		waitBinding();
 		if (timeToDiscover==TIME_MAX_TO_DISCOVER)
 			mLastTimeToDiscover=TIME_MAX_TO_DISCOVER;
@@ -225,8 +220,6 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
     public synchronized void cancelDiscover()
     {
 		mLastTimeToDiscover=0;
-		if (noDiscoverPrivilege)
-			return;
 		waitBinding();
 		try
 		{
@@ -241,8 +234,6 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	@Override
 	public boolean isDiscovering()
 	{
-		if (noDiscoverPrivilege)
-			return false;
 		//FIXME: dead-lock sur waitBinding lors de l'init à cause de l'event reseau qui arrive dans le main thread.
 		if (HACK_DEAD_LOCK)
 		{
@@ -423,7 +414,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
     public ListRemoteAndroidInfo getBoundedDevices()
     {
 		waitBinding();
-		ListRemoteAndroidInfo rc=new ListRemoteAndroidInfoImpl(this);
+		ListRemoteAndroidInfo rc=newDiscoveredAndroid(getContext(), null);
 		try
 		{
 			List<RemoteAndroidInfoImpl> boundedDevices=mManager.getBoundedDevices();
@@ -458,14 +449,6 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 				throw new IllegalStateException("Service Remote android not found");
 		}
 	}
-	
-	@Override
-    public ListRemoteAndroidInfo newDiscoveredAndroid(DiscoverListener callback)
-    {
-		if (noDiscoverPrivilege)
-			throw new IllegalStateException(MSG_SECURITY);
-    	return new ListRemoteAndroidInfoImpl(this,callback);
-    }
 
 	@Override
 	public NdefMessage createNdefMessage()

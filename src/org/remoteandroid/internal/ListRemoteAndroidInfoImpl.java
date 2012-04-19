@@ -1,8 +1,10 @@
 package org.remoteandroid.internal;
 
-import static org.remoteandroid.internal.Constants.*;
+import static org.remoteandroid.internal.Constants.D;
+import static org.remoteandroid.internal.Constants.PREFIX_LOG;
+import static org.remoteandroid.internal.Constants.TAG_CLIENT_BIND;
 
-import java.lang.ref.WeakReference;
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,11 +23,11 @@ import android.util.Log;
 
 
 // FIXME: a laiser dans sharedlib ?
-public final class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
+public final class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo, Closeable
 {
 	private final Object mutex=this;
 	private ArrayList<RemoteAndroidInfo> mDiscoveredAndroid=new ArrayList<RemoteAndroidInfo>();
-	private WeakReference<RemoteAndroidManager> mManager;
+	private Context mContext;
 	private DiscoverListener mCallBack;
 
 	private final BroadcastReceiver mReceiver=new BroadcastReceiver()
@@ -51,19 +53,19 @@ public final class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 
 	};
 
-	public ListRemoteAndroidInfoImpl(RemoteAndroidManager manager)
+	public ListRemoteAndroidInfoImpl(Context context)
 	{
-		this(manager,null);
+		this(context,null);
 	}
-	public ListRemoteAndroidInfoImpl(RemoteAndroidManager manager,DiscoverListener callback)
+	public ListRemoteAndroidInfoImpl(Context context,DiscoverListener callback)
 	{
-		mManager=new WeakReference<RemoteAndroidManager>(manager);
 		mCallBack=callback;
+		mContext=context;
 		IntentFilter filter=new IntentFilter();
 		filter.addAction(RemoteAndroidManager.ACTION_DISCOVER_ANDROID);
 		filter.addAction(RemoteAndroidManager.ACTION_START_DISCOVER_ANDROID);
 		filter.addAction(RemoteAndroidManager.ACTION_STOP_DISCOVER_ANDROID);
-		manager.getContext().registerReceiver(mReceiver, 
+		context.registerReceiver(mReceiver, 
 				filter,
 				RemoteAndroidManager.PERMISSION_DISCOVER_SEND,null
 				);
@@ -78,28 +80,14 @@ public final class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 	@Override
 	public void close()
 	{
-		cancel();
-		RemoteAndroidManager manager=mManager.get();
-		if (manager!=null)
-		{
-			manager.getContext().unregisterReceiver(mReceiver);
-		}
+		mContext.unregisterReceiver(mReceiver);
 		mCallBack=null;
 	}
 	@Override
 	protected void finalize() throws Throwable
 	{
 		super.finalize();
-		try
-		{
-			RemoteAndroidManager manager=mManager.get();
-			if (manager!=null && mReceiver!=null)
-				manager.getContext().unregisterReceiver(mReceiver);
-		}
-		catch (Exception e)
-		{
-			// Ignore
-		}
+		close();
 	}
 	
 	synchronized private void detectAndroid(RemoteAndroidInfoImpl android)
@@ -131,25 +119,6 @@ public final class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo
 			mCallBack.onDiscoverStop();
 	}
 	
-	public void start(long timeToDiscover)
-	{
-		start(0,timeToDiscover);
-	}
-	public void start(int flag,long timeToDiscover)
-	{
-		RemoteAndroidManager manager=mManager.get();
-		if (manager!=null)
-			manager.startDiscover(flag,timeToDiscover);
-		else
-			Log.w(TAG_RA,"RemoteAndroidManager is disconbected");
-	}
-	public void cancel()
-	{
-		RemoteAndroidManager manager=mManager.get();
-		if (manager!=null)
-			manager.cancelDiscover();
-	}
-
 	public boolean add(RemoteAndroidInfo object)
 	{
 		synchronized(mutex) { return mDiscoveredAndroid.add(object); }
