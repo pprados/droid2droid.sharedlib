@@ -465,39 +465,6 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	}
 	
 	@Override
-    public RemoteAndroidInfo parseNfcRawMessages(Context context,Parcelable[] rawMessages)
-	{
-        if (rawMessages != null) 
-        {
-        	for (int i = 0; i < rawMessages.length; i++) 
-            {
-        		NdefMessage msg = (NdefMessage) rawMessages[i];
-				for (NdefRecord record:msg.getRecords())
-				{
-					if ((record.getTnf()==NdefRecord.TNF_MIME_MEDIA)
-							&& Arrays.equals(NDEF_MIME_TYPE, record.getType()))
-					{
-						try
-						{
-							Messages.Identity identity=Messages.Identity.newBuilder().mergeFrom(record.getPayload()).build();
-		    				return ProtobufConvs.toRemoteAndroidInfo(context,identity);
-						}
-						catch (InvalidProtocolBufferException e)
-						{
-							if (W) Log.d(TAG_NFC,PREFIX_LOG+"Invalide data");
-						}
-						catch (UninitializedMessageException e)
-						{
-							if (W) Log.d(TAG_NFC,PREFIX_LOG+"Invalide data");
-						}
-					}
-				}
-            }
-        }
-		return null;
-	}
-    
-	@Override
 	public void setLog(int type, boolean state)
 	{
 		waitBinding();
