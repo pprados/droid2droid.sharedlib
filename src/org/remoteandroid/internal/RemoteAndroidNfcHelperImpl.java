@@ -26,11 +26,11 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.util.Log;
 
-public class RemoteAndroidNfcIntegrationHelperImpl 
+public class RemoteAndroidNfcHelperImpl 
 implements RemoteAndroidNfcHelper
 {
 	private RemoteAndroidNfcHelper.OnNfcDiscover mCallBack; 
-	public RemoteAndroidNfcIntegrationHelperImpl(RemoteAndroidNfcHelper.OnNfcDiscover callback)
+	public RemoteAndroidNfcHelperImpl(RemoteAndroidNfcHelper.OnNfcDiscover callback)
 	{
 		mCallBack=callback;
 	}

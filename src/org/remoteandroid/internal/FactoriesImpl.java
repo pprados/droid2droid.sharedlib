@@ -24,7 +24,7 @@ extends Friend.Factories
 	@Override
 	public RemoteAndroidNfcHelper newNfcIntegrationHelper(OnNfcDiscover callback)
     {
-    	return new RemoteAndroidNfcIntegrationHelperImpl(callback);    	
+    	return new RemoteAndroidNfcHelperImpl(callback);    	
     }
 
 	@Override
