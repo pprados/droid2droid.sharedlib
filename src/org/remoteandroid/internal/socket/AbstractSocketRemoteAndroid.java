@@ -153,7 +153,7 @@ public abstract class AbstractSocketRemoteAndroid<T extends BossSocketSender> ex
 		{
 			if (V) Log.v(TAG_CLIENT_BIND,PREFIX_LOG+"Read socket",e);
     		mLocks.remove(threadid);
-	    	return null;
+    		throw new RemoteException(); // TODO: Retourner une interruptidRemoteException
 		}
     	finally
     	{

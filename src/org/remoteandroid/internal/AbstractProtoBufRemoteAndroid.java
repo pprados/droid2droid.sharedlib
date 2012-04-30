@@ -54,8 +54,9 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 		}
 	}
 
-	public void checkStatus(int status) throws SecurityException
+	public void checkStatus(Msg resp) throws SecurityException
 	{
+		int status = resp.getStatus();
 		switch (status)
 		{
 			case AbstractRemoteAndroidImpl.STATUS_REFUSE_ANONYMOUS:
@@ -90,7 +91,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 			.setFlags(flags)
 			.build();
 		Msg resp = sendRequestAndReadResponse(msg,timeout);
-		checkStatus(resp.getStatus());
+		checkStatus(resp);
 		ByteString bs = resp.getReply();
 		byte[] rc = new byte[bs.size()];
 		bs.copyTo(rc, 0);
@@ -120,7 +121,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 			.setFlags(flags)
 			.build();
 		Msg resp = sendRequestAndReadResponse(msg,timeout);
-		checkStatus(resp.getStatus());
+		checkStatus(resp);
 		ByteString bs = resp.getReply();
 		byte[] rc = new byte[bs.size()];
 		bs.copyTo(rc, 0);
@@ -169,7 +170,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 				.setFlags(flags)
 				.build();
 			Msg resp = sendRequestAndReadResponse(msg,timeout);
-			checkStatus(resp.getStatus());
+			checkStatus(resp);
 			if (V) Log.v(TAG_INSTALL, PREFIX_LOG+"ProposeFile done.");
 			ByteString bs = resp.getReply();
 			byte[] rc = new byte[bs.size()];
@@ -208,7 +209,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 				.setData(ByteString.copyFrom(data.marshall()))
 				.build();
 			Msg resp = sendRequestAndReadResponse(msg,timeout);
-			checkStatus(resp.getStatus());
+			checkStatus(resp);
 			if (V) Log.v(TAG_INSTALL, PREFIX_LOG+"SendFileData done.");
 			ByteString bs = resp.getReply();
 			byte[] rc = new byte[bs.size()];
@@ -242,7 +243,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 				.setData(ByteString.copyFrom(data.marshall()))
 				.build();
 			Msg resp=sendRequestAndReadResponse(msg,timeout);
-			checkStatus(resp.getStatus());
+			checkStatus(resp);
 			reply.readException();
 			if (V) Log.v(TAG_INSTALL, PREFIX_LOG+"CancelFileData done.");
 		}
@@ -272,7 +273,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 				.setData(ByteString.copyFrom(data.marshall()))
 				.build();
 			Msg resp = sendRequestAndReadResponse(msg,timeout);
-			checkStatus(resp.getStatus());
+			checkStatus(resp);
 			if (V) Log.v(TAG_INSTALL, PREFIX_LOG+"InstallApk done.");
 			ByteString bs = resp.getReply();
 			byte[] rc = new byte[bs.size()];
@@ -362,7 +363,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 		{
 			((RemoteAndroidManagerImpl)mManager).removeCookie(mUri.toString());
 		}
-		checkStatus(resp.getStatus());
+		checkStatus(resp);
 		if (resp.hasIdentity())
 		{
 			mInfo=ProtobufConvs.toRemoteAndroidInfo(mManager.getContext(),resp.getIdentity());
