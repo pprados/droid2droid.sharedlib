@@ -93,17 +93,19 @@ public final class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo, C
 	synchronized private void detectAndroid(RemoteAndroidInfoImpl android)
 	{
 		if (D) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+"Discover "+android);
+		final DiscoverListener callBack=mCallBack;
 		for (RemoteAndroidInfo a:mDiscoveredAndroid)
 		{
 			RemoteAndroidInfoImpl and=(RemoteAndroidInfoImpl)a;
 			if (and.uuid.equals(android.uuid))
 			{
 				and.merge(android);
+				if (callBack!=null)
+					callBack.onDiscover(android, true); // FIXME: gérer le flag update
 				return;
 			}
 		}
 		mDiscoveredAndroid.add(android);
-		final DiscoverListener callBack=mCallBack;
 		if (callBack!=null)
 			callBack.onDiscover(android, false);
 	}
