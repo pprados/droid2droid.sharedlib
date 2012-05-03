@@ -30,7 +30,7 @@ public final class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo, C
 	private Context mContext;
 	private DiscoverListener mCallBack;
 
-	private final BroadcastReceiver mReceiver=new BroadcastReceiver()
+	private BroadcastReceiver mReceiver=new BroadcastReceiver()
 	{
 		@Override
 		public void onReceive(Context context, Intent intent)
@@ -80,7 +80,9 @@ public final class ListRemoteAndroidInfoImpl implements ListRemoteAndroidInfo, C
 	@Override
 	public void close()
 	{
-		mContext.unregisterReceiver(mReceiver);
+		if (mReceiver!=null)
+			mContext.unregisterReceiver(mReceiver);
+		mReceiver=null;
 		mCallBack=null;
 	}
 	@Override

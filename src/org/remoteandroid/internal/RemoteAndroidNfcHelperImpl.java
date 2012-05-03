@@ -7,12 +7,9 @@ import static org.remoteandroid.internal.Constants.W;
 
 import java.util.Arrays;
 
-import org.remoteandroid.RemoteAndroidNfcHelper;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
-
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.UninitializedMessageException;
+import org.remoteandroid.RemoteAndroidNfcHelper;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -26,6 +23,9 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.UninitializedMessageException;
+
 public class RemoteAndroidNfcHelperImpl 
 implements RemoteAndroidNfcHelper
 {
@@ -34,31 +34,6 @@ implements RemoteAndroidNfcHelper
 	{
 		mCallBack=callback;
 	}
-//	private void onNfcCreate()
-//	{
-//		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD)
-//		{
-//			NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-//	        if (nfcAdapter != null) 
-//	        {
-//	        	nfcAdapter.setNdefPushMessageCallback(new CreateNdefMessageCallback()
-//	        	{
-//
-//					@Override
-//					public NdefMessage createNdefMessage(NfcEvent event)
-//					{
-//						RemoteAndroidManager manager=getRemoteAndroidManager();
-//						if (manager!=null)
-//						{
-//							return manager.createNdefMessage();
-//						}
-//						return null;
-//					}
-//	        		
-//	        	}, this);
-//	        }
-//		}
-//	}
 	
 	@Override
     public NdefMessage createNdefMessage(RemoteAndroidManager manager)
@@ -118,6 +93,8 @@ implements RemoteAndroidNfcHelper
 					if (mCallBack!=null)
 						mCallBack.onNfcDiscover(info);
 				}
+				else
+					; // TODO: Alert with "unknown tag format ?"
 			}
 		}
 	}	
@@ -147,6 +124,7 @@ implements RemoteAndroidNfcHelper
 			if (nfcAdapter!=null)
 			{
 				nfcAdapter.disableForegroundDispatch(activity);
+				nfcAdapter.setNdefPushMessageCallback(null,activity);
 			}
 		}
     }
