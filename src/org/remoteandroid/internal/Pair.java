@@ -38,7 +38,7 @@ public final class Pair<F, S>
 		{
 			other = (Pair<F, S>) o;
 		}
-		catch (ClassCastException e)
+		catch (ClassCastException e) // $codepro.audit.disable logExceptions
 		{
 			return false;
 		}

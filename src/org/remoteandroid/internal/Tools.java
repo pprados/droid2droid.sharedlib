@@ -60,7 +60,7 @@ public final class Tools
 			NetworkInterface network=networks.nextElement();
 			for (Enumeration<InetAddress> addrs=network.getInetAddresses();addrs.hasMoreElements();)
 			{
-				InetAddress add=(InetAddress)addrs.nextElement();
+				InetAddress add=addrs.nextElement();
 				if (network.getName().startsWith("sit")) // vpn ?
 					continue;
 				if (network.getName().startsWith("dummy")) // ipv6 in ipv4
@@ -91,7 +91,7 @@ public final class Tools
 				}
 			}
 		}
-		catch (Exception e)
+		catch (Exception e) // $codepro.audit.disable emptyCatchClause
 		{
 			// Ignore
 		}
@@ -103,7 +103,7 @@ public final class Tools
 				{
 					in.close();
 				}
-				catch (IOException e)
+				catch (IOException e) // $codepro.audit.disable emptyCatchClause
 				{
 					// Ignore
 				}
@@ -124,7 +124,7 @@ public final class Tools
 			String line;
 			return Long.parseLong(in.readLine());
 		}
-		catch (Exception e)
+		catch (Exception e) // $codepro.audit.disable emptyCatchClause
 		{
 			// Ignore
 		}
@@ -136,7 +136,7 @@ public final class Tools
 				{
 					in.close();
 				}
-				catch (IOException e)
+				catch (IOException e) // $codepro.audit.disable emptyCatchClause, logExceptions
 				{
 					// Ignore
 				}

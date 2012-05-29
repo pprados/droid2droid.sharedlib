@@ -120,7 +120,7 @@ public final class NetworkSocketBossSender implements BossSocketSender
 			if (mChannel!=null)
 				mChannel.close();
 		}
-		catch (IOException e)
+		catch (IOException e) // $codepro.audit.disable emptyCatchClause
 		{
 			// Ignore
 		}

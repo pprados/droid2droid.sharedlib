@@ -48,7 +48,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 			Msg resp = sendRequestAndReadResponse(msg,TIMEOUT_PING_BINDER);
 			return (resp != null && resp.getType() == Type.PING);
 		}
-		catch (RemoteException e)
+		catch (RemoteException e) // $codepro.audit.disable logExceptions
 		{
 			return false;
 		}

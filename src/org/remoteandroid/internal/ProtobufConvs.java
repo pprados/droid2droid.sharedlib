@@ -88,7 +88,7 @@ public final class ProtobufConvs
 						candidateBuilder.addInternetIpv6(ByteString.copyFrom(add.getAddress()));
 					}
 				}
-				catch (UnknownHostException e)
+				catch (UnknownHostException e) // $codepro.audit.disable logExceptions
 				{
 					if (W)
 						Log.w(
@@ -178,7 +178,7 @@ public final class ProtobufConvs
 					continue;
 				results.add(SCHEME_TCP + "://" + add.getHostAddress() + ':' + port + '/');
 			}
-			catch (UnknownHostException e)
+			catch (UnknownHostException e) // $codepro.audit.disable logExceptions
 			{
 				if (V)
 					Log.v(
@@ -202,7 +202,7 @@ public final class ProtobufConvs
 					continue;
 				results.add(SCHEME_TCP + "://[" + add.getHostAddress() + "]:" + port + "/");
 			}
-			catch (UnknownHostException e)
+			catch (UnknownHostException e) // $codepro.audit.disable logExceptions
 			{
 				if (V)
 					Log.v(

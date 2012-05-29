@@ -1600,7 +1600,7 @@ public final class Descriptors {
       for (final FileDescriptor dependency : dependencies) {
         try {
           addPackage(dependency.getPackage(), dependency);
-        } catch (DescriptorValidationException e) {
+        } catch (DescriptorValidationException e) { // $codepro.audit.disable logExceptions
           // Can't happen, because addPackage() only fails when the name
           // conflicts with a non-package, but we have not yet added any
           // non-packages at this point.

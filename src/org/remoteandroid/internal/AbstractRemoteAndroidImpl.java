@@ -14,13 +14,8 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.net.UnknownHostException;
-import java.text.Normalizer;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CancellationException;
 
@@ -28,7 +23,6 @@ import org.apache.http.MethodNotSupportedException;
 import org.remoteandroid.RemoteAndroid;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
-import org.remoteandroid.internal.Messages.Msg;
 import org.remoteandroid.internal.Messages.Type;
 
 import android.content.ComponentName;
@@ -41,16 +35,11 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.os.RemoteException;
-import android.text.TextUtils;
 import android.util.Log;
-import android.util.SparseArray;
 
 // NAT file:///home/pprados/Bureau/J%20ICE/index.html
 /** @hide */
@@ -488,7 +477,7 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 						{
 							in.close();
 						}
-						catch (IOException e)
+						catch (IOException e) // $codepro.audit.disable emptyCatchClause
 						{
 							// Ignore
 						}
@@ -503,7 +492,7 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 					{
 						cancelFileData(connid, fd, timeout);
 					}
-					catch (RemoteException e1)
+					catch (RemoteException e1) // $codepro.audit.disable emptyCatchClause
 					{
 						// Ignore
 					}

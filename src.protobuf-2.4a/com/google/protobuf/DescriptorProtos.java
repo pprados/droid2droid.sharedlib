@@ -15688,8 +15688,8 @@ public final class DescriptorProtos {
       private int spanMemoizedSerializedSize = -1;
       
       private void initFields() {
-        path_ = java.util.Collections.emptyList();;
-        span_ = java.util.Collections.emptyList();;
+        path_ = java.util.Collections.emptyList();
+        span_ = java.util.Collections.emptyList();
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -15876,9 +15876,9 @@ public final class DescriptorProtos {
         
         public Builder clear() {
           super.clear();
-          path_ = java.util.Collections.emptyList();;
+          path_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
-          span_ = java.util.Collections.emptyList();;
+          span_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
@@ -16066,7 +16066,7 @@ public final class DescriptorProtos {
           return this;
         }
         public Builder clearPath() {
-          path_ = java.util.Collections.emptyList();;
+          path_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
           onChanged();
           return this;
@@ -16111,7 +16111,7 @@ public final class DescriptorProtos {
           return this;
         }
         public Builder clearSpan() {
-          span_ = java.util.Collections.emptyList();;
+          span_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
           return this;

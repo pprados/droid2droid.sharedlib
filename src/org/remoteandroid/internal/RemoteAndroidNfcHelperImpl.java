@@ -59,11 +59,11 @@ implements RemoteAndroidNfcHelper
 							Messages.Identity identity=Messages.Identity.newBuilder().mergeFrom(record.getPayload()).build();
 		    				return ProtobufConvs.toRemoteAndroidInfo(context,identity);
 						}
-						catch (InvalidProtocolBufferException e)
+						catch (InvalidProtocolBufferException e) // $codepro.audit.disable logExceptions
 						{
 							if (W) Log.d(TAG_NFC,PREFIX_LOG+"Invalide data");
 						}
-						catch (UninitializedMessageException e)
+						catch (UninitializedMessageException e) // $codepro.audit.disable logExceptions
 						{
 							if (W) Log.d(TAG_NFC,PREFIX_LOG+"Invalide data");
 						}

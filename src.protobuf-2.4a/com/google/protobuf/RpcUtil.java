@@ -75,7 +75,7 @@ public final class RpcUtil {
         Type typedParameter;
         try {
           typedParameter = originalClass.cast(parameter);
-        } catch (ClassCastException ignored) {
+        } catch (ClassCastException ignored) { // $codepro.audit.disable logExceptions
           typedParameter = copyAsType(defaultInstance, parameter);
         }
         originalCallback.run(typedParameter);

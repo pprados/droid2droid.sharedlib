@@ -73,7 +73,7 @@ public final class NetworkTools
 			else
 				activeNetwork&=~ACTIVE_PHONE_SIM;
 		}
-		catch (SecurityException e)
+		catch (SecurityException e) // $codepro.audit.disable logExceptions
 		{
 			if (W) Log.w(TAG_RA,"Need ACCESS_NETWORK_STATE permission for the application ?");
 		}
@@ -86,7 +86,7 @@ public final class NetworkTools
 			else
 				activeNetwork|=ACTIVE_BLUETOOTH;
 		}
-		catch (SecurityException e)
+		catch (SecurityException e) // $codepro.audit.disable logExceptions
 		{
 			if (W) Log.w(TAG_RA,"Need BLUETOOTH permission for the application ?");
 		}
@@ -104,10 +104,7 @@ public final class NetworkTools
 					public Boolean run()
 					{
 						NfcManager nfc=(NfcManager)context.getSystemService(Context.NFC_SERVICE);
-						if (nfc==null || nfc.getDefaultAdapter()==null || !nfc.getDefaultAdapter().isEnabled())
-							return false;
-						else
-							return true;
+						return !(nfc==null || nfc.getDefaultAdapter()==null || !nfc.getDefaultAdapter().isEnabled());
 					}
 				}.run();
 				if (!rc)
@@ -115,7 +112,7 @@ public final class NetworkTools
 				else
 					activeNetwork|=ACTIVE_NFC;
 			}
-			catch (SecurityException e)
+			catch (SecurityException e) // $codepro.audit.disable logExceptions
 			{
 				activeNetwork&=~ACTIVE_NFC;
 			}

@@ -46,7 +46,7 @@ public final class RemoteBinderProxy implements IBinder
 		{
 			return mProvider != null && mProvider.pingBinder(mProvider.getConnectionId(),mObject,TIMEOUT_PING_BINDER);
 		}
-		catch (RemoteException e)
+		catch (RemoteException e) // $codepro.audit.disable logExceptions
 		{
 			return false;
 		}
@@ -59,7 +59,7 @@ public final class RemoteBinderProxy implements IBinder
 		{
 			return mObject!=-1 && mProvider != null && mProvider.isBinderAlive(mProvider.getConnectionId(),mObject,TIMEOUT_IS_BINDER_ALIVE);
 		}
-		catch (RemoteException e)
+		catch (RemoteException e) // $codepro.audit.disable logExceptions
 		{
 			return false;
 		}

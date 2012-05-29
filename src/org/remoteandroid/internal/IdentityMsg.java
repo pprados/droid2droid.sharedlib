@@ -993,8 +993,5 @@ public final class IdentityMsg {
   }
   
   
-  static {
-  }
-  
   // @@protoc_insertion_point(outer_class_scope)
 }

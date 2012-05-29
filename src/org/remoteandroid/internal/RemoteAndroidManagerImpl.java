@@ -211,7 +211,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		{
 			mManager.startDiscover(flags,timeToDiscover);
 		}
-		catch (RemoteException e)
+		catch (RemoteException e) // $codepro.audit.disable logExceptions
 		{
 			if (W) Log.w(TAG_CLIENT_BIND,PREFIX_LOG+"Impossible to start the discovery process.");
 		}
@@ -225,7 +225,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		{
 			mManager.cancelDiscover();
 		}
-		catch (RemoteException e)
+		catch (RemoteException e) // $codepro.audit.disable logExceptions
 		{
 			if (W) Log.w(TAG_CLIENT_BIND,PREFIX_LOG+"Impossible to stop the discovery process.");
 		}
@@ -246,7 +246,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		{
 			return mManager.isDiscovering();
 		}
-		catch (RemoteException e)
+		catch (RemoteException e) // $codepro.audit.disable logExceptions
 		{
 			if (W) Log.w(TAG_CLIENT_BIND,PREFIX_LOG+"Impossible to stop the discovery process.");
 		}
@@ -265,12 +265,12 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		{
 			return mManager.getCookie(flags,uri);
 		}
-		catch (SecurityException e)
+		catch (SecurityException e) // $codepro.audit.disable logExceptions
 		{
 			if (W) Log.w(TAG_CLIENT_BIND,PREFIX_LOG+"Impossible to get cookie (pairing rejected).");
 			return COOKIE_SECURITY;
 		}
-		catch (RemoteException e)
+		catch (RemoteException e) // $codepro.audit.disable logExceptions
 		{
 			if (W) Log.w(TAG_CLIENT_BIND,PREFIX_LOG+"Impossible to get cookie.");
 			return COOKIE_EXCEPTION;
@@ -284,7 +284,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		{
 			mManager.removeCookie(uri);
 		}
-		catch (RemoteException e)
+		catch (RemoteException e) // $codepro.audit.disable logExceptions
 		{
 			if (W) Log.w(TAG_CLIENT_BIND,PREFIX_LOG+"Impossible to remove cookie.");
 			// Ignore
@@ -300,6 +300,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	{
 		return askMsgCookie(uri,Type.CONNECT_FOR_COOKIE,flags);
 	}
+	@SuppressWarnings("unused")
 	public final Pair<RemoteAndroidInfoImpl,Long> askMsgCookie(Uri uri,Type type,int flags) throws IOException, SecurityException
 	{
 		AbstractRemoteAndroidImpl binder=null;
@@ -440,7 +441,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 				Thread.sleep(BINDING_TIMEOUT_WAIT);
 				++cnt;
 			}
-			catch (InterruptedException e)
+			catch (InterruptedException e) // $codepro.audit.disable logExceptions
 			{
 				// Ignore
 				if (D && mManager==null) Log.d(TAG_CLIENT_BIND,PREFIX_LOG+"Binding to RemoteAndroid failed.");
