@@ -11,7 +11,7 @@ enum Type
    CONNECT=10;
    CONNECT_FOR_DISCOVERING=11;
    CONNECT_FOR_COOKIE=12;
-   CONNECT_FOR_PAIRING=13;
+//   CONNECT_FOR_PAIRING=13;
    CONNECT_FOR_BROADCAST=14;
    TRANSACT_RemoteAndroid=40;
    TRANSACT_Binder=41;
@@ -43,7 +43,7 @@ message Identity
 	optional int32 version			= 13;
 	optional string os				= 14;
 	optional int64 capability		= 15;
-	optional bool bounded			= 16;
+	optional bool bonded			= 16;
 
 	optional Candidates candidates  = 20;
 }
@@ -76,7 +76,8 @@ message Msg
 	
 		
 	// Pair
-	optional int32 feature	   = 20;	
+	optional bool pairing	= 20;
+	optional int32 feature	= 21;	
 		
 	// Bind
 	optional int32 status	=40; // Accept or refuse invocation

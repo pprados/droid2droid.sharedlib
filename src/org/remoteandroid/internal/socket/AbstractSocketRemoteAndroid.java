@@ -7,8 +7,12 @@ import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 import org.remoteandroid.RemoteAndroidManager;
+import static org.remoteandroid.RemoteAndroidManager.*;
+
 import org.remoteandroid.internal.AbstractProtoBufRemoteAndroid;
 import org.remoteandroid.internal.Login;
+import org.remoteandroid.internal.Pairing;
+import org.remoteandroid.internal.RemoteAndroidManagerImpl;
 import org.remoteandroid.internal.Messages.Type;
 import org.remoteandroid.internal.Pair;
 import org.remoteandroid.internal.RemoteAndroidInfoImpl;
@@ -104,7 +108,41 @@ public abstract class AbstractSocketRemoteAndroid<T extends BossSocketSender> ex
 	public Pair<RemoteAndroidInfoImpl,Long> connectWithAuthent(Uri uri,Type type,int flags,long timeout) throws UnknownHostException, IOException, RemoteException
 	{
 		initBootstrap();
-		return Login.getLogin().client(this, uri,type,flags,timeout);
+		Pair<RemoteAndroidInfoImpl,Long> result=Login.getLogin().client(this, uri,type,flags,timeout);
+		boolean tryPairing=false;
+		long cookie=result.second;
+		if (result.first!=null)
+		{
+			boolean isBonded=((RemoteAndroidManagerImpl)mManager).isBonded(result.first);
+			if ((cookie==COOKIE_NO) || (cookie==COOKIE_SECURITY) || (cookie==COOKIE_EXCEPTION))
+			{
+				if ((flags & FLAG_PROPOSE_PAIRING)!=0)
+					tryPairing=true;
+			}
+			else
+			{
+				if (((flags & FLAG_ACCEPT_ANONYMOUS)==0) && !isBonded)
+				{
+					cookie=COOKIE_NO;
+				}
+				if ((cookie==COOKIE_NO) && ((flags & FLAG_PROPOSE_PAIRING)!=0) && !isBonded) 
+				{
+					tryPairing=true;
+				}
+			}
+			if (tryPairing)
+			{
+				result=Pairing.getPairing().client(this, uri, type, flags, timeout);
+				cookie=result.second;
+			}
+		}
+		if ((cookie==COOKIE_NO) || (cookie==COOKIE_SECURITY) || (cookie==COOKIE_EXCEPTION))
+		{
+			if (E) Log.e(TAG_SECURITY,PREFIX_LOG+"Invalide challenge");
+			throw new SecurityException("Invalide challenge");
+		}
+
+		return result;
 	}
 	
 
@@ -143,12 +181,6 @@ public abstract class AbstractSocketRemoteAndroid<T extends BossSocketSender> ex
     		}
     		return rw.mResponse;
     	}
-//		catch (IOException e)
-//		{
-//			e.printStackTrace();
-//    		mLocks.remove(threadid);
-//	    	return null;
-//		}
 		catch (InterruptedException e)
 		{
 			if (V) Log.v(TAG_CLIENT_BIND,PREFIX_LOG+"Read socket",e);

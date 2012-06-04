@@ -14,18 +14,16 @@ public final class Messages {
     CONNECT(1, 10),
     CONNECT_FOR_DISCOVERING(2, 11),
     CONNECT_FOR_COOKIE(3, 12),
-    CONNECT_FOR_PAIRING(4, 13),
-    CONNECT_FOR_BROADCAST(5, 14),
-    TRANSACT_RemoteAndroid(6, 40),
-    TRANSACT_Binder(7, 41),
-    TRANSACT_Apk(8, 42),
+    CONNECT_FOR_BROADCAST(4, 14),
+    TRANSACT_RemoteAndroid(5, 40),
+    TRANSACT_Binder(6, 41),
+    TRANSACT_Apk(7, 42),
     ;
     
     public static final int PING_VALUE = 0;
     public static final int CONNECT_VALUE = 10;
     public static final int CONNECT_FOR_DISCOVERING_VALUE = 11;
     public static final int CONNECT_FOR_COOKIE_VALUE = 12;
-    public static final int CONNECT_FOR_PAIRING_VALUE = 13;
     public static final int CONNECT_FOR_BROADCAST_VALUE = 14;
     public static final int TRANSACT_RemoteAndroid_VALUE = 40;
     public static final int TRANSACT_Binder_VALUE = 41;
@@ -40,7 +38,6 @@ public final class Messages {
         case 10: return CONNECT;
         case 11: return CONNECT_FOR_DISCOVERING;
         case 12: return CONNECT_FOR_COOKIE;
-        case 13: return CONNECT_FOR_PAIRING;
         case 14: return CONNECT_FOR_BROADCAST;
         case 40: return TRANSACT_RemoteAndroid;
         case 41: return TRANSACT_Binder;
@@ -974,9 +971,9 @@ public final class Messages {
     boolean hasCapability();
     long getCapability();
     
-    // optional bool bounded = 16;
-    boolean hasBounded();
-    boolean getBounded();
+    // optional bool bonded = 16;
+    boolean hasBonded();
+    boolean getBonded();
     
     // optional .org.remoteandroid.internal.Candidates candidates = 20;
     boolean hasCandidates();
@@ -1105,14 +1102,14 @@ public final class Messages {
       return capability_;
     }
     
-    // optional bool bounded = 16;
-    public static final int BOUNDED_FIELD_NUMBER = 16;
-    private boolean bounded_;
-    public boolean hasBounded() {
+    // optional bool bonded = 16;
+    public static final int BONDED_FIELD_NUMBER = 16;
+    private boolean bonded_;
+    public boolean hasBonded() {
       return ((bitField0_ & 0x00000040) == 0x00000040);
     }
-    public boolean getBounded() {
-      return bounded_;
+    public boolean getBonded() {
+      return bonded_;
     }
     
     // optional .org.remoteandroid.internal.Candidates candidates = 20;
@@ -1132,7 +1129,7 @@ public final class Messages {
       version_ = 0;
       os_ = "";
       capability_ = 0L;
-      bounded_ = false;
+      bonded_ = false;
       candidates_ = org.remoteandroid.internal.Messages.Candidates.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
@@ -1166,7 +1163,7 @@ public final class Messages {
         output.writeInt64(15, capability_);
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        output.writeBool(16, bounded_);
+        output.writeBool(16, bonded_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         output.writeMessage(20, candidates_);
@@ -1205,7 +1202,7 @@ public final class Messages {
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(16, bounded_);
+          .computeBoolSize(16, bonded_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1325,7 +1322,7 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000010);
         capability_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000020);
-        bounded_ = false;
+        bonded_ = false;
         bitField0_ = (bitField0_ & ~0x00000040);
         candidates_ = org.remoteandroid.internal.Messages.Candidates.getDefaultInstance();
         bitField0_ = (bitField0_ & ~0x00000080);
@@ -1389,7 +1386,7 @@ public final class Messages {
         if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
           to_bitField0_ |= 0x00000040;
         }
-        result.bounded_ = bounded_;
+        result.bonded_ = bonded_;
         if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
           to_bitField0_ |= 0x00000080;
         }
@@ -1418,8 +1415,8 @@ public final class Messages {
         if (other.hasCapability()) {
           setCapability(other.getCapability());
         }
-        if (other.hasBounded()) {
-          setBounded(other.getBounded());
+        if (other.hasBonded()) {
+          setBonded(other.getBonded());
         }
         if (other.hasCandidates()) {
           mergeCandidates(other.getCandidates());
@@ -1480,7 +1477,7 @@ public final class Messages {
             }
             case 128: {
               bitField0_ |= 0x00000040;
-              bounded_ = input.readBool();
+              bonded_ = input.readBool();
               break;
             }
             case 162: {
@@ -1660,23 +1657,23 @@ public final class Messages {
         return this;
       }
       
-      // optional bool bounded = 16;
-      private boolean bounded_ ;
-      public boolean hasBounded() {
+      // optional bool bonded = 16;
+      private boolean bonded_ ;
+      public boolean hasBonded() {
         return ((bitField0_ & 0x00000040) == 0x00000040);
       }
-      public boolean getBounded() {
-        return bounded_;
+      public boolean getBonded() {
+        return bonded_;
       }
-      public Builder setBounded(boolean value) {
+      public Builder setBonded(boolean value) {
         bitField0_ |= 0x00000040;
-        bounded_ = value;
+        bonded_ = value;
         
         return this;
       }
-      public Builder clearBounded() {
+      public Builder clearBonded() {
         bitField0_ = (bitField0_ & ~0x00000040);
-        bounded_ = false;
+        bonded_ = false;
         
         return this;
       }
@@ -2261,7 +2258,11 @@ public final class Messages {
     boolean hasChallenge2();
     com.google.protobuf.ByteString getChallenge2();
     
-    // optional int32 feature = 20;
+    // optional bool pairing = 20;
+    boolean hasPairing();
+    boolean getPairing();
+    
+    // optional int32 feature = 21;
     boolean hasFeature();
     int getFeature();
     
@@ -2406,11 +2407,21 @@ public final class Messages {
       return challenge2_;
     }
     
-    // optional int32 feature = 20;
-    public static final int FEATURE_FIELD_NUMBER = 20;
+    // optional bool pairing = 20;
+    public static final int PAIRING_FIELD_NUMBER = 20;
+    private boolean pairing_;
+    public boolean hasPairing() {
+      return ((bitField0_ & 0x00000200) == 0x00000200);
+    }
+    public boolean getPairing() {
+      return pairing_;
+    }
+    
+    // optional int32 feature = 21;
+    public static final int FEATURE_FIELD_NUMBER = 21;
     private int feature_;
     public boolean hasFeature() {
-      return ((bitField0_ & 0x00000200) == 0x00000200);
+      return ((bitField0_ & 0x00000400) == 0x00000400);
     }
     public int getFeature() {
       return feature_;
@@ -2420,7 +2431,7 @@ public final class Messages {
     public static final int STATUS_FIELD_NUMBER = 40;
     private int status_;
     public boolean hasStatus() {
-      return ((bitField0_ & 0x00000400) == 0x00000400);
+      return ((bitField0_ & 0x00000800) == 0x00000800);
     }
     public int getStatus() {
       return status_;
@@ -2430,7 +2441,7 @@ public final class Messages {
     public static final int OID_FIELD_NUMBER = 41;
     private int oid_;
     public boolean hasOid() {
-      return ((bitField0_ & 0x00000800) == 0x00000800);
+      return ((bitField0_ & 0x00001000) == 0x00001000);
     }
     public int getOid() {
       return oid_;
@@ -2440,7 +2451,7 @@ public final class Messages {
     public static final int CMD_FIELD_NUMBER = 42;
     private int cmd_;
     public boolean hasCmd() {
-      return ((bitField0_ & 0x00001000) == 0x00001000);
+      return ((bitField0_ & 0x00002000) == 0x00002000);
     }
     public int getCmd() {
       return cmd_;
@@ -2450,7 +2461,7 @@ public final class Messages {
     public static final int DATA_FIELD_NUMBER = 43;
     private com.google.protobuf.ByteString data_;
     public boolean hasData() {
-      return ((bitField0_ & 0x00002000) == 0x00002000);
+      return ((bitField0_ & 0x00004000) == 0x00004000);
     }
     public com.google.protobuf.ByteString getData() {
       return data_;
@@ -2460,7 +2471,7 @@ public final class Messages {
     public static final int FLAGS_FIELD_NUMBER = 44;
     private int flags_;
     public boolean hasFlags() {
-      return ((bitField0_ & 0x00004000) == 0x00004000);
+      return ((bitField0_ & 0x00008000) == 0x00008000);
     }
     public int getFlags() {
       return flags_;
@@ -2470,7 +2481,7 @@ public final class Messages {
     public static final int RC_FIELD_NUMBER = 45;
     private boolean rc_;
     public boolean hasRc() {
-      return ((bitField0_ & 0x00008000) == 0x00008000);
+      return ((bitField0_ & 0x00010000) == 0x00010000);
     }
     public boolean getRc() {
       return rc_;
@@ -2480,7 +2491,7 @@ public final class Messages {
     public static final int RCINT_FIELD_NUMBER = 46;
     private int rcInt_;
     public boolean hasRcInt() {
-      return ((bitField0_ & 0x00010000) == 0x00010000);
+      return ((bitField0_ & 0x00020000) == 0x00020000);
     }
     public int getRcInt() {
       return rcInt_;
@@ -2490,7 +2501,7 @@ public final class Messages {
     public static final int REPLY_FIELD_NUMBER = 47;
     private com.google.protobuf.ByteString reply_;
     public boolean hasReply() {
-      return ((bitField0_ & 0x00020000) == 0x00020000);
+      return ((bitField0_ & 0x00040000) == 0x00040000);
     }
     public com.google.protobuf.ByteString getReply() {
       return reply_;
@@ -2506,6 +2517,7 @@ public final class Messages {
       challengestep_ = 0;
       challenge1_ = com.google.protobuf.ByteString.EMPTY;
       challenge2_ = com.google.protobuf.ByteString.EMPTY;
+      pairing_ = false;
       feature_ = 0;
       status_ = 0;
       oid_ = 0;
@@ -2560,30 +2572,33 @@ public final class Messages {
         output.writeBytes(15, challenge2_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
-        output.writeInt32(20, feature_);
+        output.writeBool(20, pairing_);
       }
       if (((bitField0_ & 0x00000400) == 0x00000400)) {
-        output.writeInt32(40, status_);
+        output.writeInt32(21, feature_);
       }
       if (((bitField0_ & 0x00000800) == 0x00000800)) {
-        output.writeInt32(41, oid_);
+        output.writeInt32(40, status_);
       }
       if (((bitField0_ & 0x00001000) == 0x00001000)) {
-        output.writeInt32(42, cmd_);
+        output.writeInt32(41, oid_);
       }
       if (((bitField0_ & 0x00002000) == 0x00002000)) {
-        output.writeBytes(43, data_);
+        output.writeInt32(42, cmd_);
       }
       if (((bitField0_ & 0x00004000) == 0x00004000)) {
-        output.writeInt32(44, flags_);
+        output.writeBytes(43, data_);
       }
       if (((bitField0_ & 0x00008000) == 0x00008000)) {
-        output.writeBool(45, rc_);
+        output.writeInt32(44, flags_);
       }
       if (((bitField0_ & 0x00010000) == 0x00010000)) {
-        output.writeInt32(46, rcInt_);
+        output.writeBool(45, rc_);
       }
       if (((bitField0_ & 0x00020000) == 0x00020000)) {
+        output.writeInt32(46, rcInt_);
+      }
+      if (((bitField0_ & 0x00040000) == 0x00040000)) {
         output.writeBytes(47, reply_);
       }
     }
@@ -2632,37 +2647,41 @@ public final class Messages {
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(20, feature_);
+          .computeBoolSize(20, pairing_);
       }
       if (((bitField0_ & 0x00000400) == 0x00000400)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(40, status_);
+          .computeInt32Size(21, feature_);
       }
       if (((bitField0_ & 0x00000800) == 0x00000800)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(41, oid_);
+          .computeInt32Size(40, status_);
       }
       if (((bitField0_ & 0x00001000) == 0x00001000)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(42, cmd_);
+          .computeInt32Size(41, oid_);
       }
       if (((bitField0_ & 0x00002000) == 0x00002000)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(43, data_);
+          .computeInt32Size(42, cmd_);
       }
       if (((bitField0_ & 0x00004000) == 0x00004000)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(44, flags_);
+          .computeBytesSize(43, data_);
       }
       if (((bitField0_ & 0x00008000) == 0x00008000)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(45, rc_);
+          .computeInt32Size(44, flags_);
       }
       if (((bitField0_ & 0x00010000) == 0x00010000)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(46, rcInt_);
+          .computeBoolSize(45, rc_);
       }
       if (((bitField0_ & 0x00020000) == 0x00020000)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(46, rcInt_);
+      }
+      if (((bitField0_ & 0x00040000) == 0x00040000)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(47, reply_);
       }
@@ -2786,24 +2805,26 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000080);
         challenge2_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000100);
-        feature_ = 0;
+        pairing_ = false;
         bitField0_ = (bitField0_ & ~0x00000200);
-        status_ = 0;
+        feature_ = 0;
         bitField0_ = (bitField0_ & ~0x00000400);
-        oid_ = 0;
+        status_ = 0;
         bitField0_ = (bitField0_ & ~0x00000800);
-        cmd_ = 0;
+        oid_ = 0;
         bitField0_ = (bitField0_ & ~0x00001000);
-        data_ = com.google.protobuf.ByteString.EMPTY;
+        cmd_ = 0;
         bitField0_ = (bitField0_ & ~0x00002000);
-        flags_ = 0;
+        data_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00004000);
-        rc_ = false;
+        flags_ = 0;
         bitField0_ = (bitField0_ & ~0x00008000);
-        rcInt_ = 0;
+        rc_ = false;
         bitField0_ = (bitField0_ & ~0x00010000);
-        reply_ = com.google.protobuf.ByteString.EMPTY;
+        rcInt_ = 0;
         bitField0_ = (bitField0_ & ~0x00020000);
+        reply_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00040000);
         return this;
       }
       
@@ -2876,37 +2897,41 @@ public final class Messages {
         if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
           to_bitField0_ |= 0x00000200;
         }
-        result.feature_ = feature_;
+        result.pairing_ = pairing_;
         if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
           to_bitField0_ |= 0x00000400;
         }
-        result.status_ = status_;
+        result.feature_ = feature_;
         if (((from_bitField0_ & 0x00000800) == 0x00000800)) {
           to_bitField0_ |= 0x00000800;
         }
-        result.oid_ = oid_;
+        result.status_ = status_;
         if (((from_bitField0_ & 0x00001000) == 0x00001000)) {
           to_bitField0_ |= 0x00001000;
         }
-        result.cmd_ = cmd_;
+        result.oid_ = oid_;
         if (((from_bitField0_ & 0x00002000) == 0x00002000)) {
           to_bitField0_ |= 0x00002000;
         }
-        result.data_ = data_;
+        result.cmd_ = cmd_;
         if (((from_bitField0_ & 0x00004000) == 0x00004000)) {
           to_bitField0_ |= 0x00004000;
         }
-        result.flags_ = flags_;
+        result.data_ = data_;
         if (((from_bitField0_ & 0x00008000) == 0x00008000)) {
           to_bitField0_ |= 0x00008000;
         }
-        result.rc_ = rc_;
+        result.flags_ = flags_;
         if (((from_bitField0_ & 0x00010000) == 0x00010000)) {
           to_bitField0_ |= 0x00010000;
         }
-        result.rcInt_ = rcInt_;
+        result.rc_ = rc_;
         if (((from_bitField0_ & 0x00020000) == 0x00020000)) {
           to_bitField0_ |= 0x00020000;
+        }
+        result.rcInt_ = rcInt_;
+        if (((from_bitField0_ & 0x00040000) == 0x00040000)) {
+          to_bitField0_ |= 0x00040000;
         }
         result.reply_ = reply_;
         result.bitField0_ = to_bitField0_;
@@ -2941,6 +2966,9 @@ public final class Messages {
         }
         if (other.hasChallenge2()) {
           setChallenge2(other.getChallenge2());
+        }
+        if (other.hasPairing()) {
+          setPairing(other.getPairing());
         }
         if (other.hasFeature()) {
           setFeature(other.getFeature());
@@ -3052,46 +3080,51 @@ public final class Messages {
             }
             case 160: {
               bitField0_ |= 0x00000200;
+              pairing_ = input.readBool();
+              break;
+            }
+            case 168: {
+              bitField0_ |= 0x00000400;
               feature_ = input.readInt32();
               break;
             }
             case 320: {
-              bitField0_ |= 0x00000400;
+              bitField0_ |= 0x00000800;
               status_ = input.readInt32();
               break;
             }
             case 328: {
-              bitField0_ |= 0x00000800;
+              bitField0_ |= 0x00001000;
               oid_ = input.readInt32();
               break;
             }
             case 336: {
-              bitField0_ |= 0x00001000;
+              bitField0_ |= 0x00002000;
               cmd_ = input.readInt32();
               break;
             }
             case 346: {
-              bitField0_ |= 0x00002000;
+              bitField0_ |= 0x00004000;
               data_ = input.readBytes();
               break;
             }
             case 352: {
-              bitField0_ |= 0x00004000;
+              bitField0_ |= 0x00008000;
               flags_ = input.readInt32();
               break;
             }
             case 360: {
-              bitField0_ |= 0x00008000;
+              bitField0_ |= 0x00010000;
               rc_ = input.readBool();
               break;
             }
             case 368: {
-              bitField0_ |= 0x00010000;
+              bitField0_ |= 0x00020000;
               rcInt_ = input.readInt32();
               break;
             }
             case 378: {
-              bitField0_ |= 0x00020000;
+              bitField0_ |= 0x00040000;
               reply_ = input.readBytes();
               break;
             }
@@ -3324,22 +3357,43 @@ public final class Messages {
         return this;
       }
       
-      // optional int32 feature = 20;
+      // optional bool pairing = 20;
+      private boolean pairing_ ;
+      public boolean hasPairing() {
+        return ((bitField0_ & 0x00000200) == 0x00000200);
+      }
+      public boolean getPairing() {
+        return pairing_;
+      }
+      public Builder setPairing(boolean value) {
+        bitField0_ |= 0x00000200;
+        pairing_ = value;
+        
+        return this;
+      }
+      public Builder clearPairing() {
+        bitField0_ = (bitField0_ & ~0x00000200);
+        pairing_ = false;
+        
+        return this;
+      }
+      
+      // optional int32 feature = 21;
       private int feature_ ;
       public boolean hasFeature() {
-        return ((bitField0_ & 0x00000200) == 0x00000200);
+        return ((bitField0_ & 0x00000400) == 0x00000400);
       }
       public int getFeature() {
         return feature_;
       }
       public Builder setFeature(int value) {
-        bitField0_ |= 0x00000200;
+        bitField0_ |= 0x00000400;
         feature_ = value;
         
         return this;
       }
       public Builder clearFeature() {
-        bitField0_ = (bitField0_ & ~0x00000200);
+        bitField0_ = (bitField0_ & ~0x00000400);
         feature_ = 0;
         
         return this;
@@ -3348,19 +3402,19 @@ public final class Messages {
       // optional int32 status = 40;
       private int status_ ;
       public boolean hasStatus() {
-        return ((bitField0_ & 0x00000400) == 0x00000400);
+        return ((bitField0_ & 0x00000800) == 0x00000800);
       }
       public int getStatus() {
         return status_;
       }
       public Builder setStatus(int value) {
-        bitField0_ |= 0x00000400;
+        bitField0_ |= 0x00000800;
         status_ = value;
         
         return this;
       }
       public Builder clearStatus() {
-        bitField0_ = (bitField0_ & ~0x00000400);
+        bitField0_ = (bitField0_ & ~0x00000800);
         status_ = 0;
         
         return this;
@@ -3369,19 +3423,19 @@ public final class Messages {
       // optional int32 oid = 41;
       private int oid_ ;
       public boolean hasOid() {
-        return ((bitField0_ & 0x00000800) == 0x00000800);
+        return ((bitField0_ & 0x00001000) == 0x00001000);
       }
       public int getOid() {
         return oid_;
       }
       public Builder setOid(int value) {
-        bitField0_ |= 0x00000800;
+        bitField0_ |= 0x00001000;
         oid_ = value;
         
         return this;
       }
       public Builder clearOid() {
-        bitField0_ = (bitField0_ & ~0x00000800);
+        bitField0_ = (bitField0_ & ~0x00001000);
         oid_ = 0;
         
         return this;
@@ -3390,19 +3444,19 @@ public final class Messages {
       // optional int32 cmd = 42;
       private int cmd_ ;
       public boolean hasCmd() {
-        return ((bitField0_ & 0x00001000) == 0x00001000);
+        return ((bitField0_ & 0x00002000) == 0x00002000);
       }
       public int getCmd() {
         return cmd_;
       }
       public Builder setCmd(int value) {
-        bitField0_ |= 0x00001000;
+        bitField0_ |= 0x00002000;
         cmd_ = value;
         
         return this;
       }
       public Builder clearCmd() {
-        bitField0_ = (bitField0_ & ~0x00001000);
+        bitField0_ = (bitField0_ & ~0x00002000);
         cmd_ = 0;
         
         return this;
@@ -3411,7 +3465,7 @@ public final class Messages {
       // optional bytes data = 43;
       private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
       public boolean hasData() {
-        return ((bitField0_ & 0x00002000) == 0x00002000);
+        return ((bitField0_ & 0x00004000) == 0x00004000);
       }
       public com.google.protobuf.ByteString getData() {
         return data_;
@@ -3420,13 +3474,13 @@ public final class Messages {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00002000;
+  bitField0_ |= 0x00004000;
         data_ = value;
         
         return this;
       }
       public Builder clearData() {
-        bitField0_ = (bitField0_ & ~0x00002000);
+        bitField0_ = (bitField0_ & ~0x00004000);
         data_ = getDefaultInstance().getData();
         
         return this;
@@ -3435,19 +3489,19 @@ public final class Messages {
       // optional int32 flags = 44;
       private int flags_ ;
       public boolean hasFlags() {
-        return ((bitField0_ & 0x00004000) == 0x00004000);
+        return ((bitField0_ & 0x00008000) == 0x00008000);
       }
       public int getFlags() {
         return flags_;
       }
       public Builder setFlags(int value) {
-        bitField0_ |= 0x00004000;
+        bitField0_ |= 0x00008000;
         flags_ = value;
         
         return this;
       }
       public Builder clearFlags() {
-        bitField0_ = (bitField0_ & ~0x00004000);
+        bitField0_ = (bitField0_ & ~0x00008000);
         flags_ = 0;
         
         return this;
@@ -3456,19 +3510,19 @@ public final class Messages {
       // optional bool rc = 45;
       private boolean rc_ ;
       public boolean hasRc() {
-        return ((bitField0_ & 0x00008000) == 0x00008000);
+        return ((bitField0_ & 0x00010000) == 0x00010000);
       }
       public boolean getRc() {
         return rc_;
       }
       public Builder setRc(boolean value) {
-        bitField0_ |= 0x00008000;
+        bitField0_ |= 0x00010000;
         rc_ = value;
         
         return this;
       }
       public Builder clearRc() {
-        bitField0_ = (bitField0_ & ~0x00008000);
+        bitField0_ = (bitField0_ & ~0x00010000);
         rc_ = false;
         
         return this;
@@ -3477,19 +3531,19 @@ public final class Messages {
       // optional int32 rcInt = 46;
       private int rcInt_ ;
       public boolean hasRcInt() {
-        return ((bitField0_ & 0x00010000) == 0x00010000);
+        return ((bitField0_ & 0x00020000) == 0x00020000);
       }
       public int getRcInt() {
         return rcInt_;
       }
       public Builder setRcInt(int value) {
-        bitField0_ |= 0x00010000;
+        bitField0_ |= 0x00020000;
         rcInt_ = value;
         
         return this;
       }
       public Builder clearRcInt() {
-        bitField0_ = (bitField0_ & ~0x00010000);
+        bitField0_ = (bitField0_ & ~0x00020000);
         rcInt_ = 0;
         
         return this;
@@ -3498,7 +3552,7 @@ public final class Messages {
       // optional bytes reply = 47;
       private com.google.protobuf.ByteString reply_ = com.google.protobuf.ByteString.EMPTY;
       public boolean hasReply() {
-        return ((bitField0_ & 0x00020000) == 0x00020000);
+        return ((bitField0_ & 0x00040000) == 0x00040000);
       }
       public com.google.protobuf.ByteString getReply() {
         return reply_;
@@ -3507,13 +3561,13 @@ public final class Messages {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00020000;
+  bitField0_ |= 0x00040000;
         reply_ = value;
         
         return this;
       }
       public Builder clearReply() {
-        bitField0_ = (bitField0_ & ~0x00020000);
+        bitField0_ = (bitField0_ & ~0x00040000);
         reply_ = getDefaultInstance().getReply();
         
         return this;

@@ -9,12 +9,12 @@ import org.remoteandroid.internal.Messages.Type;
 import android.net.Uri;
 import android.os.RemoteException;
 
-public abstract class Login
+public abstract class Pairing
 {
-	public static Login sLogin;
-	public static Login getLogin()
+	public static Pairing sPairing;
+	public static Pairing getPairing()
 	{
-		return sLogin;
+		return sPairing;
 	}
 	public abstract Pair<RemoteAndroidInfoImpl,Long> client(
 		AbstractProtoBufRemoteAndroid android,
@@ -22,5 +22,5 @@ public abstract class Login
 		Type type,
 		int flags,
 		long timeout) throws UnknownHostException, IOException, RemoteException;
-	public abstract Msg server(Object conContext,Msg req,long cookie,boolean acceptAnonymous);
+	public abstract Msg server(Object conContext,Msg req,long cookie);
 }

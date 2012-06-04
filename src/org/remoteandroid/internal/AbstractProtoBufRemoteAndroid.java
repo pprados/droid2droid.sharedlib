@@ -311,12 +311,12 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 					{
 						cookie=((RemoteAndroidManagerImpl)mManager).getCookie(flags,mUri.toString());
 						if (cookie==COOKIE_SECURITY)
-							throw new SecurityException("Impossible to get cookie with "+mUri+". Add the flag FLAG_PROPOSE_PAIRING ?");
+							throw new SecurityException("Impossible to connect with "+mUri+". Add the flag FLAG_PROPOSE_PAIRING ?");
 						if (cookie==COOKIE_EXCEPTION)
-							throw new IOException("Impossible to get cookie with "+mUri+"."); // TODO: Avec Motorola Milestone et IPV6, java.net.SocketException: The socket level is invalid
+							throw new IOException("Impossible to connect with "+mUri+"."); // FIXME: Avec Motorola Milestone et IPV6, java.net.SocketException: The socket level is invalid
 	
 						if (cookie==COOKIE_NO)
-							throw new SecurityException("Can't find a cookie with "+mUri);
+							throw new SecurityException("Connection impossible with "+mUri);
 					}
 				}
 				initBootstrap();
@@ -336,8 +336,8 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 					throw new SecurityException("Refuse anonymous. Use FLAG_PROPOSE_PAIRING ?");
 				}
 				// Unpair
-				if (conType==Type.CONNECT_FOR_PAIRING && cookie==-1)
-					return true;
+//FIXME				if (conType==Type.CONNECT_FOR_PAIRING && cookie==-1)
+//					return true;
 				// If invalide cookie, ask a new one and retry
 				
 				cookieAlive=resp.getStatus()!=AbstractRemoteAndroidImpl.STATUS_INVALIDE_COOKIE;
@@ -350,7 +350,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 			if (!refuse && resp.getStatus()==AbstractRemoteAndroidImpl.STATUS_REFUSE_ANONYMOUS)
 			{
 				refuse=true;
-				conType=org.remoteandroid.internal.Messages.Type.CONNECT_FOR_PAIRING;
+//FIXME				conType=org.remoteandroid.internal.Messages.Type.CONNECT_FOR_PAIRING;
 				((RemoteAndroidManagerImpl)mManager).removeCookie(mUri.toString());
 			}
 			else

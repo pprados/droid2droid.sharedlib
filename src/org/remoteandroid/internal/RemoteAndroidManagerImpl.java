@@ -314,23 +314,29 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			binder=driver.factoryBinder(mAppContext,RemoteAndroidManagerImpl.this,uri);
 			return binder.connectWithAuthent(uri,type,flags,TIMEOUT_CONNECT_WIFI);
 		}
+		catch (SecurityException e)
+		{
+			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection refused. ("+e.getMessage()+")");
+			if (D) Log.d(TAG_CLIENT_BIND,"Connection refused.",e);
+			throw (SecurityException)e.fillInStackTrace();
+		}
 		catch (SocketException e)
 		{
-			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie. Imcompatible with ipv6? ("+e.getMessage()+")");
-			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible for ask cookie. Imcompatible with ipv6?",e);
+			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible. Imcompatible with ipv6? ("+e.getMessage()+")");
+			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible. Imcompatible with ipv6?",e);
 			throw new SocketException(e.getMessage());
 		}
 		catch (IOException e)
 		{
-			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie ("+e.getMessage()+")");
-			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible for ask cookie.",e);
+			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible ("+e.getMessage()+")");
+			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible.",e);
 			throw new IOException(e.getMessage(),e);
 		}
 		catch (Exception e)
 		{
-			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible for ask cookie ("+e.getMessage()+")");
-			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible for ask cookie.",e);
-			throw new IOException("Connection impossible for ask cookie");
+			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible ("+e.getMessage()+")");
+			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible.",e);
+			throw new IOException("Connection impossible",e);
 		}
 		finally
 		{
@@ -411,16 +417,16 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 	}
 
 	@Override
-    public ListRemoteAndroidInfo getBoundedDevices()
+    public ListRemoteAndroidInfo getBondedDevices()
     {
 		waitBinding();
 		ListRemoteAndroidInfo rc=newDiscoveredAndroid(getContext(), null);
 		try
 		{
-			List<RemoteAndroidInfoImpl> boundedDevices=mManager.getBoundedDevices();
-			for (int i=0;i<boundedDevices.size();++i)
+			List<RemoteAndroidInfoImpl> bondedDevices=mManager.getBondedDevices();
+			for (int i=0;i<bondedDevices.size();++i)
 			{
-				rc.add(boundedDevices.get(i));
+				rc.add(bondedDevices.get(i));
 			}
 		}
 		catch (RemoteException e)
@@ -430,6 +436,19 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		return rc; 
     }
     
+	public boolean isBonded(RemoteAndroidInfoImpl info)
+	{
+		waitBinding();
+		try
+		{
+			return mManager.isBonded(info);
+		}
+		catch (RemoteException e)
+		{
+			Log.e(TAG_CLIENT_BIND,PREFIX_LOG+"Remote exception "+e.getMessage(),e);
+			return false;
+		}
+	}
 	private final void waitBinding() //TODO: reconnection
 	{
 		int cnt=0;

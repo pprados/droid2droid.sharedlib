@@ -115,7 +115,7 @@ public final class ProtobufConvs
 			info.os = identity.getOs();
 			info.feature = identity.getCapability();
 			info.uris = toUris(context,identity.getCandidates());
-			info.isBonded = identity.getBounded();
+			info.isBonded = identity.getBonded();
 			return info;
 		}
 		catch (NoSuchAlgorithmException e)
