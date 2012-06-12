@@ -113,7 +113,7 @@ public abstract class AbstractSocketRemoteAndroid<T extends BossSocketSender> ex
 		long cookie=result.second;
 		if (result.first!=null)
 		{
-			boolean isBonded=((RemoteAndroidManagerImpl)mManager).isBonded(result.first);
+			boolean isBonded=Pairing.isTemporaryAcceptAnonymous() || ((RemoteAndroidManagerImpl)mManager).isBonded(result.first);
 			if ((cookie==COOKIE_NO) || (cookie==COOKIE_SECURITY) || (cookie==COOKIE_EXCEPTION))
 			{
 				if ((flags & FLAG_PROPOSE_PAIRING)!=0)

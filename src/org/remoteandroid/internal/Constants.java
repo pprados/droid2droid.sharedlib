@@ -16,26 +16,26 @@ public final class Constants
 
 	public static final String TAG_RA							="RA";
 
-	public static final int VERSION								=0; // TODO
+	public static final int VERSION							=0; // TODO
 	
-	public static final String TAG_INSTALL 						= "Install";
-	public static final String TAG_PAIRING 						= "Pairing";
-	public static final String TAG_SECURITY						= "Security";
-	public static final String TAG_PREFERENCE 					= "Preference";
-	public static final String TAG_CLIENT_BIND 					= "Client";
+	public static final String TAG_INSTALL 					= "Install";
+	public static final String TAG_PAIRING 					= "Pairing";
+	public static final String TAG_SECURITY					= "Security";
+	public static final String TAG_PREFERENCE 				= "Preference";
+	public static final String TAG_CLIENT_BIND 				= "Client";
 	public static final String TAG_CANDIDATE 					= "Candidate";
 	public static final String TAG_PROVIDER 					= "Provider";
-	public static final String TAG_NFC 							= "Nfc";
+	public static final String TAG_NFC 						= "Nfc";
 
 	public static final String SCHEME_TCP						="ip";
 	
-	public static final boolean USE_SHAREDLIB					=Friend.USE_SHAREDLIB;
+	public static final boolean USE_SHAREDLIB				=Friend.USE_SHAREDLIB;
 	public static final String SHARED_LIB						=Friend.SHARED_LIB;
 		
 	public static final int BINDING_TIMEOUT_WAIT				=10000; // FIXME: remove
 	public static final int BINDING_NB_RETRY					=3;
 	
-	public static final long COOKIE_NO							=0;
+	public static final long COOKIE_NO						=0;
 	public static final long COOKIE_EXCEPTION					=-1;
 	public static final long COOKIE_SECURITY					=-2;
 	
@@ -43,7 +43,7 @@ public final class Constants
 	public static final int BUFFER_SIZE_FOR_DOWNLOAD 			= 1024 * 10;
 
 	/** Patch parcel for compatibility between different versions of Android */
-	public static final boolean UPDATE_PARCEL 					= true;
+	public static final boolean UPDATE_PARCEL 				= true;
 
     /** Delay to discover others remote androids. */
 	public static final long TIME_MAX_TO_DISCOVER				=20000L;
@@ -51,7 +51,7 @@ public final class Constants
 	/** Use ethernet */
 	public static final boolean ETHERNET						=true;
     /** Use only IP v4 */
-    public static final boolean ETHERNET_ONLY_IPV4 				=true; // FIXME 
+    public static final boolean ETHERNET_ONLY_IPV4 			=true; // FIXME 
 
     /** Order uris with IPV4 before IPV6 */
 	public static final boolean ETHERNET_IPV4_FIRST 			= false;
@@ -60,7 +60,7 @@ public final class Constants
 	public static final boolean WAN 							= false;
 
 	/** Check security. */
-	public static final boolean SECURITY 						= true;
+	public static final boolean SECURITY 					= true;
 
 	/** Prefix for log */
 	public static final String PREFIX_LOG						='['+Build.MODEL+"] ";
@@ -91,4 +91,8 @@ public final class Constants
 	public static final byte[] NDEF_MIME_TYPE					="application/org.remoteandroid".getBytes();//Charset.forName("US-ASCII"));
 	
 	public static final boolean HACK_DEAD_LOCK=false;
+	
+    /** Timeout before accept anonymouse (after expose NFC or QRCode) */
+	public static final long 	TIMEOUT_ACCEPT_ANONYMOUS				=1*60L*1000; // 1m
+	
 }

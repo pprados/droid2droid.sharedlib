@@ -1,5 +1,7 @@
 package org.remoteandroid.internal;
 
+import static org.remoteandroid.internal.Constants.*;
+
 import java.io.IOException;
 import java.net.UnknownHostException;
 
@@ -23,4 +25,14 @@ public abstract class Pairing
 		int flags,
 		long timeout) throws UnknownHostException, IOException, RemoteException;
 	public abstract Msg server(Object conContext,Msg req,long cookie);
+	private static long sTimeoutAcceptAnonymous;
+	public static void enableTemporaryAcceptAnonymous()
+	{
+		sTimeoutAcceptAnonymous=System.currentTimeMillis()+TIMEOUT_ACCEPT_ANONYMOUS;
+	}
+	public static boolean isTemporaryAcceptAnonymous()
+	{
+		return sTimeoutAcceptAnonymous<System.currentTimeMillis();
+	}
+	
 }
