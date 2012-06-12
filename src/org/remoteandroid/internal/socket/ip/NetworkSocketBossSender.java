@@ -12,9 +12,18 @@ import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.X509TrustManager;
 
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.Messages.Msg;
@@ -34,6 +43,18 @@ import android.util.Log;
 public final class NetworkSocketBossSender implements BossSocketSender
 {
 	private static AtomicInteger sId=new AtomicInteger();
+    private static SecureRandom sRandom;
+    static
+    {
+    	try
+		{
+			sRandom=SecureRandom.getInstance("SHA1PRNG");
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			throw new InternalError(e.getMessage());
+		}
+    }
 
 	private int mId;
 	private NetworkSocketChannel mChannel;
@@ -64,15 +85,62 @@ public final class NetworkSocketBossSender implements BossSocketSender
     	// TODO: ne pas tenter si moi en global network et target en local network. Mais en vérifier toutes les ip
     	//if (Trusted.isLocalNetwork(Appl))
     	
-    	Socket socket=new Socket();
-    	socket.connect(new InetSocketAddress(mHost,mPort),(int)TIMEOUT_CONNECT_WIFI); // Note: for ipv6 linkLocalAddress, we must select the interface :-(
-    	socket.setSoLinger(ETHERNET_SO_LINGER, ETHERNET_SO_LINGER_TIMEOUT);
-        socket.setKeepAlive(true);
-        socket.setTcpNoDelay(true);
-        socket.setReuseAddress(true);
-        socket.setPerformancePreferences(2, 3, 1);
-        mChannel=new NetworkSocketChannel(socket);
+    	try
+    	{
+			Socket socket = createSocket(InetAddress.getByName(mHost),mPort);
+	    	socket.setSoLinger(ETHERNET_SO_LINGER, ETHERNET_SO_LINGER_TIMEOUT);
+	        socket.setKeepAlive(true);
+	        socket.setTcpNoDelay(true);
+	        socket.setReuseAddress(true);
+	        socket.setPerformancePreferences(2, 3, 1);
+	        mChannel=new NetworkSocketChannel(socket);
+    	}
+    	catch (NoSuchAlgorithmException e)
+    	{
+    		throw new Error(e);
+    	}
+		catch (KeyManagementException e)
+		{
+    		throw new Error(e);
+		}
+	}
+
+    private static KeyManager[] sKeyManagers;
+    public static void setKeyManagers(KeyManager[] keymanagers)
+    {
+    	sKeyManagers=keymanagers;
+    }
+	public static Socket createSocket(InetAddress host,int port) throws NoSuchAlgorithmException, KeyManagementException, IOException
+	{
+		SSLContext sslcontext = SSLContext.getInstance(TLS);
+		sslcontext.init(
+			sKeyManagers, 
+			new X509TrustManager[]
+			{ 
+				new X509TrustManager()
+				{
+					public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException
+					{
+						System.out.println("check client trusted");
+					}
+
+					public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
+					{
+						System.out.println("check server trusted");
+					}
+
+					public X509Certificate[] getAcceptedIssuers()
+					{
+						System.out.println("getAcceptedIssuers");
+						return new X509Certificate[0];
+					}
+				} 
+			}, 
+			sRandom);
 		
+		Socket socket=sslcontext.getSocketFactory().createSocket();
+		socket.connect(new InetSocketAddress(host,port),(int)TIMEOUT_CONNECT_WIFI); // Note: for ipv6 linkLocalAddress, we must select the interface :-(
+		return socket;
 	}
     
     // For ipv6 local address. Trouver l'interface
@@ -115,15 +183,16 @@ public final class NetworkSocketBossSender implements BossSocketSender
     @Override
     public void close()
     {
-    	try
-		{
-			if (mChannel!=null)
-				mChannel.close();
-		}
-		catch (IOException e)
-		{
-			// Ignore
-		}
+    	// FIXME: unsuported operation with SSL
+//    	try
+//		{
+//			if (mChannel!=null)
+//				mChannel.close();
+//		}
+//		catch (IOException e)
+//		{
+//			// Ignore
+//		}
        	if (mThreadW!=null)
        	{
        		mThreadW.interrupt();

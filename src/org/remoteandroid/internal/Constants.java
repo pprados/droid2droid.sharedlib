@@ -61,6 +61,8 @@ public final class Constants
 
 	/** Check security. */
 	public static final boolean SECURITY 					= true;
+	/** Implementation name for TLS */
+	public static final String TLS							="TLS";
 
 	/** Prefix for log */
 	public static final String PREFIX_LOG						='['+Build.MODEL+"] ";
@@ -71,19 +73,19 @@ public final class Constants
 	/** Timeout for connect to remote android. */
 	public static final long TIMEOUT_CONNECT_WIFI				=5000L; // FIXME second
     /** Flush current data before close the socket. */
-    public static final boolean ETHERNET_SO_LINGER				=true; 	// Vide les derniers paquets avant la fermeture du socket
+    public static final boolean ETHERNET_SO_LINGER			=true; 	// Vide les derniers paquets avant la fermeture du socket
     /** Timeout to flush the last datas. */
-    public static final int ETHERNET_SO_LINGER_TIMEOUT			=2000; // FIXME Delay for flush last packets
+    public static final int ETHERNET_SO_LINGER_TIMEOUT		=2000; // FIXME Delay for flush last packets
 	/** Timeout to detect if binder is alive. */
 	public static final long TIMEOUT_IS_BINDER_ALIVE			=1000L; // FIXME second
 	/** Timeout to inform the finalize of binder. */
 	public static final long TIMEOUT_FINALIZE					=2000L; // FIXME second
 	
 	/** Timeout for accept a pairing chalenge. */
-	public static final long TIMEOUT_PAIRING_ASK_CHALENGE = 30000L; // 30s
+	public static final long TIMEOUT_PAIRING_ASK_CHALENGE 	= 30000L; // 30s
 
 	/** Frequency of probe messages. */
-	public static final int PROBE_INTERVAL_MS = 6000;
+	public static final int PROBE_INTERVAL_MS 				= 6000;
 
 	/** Number of probe sent */
 	public static final int PROBE_SENT = 2;
