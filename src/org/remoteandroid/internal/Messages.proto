@@ -11,8 +11,7 @@ enum Type
    CONNECT=10;
    CONNECT_FOR_DISCOVERING=11;
    CONNECT_FOR_COOKIE=12;
-//   CONNECT_FOR_PAIRING=13;
-   CONNECT_FOR_BROADCAST=14;
+   CONNECT_FOR_BROADCAST=13;
    TRANSACT_RemoteAndroid=40;
    TRANSACT_Binder=41;
    TRANSACT_Apk=42;
@@ -70,9 +69,9 @@ message Msg
 	optional Identity identity 		= 10;
 	optional bytes publickey 		= 11;
 	optional int64 cookie	 		= 12;
-	optional int32 challengestep 	= 13;	
-	optional bytes challenge1 		= 14;
-	optional bytes challenge2 		= 15;
+	optional int32 challengestep 	= 14;	
+	optional bytes challenge1 		= 15;
+	optional bytes challenge2 		= 16;
 	
 		
 	// Pair

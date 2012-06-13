@@ -14,7 +14,7 @@ public final class Messages {
     CONNECT(1, 10),
     CONNECT_FOR_DISCOVERING(2, 11),
     CONNECT_FOR_COOKIE(3, 12),
-    CONNECT_FOR_BROADCAST(4, 14),
+    CONNECT_FOR_BROADCAST(4, 13),
     TRANSACT_RemoteAndroid(5, 40),
     TRANSACT_Binder(6, 41),
     TRANSACT_Apk(7, 42),
@@ -24,7 +24,7 @@ public final class Messages {
     public static final int CONNECT_VALUE = 10;
     public static final int CONNECT_FOR_DISCOVERING_VALUE = 11;
     public static final int CONNECT_FOR_COOKIE_VALUE = 12;
-    public static final int CONNECT_FOR_BROADCAST_VALUE = 14;
+    public static final int CONNECT_FOR_BROADCAST_VALUE = 13;
     public static final int TRANSACT_RemoteAndroid_VALUE = 40;
     public static final int TRANSACT_Binder_VALUE = 41;
     public static final int TRANSACT_Apk_VALUE = 42;
@@ -38,7 +38,7 @@ public final class Messages {
         case 10: return CONNECT;
         case 11: return CONNECT_FOR_DISCOVERING;
         case 12: return CONNECT_FOR_COOKIE;
-        case 14: return CONNECT_FOR_BROADCAST;
+        case 13: return CONNECT_FOR_BROADCAST;
         case 40: return TRANSACT_RemoteAndroid;
         case 41: return TRANSACT_Binder;
         case 42: return TRANSACT_Apk;
@@ -2246,15 +2246,15 @@ public final class Messages {
     boolean hasCookie();
     long getCookie();
     
-    // optional int32 challengestep = 13;
+    // optional int32 challengestep = 14;
     boolean hasChallengestep();
     int getChallengestep();
     
-    // optional bytes challenge1 = 14;
+    // optional bytes challenge1 = 15;
     boolean hasChallenge1();
     com.google.protobuf.ByteString getChallenge1();
     
-    // optional bytes challenge2 = 15;
+    // optional bytes challenge2 = 16;
     boolean hasChallenge2();
     com.google.protobuf.ByteString getChallenge2();
     
@@ -2377,8 +2377,8 @@ public final class Messages {
       return cookie_;
     }
     
-    // optional int32 challengestep = 13;
-    public static final int CHALLENGESTEP_FIELD_NUMBER = 13;
+    // optional int32 challengestep = 14;
+    public static final int CHALLENGESTEP_FIELD_NUMBER = 14;
     private int challengestep_;
     public boolean hasChallengestep() {
       return ((bitField0_ & 0x00000040) == 0x00000040);
@@ -2387,8 +2387,8 @@ public final class Messages {
       return challengestep_;
     }
     
-    // optional bytes challenge1 = 14;
-    public static final int CHALLENGE1_FIELD_NUMBER = 14;
+    // optional bytes challenge1 = 15;
+    public static final int CHALLENGE1_FIELD_NUMBER = 15;
     private com.google.protobuf.ByteString challenge1_;
     public boolean hasChallenge1() {
       return ((bitField0_ & 0x00000080) == 0x00000080);
@@ -2397,8 +2397,8 @@ public final class Messages {
       return challenge1_;
     }
     
-    // optional bytes challenge2 = 15;
-    public static final int CHALLENGE2_FIELD_NUMBER = 15;
+    // optional bytes challenge2 = 16;
+    public static final int CHALLENGE2_FIELD_NUMBER = 16;
     private com.google.protobuf.ByteString challenge2_;
     public boolean hasChallenge2() {
       return ((bitField0_ & 0x00000100) == 0x00000100);
@@ -2563,13 +2563,13 @@ public final class Messages {
         output.writeInt64(12, cookie_);
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        output.writeInt32(13, challengestep_);
+        output.writeInt32(14, challengestep_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        output.writeBytes(14, challenge1_);
+        output.writeBytes(15, challenge1_);
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
-        output.writeBytes(15, challenge2_);
+        output.writeBytes(16, challenge2_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
         output.writeBool(20, pairing_);
@@ -2635,15 +2635,15 @@ public final class Messages {
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(13, challengestep_);
+          .computeInt32Size(14, challengestep_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(14, challenge1_);
+          .computeBytesSize(15, challenge1_);
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(15, challenge2_);
+          .computeBytesSize(16, challenge2_);
       }
       if (((bitField0_ & 0x00000200) == 0x00000200)) {
         size += com.google.protobuf.CodedOutputStream
@@ -3063,17 +3063,17 @@ public final class Messages {
               cookie_ = input.readInt64();
               break;
             }
-            case 104: {
+            case 112: {
               bitField0_ |= 0x00000040;
               challengestep_ = input.readInt32();
               break;
             }
-            case 114: {
+            case 122: {
               bitField0_ |= 0x00000080;
               challenge1_ = input.readBytes();
               break;
             }
-            case 122: {
+            case 130: {
               bitField0_ |= 0x00000100;
               challenge2_ = input.readBytes();
               break;
@@ -3288,7 +3288,7 @@ public final class Messages {
         return this;
       }
       
-      // optional int32 challengestep = 13;
+      // optional int32 challengestep = 14;
       private int challengestep_ ;
       public boolean hasChallengestep() {
         return ((bitField0_ & 0x00000040) == 0x00000040);
@@ -3309,7 +3309,7 @@ public final class Messages {
         return this;
       }
       
-      // optional bytes challenge1 = 14;
+      // optional bytes challenge1 = 15;
       private com.google.protobuf.ByteString challenge1_ = com.google.protobuf.ByteString.EMPTY;
       public boolean hasChallenge1() {
         return ((bitField0_ & 0x00000080) == 0x00000080);
@@ -3333,7 +3333,7 @@ public final class Messages {
         return this;
       }
       
-      // optional bytes challenge2 = 15;
+      // optional bytes challenge2 = 16;
       private com.google.protobuf.ByteString challenge2_ = com.google.protobuf.ByteString.EMPTY;
       public boolean hasChallenge2() {
         return ((bitField0_ & 0x00000100) == 0x00000100);

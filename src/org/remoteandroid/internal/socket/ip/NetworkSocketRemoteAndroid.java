@@ -2,6 +2,7 @@ package org.remoteandroid.internal.socket.ip;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.security.PublicKey;
 
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.RemoteAndroidManagerImpl;
@@ -40,5 +41,17 @@ public final class NetworkSocketRemoteAndroid extends AbstractSocketRemoteAndroi
 		super.disconnect(connid);
 		if (mBootstrap!=null) mBootstrap.close();
 		mBootstrap=null;
+	}
+	
+	@Override
+	public PublicKey getPeerPublicKey()
+	{
+		return mBootstrap.getPeerPublicKey();
+	}
+	@Override
+	public String  getPeerUUID()
+	{
+		// TODO Auto-generated method stub
+		return mBootstrap.getPeerUUID();
 	}
 }

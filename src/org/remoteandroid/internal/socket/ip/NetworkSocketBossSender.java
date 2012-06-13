@@ -14,16 +14,25 @@ import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
+import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
+import java.util.UUID;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.X509TrustManager;
+import javax.security.auth.x500.X500Principal;
 
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.Messages.Msg;
@@ -60,13 +69,16 @@ public final class NetworkSocketBossSender implements BossSocketSender
 	private NetworkSocketChannel mChannel;
 	private String mHost;
 	private int mPort;
-
+    private PublicKey mPeerPublicKey;
+    private String mPeerUUID;
+    
     private Thread mThreadW;
     private Thread mThreadR;
     
     private DownstreamHandler mHandler;
 
     private LinkedBlockingQueue<Msg> mMsgs=new LinkedBlockingQueue<Msg>();
+    private static final Pattern sPatternDN=Pattern.compile("CN=([0-9-]+)");
    
     NetworkSocketBossSender(Context context,Uri uri,DownstreamHandler handler) throws UnknownHostException, IOException
 	{
@@ -87,7 +99,22 @@ public final class NetworkSocketBossSender implements BossSocketSender
     	
     	try
     	{
-			Socket socket = createSocket(InetAddress.getByName(mHost),mPort);
+			SSLSocket socket = createSocket(InetAddress.getByName(mHost),mPort);
+			try
+			{
+				Certificate[] certificatesChaine=socket.getSession().getPeerCertificates();
+				String name=socket.getSession().getPeerPrincipal().getName();
+				Matcher m = sPatternDN.matcher(name);
+				if (m.find())
+				{
+					mPeerUUID=m.group(1);
+				}
+				mPeerPublicKey=certificatesChaine[0].getPublicKey();
+			}
+			catch (SSLPeerUnverifiedException e)
+			{
+				// Ignore. Client without authentification
+			}
 	    	socket.setSoLinger(ETHERNET_SO_LINGER, ETHERNET_SO_LINGER_TIMEOUT);
 	        socket.setKeepAlive(true);
 	        socket.setTcpNoDelay(true);
@@ -106,39 +133,49 @@ public final class NetworkSocketBossSender implements BossSocketSender
 	}
 
     private static KeyManager[] sKeyManagers;
-    public static void setKeyManagers(KeyManager[] keymanagers)
-    {
-    	sKeyManagers=keymanagers;
-    }
-	public static Socket createSocket(InetAddress host,int port) throws NoSuchAlgorithmException, KeyManagementException, IOException
-	{
-		SSLContext sslcontext = SSLContext.getInstance(TLS);
-		sslcontext.init(
-			sKeyManagers, 
-			new X509TrustManager[]
+    private static final X509TrustManager[] sX509TrustManager=
+    		new X509TrustManager[]
 			{ 
 				new X509TrustManager()
 				{
 					public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException
 					{
-						System.out.println("check client trusted");
+						if (V) Log.v(TAG_SECURITY,"check client trusted");
 					}
-
+		
 					public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException
 					{
-						System.out.println("check server trusted");
+						if (V) Log.v(TAG_SECURITY,"check server trusted");
 					}
-
+		
 					public X509Certificate[] getAcceptedIssuers()
 					{
-						System.out.println("getAcceptedIssuers");
 						return new X509Certificate[0];
 					}
 				} 
-			}, 
+			};
+    public static void setKeyManagers(KeyManager[] keymanagers)
+    {
+    	sKeyManagers=keymanagers;
+    }
+    public PublicKey getPeerPublicKey()
+    {
+    	return mPeerPublicKey;
+    }
+    public String getPeerUUID()
+    {
+    	return mPeerUUID;
+    }
+    
+	public static SSLSocket createSocket(InetAddress host,int port) throws NoSuchAlgorithmException, KeyManagementException, IOException
+	{
+		SSLContext sslcontext = SSLContext.getInstance(TLS);
+		sslcontext.init(
+			sKeyManagers, 
+			sX509TrustManager, 
 			sRandom);
 		
-		Socket socket=sslcontext.getSocketFactory().createSocket();
+		SSLSocket socket=(SSLSocket)sslcontext.getSocketFactory().createSocket();
 		socket.connect(new InetSocketAddress(host,port),(int)TIMEOUT_CONNECT_WIFI); // Note: for ipv6 linkLocalAddress, we must select the interface :-(
 		return socket;
 	}

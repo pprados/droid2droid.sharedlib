@@ -7,6 +7,7 @@ import static org.remoteandroid.internal.Constants.V;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.security.PublicKey;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -382,4 +383,12 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
     	public Throwable mException;
     }
     
+    public PublicKey getPeerPublicKey()
+    {
+    	return null;
+    }
+    public String  getPeerUUID()
+    {
+    	return null;
+    }
 }
