@@ -293,6 +293,14 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 	
 	protected abstract void initBootstrap() throws UnknownHostException, IOException;
 	
+	private final long srvCookie(long cookie)
+	{
+		return cookie & 0xFFFF0000;
+	}
+	private final long cliCookie(long cookie)
+	{
+		return cookie & 0xFFFF;
+	}
 	// Connection avec exploitation d'un cookie
 	@Override
 	public boolean connect(Type conType,int flags,long cookie,long timeout) throws UnknownHostException, IOException, RemoteException, SecurityException
@@ -326,7 +334,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 				Msg msg = Msg.newBuilder()
 					.setType(conType)
 					.setThreadid(threadid)
-					.setCookie(cookie)
+					.setCookie(cliCookie(cookie))
 					.setIdentity(ProtobufConvs.toIdentity(mManager.getInfos())) // My identity
 					.build();
 				resp = sendRequestAndReadResponse(msg,timeout);
@@ -346,6 +354,12 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 				{
 					((RemoteAndroidManagerImpl)mManager).removeCookie(mUri.toString());
 					close();
+				}
+				if (srvCookie(cookie)!=srvCookie(resp.getCookie()))
+				{
+					((RemoteAndroidManagerImpl)mManager).removeCookie(mUri.toString());
+					close();
+					throw new SecurityException("Unkwon remote server.");
 				}
 			} while (!cookieAlive);
 			if (!refuse && resp.getStatus()==AbstractRemoteAndroidImpl.STATUS_REFUSE_ANONYMOUS)
