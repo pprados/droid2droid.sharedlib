@@ -1,7 +1,11 @@
 package org.remoteandroid.internal;
 
+import static org.remoteandroid.internal.Constants.TAG_RA;
+import static org.remoteandroid.internal.Constants.W;
+
 import java.security.PrivilegedAction;
 
+import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -11,8 +15,8 @@ import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import static org.remoteandroid.internal.Constants.*;
 
+@TargetApi(10)
 public final class NetworkTools
 {
 	public static final int ACTIVE_REMOTE_ANDROID	=1<<0;
@@ -26,6 +30,7 @@ public final class NetworkTools
 	public static final int ACTIVE_PHONE_SIM		=1<<8;
 	public static final int ACTIVE_NFC				=1<<9;
 
+	@TargetApi(10)
 	public static int getActiveNetwork(final Context context)
 	{
 		int activeNetwork=0;

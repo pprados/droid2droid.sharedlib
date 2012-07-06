@@ -1,6 +1,6 @@
 package org.remoteandroid.internal;
 
-import static org.remoteandroid.internal.Constants.*;
+import static org.remoteandroid.internal.Constants.TIMEOUT_ACCEPT_ANONYMOUS;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -32,7 +32,10 @@ public abstract class Pairing
 	}
 	public static boolean isTemporaryAcceptAnonymous()
 	{
-		return sTimeoutAcceptAnonymous<System.currentTimeMillis();
+		return System.currentTimeMillis()<sTimeoutAcceptAnonymous;
 	}
-	
+	public static void clearTemporaryAcceptAnonymous()
+	{
+		sTimeoutAcceptAnonymous=0;
+	}
 }

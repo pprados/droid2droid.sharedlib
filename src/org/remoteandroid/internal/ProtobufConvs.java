@@ -1,5 +1,15 @@
 package org.remoteandroid.internal;
 
+import static org.remoteandroid.internal.Constants.ETHERNET;
+import static org.remoteandroid.internal.Constants.ETHERNET_IPV4_FIRST;
+import static org.remoteandroid.internal.Constants.ETHERNET_ONLY_IPV4;
+import static org.remoteandroid.internal.Constants.KEYPAIR_ALGORITHM;
+import static org.remoteandroid.internal.Constants.PREFIX_LOG;
+import static org.remoteandroid.internal.Constants.SCHEME_TCP;
+import static org.remoteandroid.internal.Constants.TAG_CANDIDATE;
+import static org.remoteandroid.internal.Constants.V;
+import static org.remoteandroid.internal.Constants.W;
+
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -11,13 +21,10 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static org.remoteandroid.internal.Constants.*;
-
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.util.Log;
 
@@ -108,9 +115,7 @@ public final class ProtobufConvs
 			info.name = identity.getName();
 			byte[] pubBytes = identity.getPublicKey().toByteArray();
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(pubBytes);
-			info.publicKey = KeyFactory.getInstance(
-				"RSA").generatePublic(
-				pubKeySpec);
+			info.publicKey = KeyFactory.getInstance(KEYPAIR_ALGORITHM).generatePublic(pubKeySpec);
 			info.version = identity.getVersion();
 			info.os = identity.getOs();
 			info.feature = identity.getCapability();

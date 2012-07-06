@@ -1,6 +1,11 @@
 package org.remoteandroid.internal;
 
-import static org.remoteandroid.internal.Constants.*;
+import static org.remoteandroid.RemoteAndroidManager.FLAG_PROPOSE_PAIRING;
+import static org.remoteandroid.internal.Constants.COOKIE_EXCEPTION;
+import static org.remoteandroid.internal.Constants.COOKIE_NO;
+import static org.remoteandroid.internal.Constants.COOKIE_SECURITY;
+import static org.remoteandroid.internal.Constants.PREFIX_LOG;
+import static org.remoteandroid.internal.Constants.SECURITY;
 import static org.remoteandroid.internal.Constants.TAG_INSTALL;
 import static org.remoteandroid.internal.Constants.TIMEOUT_PING_BINDER;
 import static org.remoteandroid.internal.Constants.V;
@@ -320,7 +325,12 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 					{
 						cookie=((RemoteAndroidManagerImpl)mManager).getCookie(flags,mUri.toString());
 						if (cookie==COOKIE_SECURITY)
-							throw new SecurityException("Impossible to connect with "+mUri+". Add the flag FLAG_PROPOSE_PAIRING ?");
+						{
+							if ((flags & FLAG_PROPOSE_PAIRING)==0)
+								throw new SecurityException("Impossible to connect with "+mUri+". Add the flag FLAG_PROPOSE_PAIRING ?");
+							else
+								throw new SecurityException("Pairing refused with "+mUri+".");
+						}
 						if (cookie==COOKIE_EXCEPTION)
 							throw new IOException("Impossible to connect with "+mUri+"."); // FIXME: Avec Motorola Milestone et IPV6, java.net.SocketException: The socket level is invalid
 	
@@ -335,6 +345,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 					.setType(conType)
 					.setThreadid(threadid)
 					.setCookie(cliCookie(cookie))
+					.setFlags(flags)
 					.setIdentity(ProtobufConvs.toIdentity(mManager.getInfos())) // My identity
 					.build();
 				resp = sendRequestAndReadResponse(msg,timeout);

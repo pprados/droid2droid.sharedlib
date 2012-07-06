@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.security.PublicKey;
 
-import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.RemoteAndroidManagerImpl;
 import org.remoteandroid.internal.socket.AbstractSocketRemoteAndroid;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.RemoteException;
 
 
 public final class NetworkSocketRemoteAndroid extends AbstractSocketRemoteAndroid<NetworkSocketBossSender>

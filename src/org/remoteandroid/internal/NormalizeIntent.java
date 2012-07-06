@@ -1,5 +1,7 @@
 package org.remoteandroid.internal;
 
+import static org.remoteandroid.internal.Constants.TAG_RA;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.util.SparseArray;
-import static org.remoteandroid.internal.Constants.*;
 
 public final class NormalizeIntent
 {

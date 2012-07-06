@@ -9,11 +9,9 @@ import static org.remoteandroid.internal.Constants.E;
 import static org.remoteandroid.internal.Constants.ETHERNET;
 import static org.remoteandroid.internal.Constants.HACK_DEAD_LOCK;
 import static org.remoteandroid.internal.Constants.I;
-import static org.remoteandroid.internal.Constants.NDEF_MIME_TYPE;
 import static org.remoteandroid.internal.Constants.PREFIX_LOG;
 import static org.remoteandroid.internal.Constants.SCHEME_TCP;
 import static org.remoteandroid.internal.Constants.TAG_CLIENT_BIND;
-import static org.remoteandroid.internal.Constants.TAG_NFC;
 import static org.remoteandroid.internal.Constants.TIMEOUT_CONNECT_WIFI;
 import static org.remoteandroid.internal.Constants.TIME_MAX_TO_DISCOVER;
 import static org.remoteandroid.internal.Constants.V;
@@ -23,7 +21,6 @@ import static org.remoteandroid.internal.Constants.W;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -33,13 +30,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.remoteandroid.ListRemoteAndroidInfo;
-import org.remoteandroid.ListRemoteAndroidInfo.DiscoverListener;
-import org.remoteandroid.RemoteAndroidNfcHelper;
 import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.Messages.Type;
 import org.remoteandroid.internal.socket.ip.NetworkSocketRemoteAndroid;
 
+import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
@@ -49,18 +45,14 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.os.RemoteException;
 import android.util.Log;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.UninitializedMessageException;
 
-
+@TargetApi(9)
 public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 {
 	public static ApplicationInfo sAppInfo;
@@ -87,7 +79,8 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
             {
                 private final AtomicInteger mCount = new AtomicInteger(1);
 
-                public Thread newThread(Runnable r) 
+                @Override
+				public Thread newThread(Runnable r) 
                 {
                     return new Thread(r, "RemoteAndroid #" + mCount.getAndIncrement());
                 }
@@ -172,6 +165,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		}
 	}
 
+	@Override
 	public Context getContext()
 	{
 		return mAppContext;
@@ -330,13 +324,19 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		{
 			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible ("+e.getMessage()+")");
 			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible.",e);
-			throw new IOException(e.getMessage(),e);
+			if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD)
+				throw new IOException(e.getMessage(),e);
+			else
+				throw new IOException(e.getMessage());
 		}
 		catch (Exception e)
 		{
 			if (E && !D) Log.e(TAG_CLIENT_BIND,"Connection impossible ("+e.getMessage()+")");
 			if (D) Log.d(TAG_CLIENT_BIND,"Connection impossible.",e);
-			throw new IOException("Connection impossible",e);
+			if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD)
+				throw new IOException("Connection impossible",e);
+			else
+				throw new IOException("Connection impossible");
 		}
 		finally
 		{

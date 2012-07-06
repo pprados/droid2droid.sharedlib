@@ -1,5 +1,6 @@
 package org.remoteandroid.internal;
 
+import static org.remoteandroid.internal.Constants.KEYPAIR_ALGORITHM;
 import static org.remoteandroid.internal.Constants.SCHEME_TCP;
 
 import java.security.KeyFactory;
@@ -341,7 +342,7 @@ public final class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 			name = parcel.readString();
 			byte[] pubBytes=parcel.createByteArray();
 			X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(pubBytes);
-			publicKey = KeyFactory.getInstance("RSA").generatePublic(pubKeySpec);
+			publicKey = KeyFactory.getInstance(KEYPAIR_ALGORITHM).generatePublic(pubKeySpec);
 			version = parcel.readInt();
 			os=parcel.readString();
 			feature=parcel.readLong();

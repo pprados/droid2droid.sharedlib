@@ -109,7 +109,7 @@ public abstract class AbstractSocketRemoteAndroid<T extends BossSocketSender> ex
 	{
 		initBootstrap();
 		Pair<RemoteAndroidInfoImpl,Long> result=Login.getLogin().client(this, uri,type,flags,timeout);
-		boolean tryPairing=false;
+		boolean tryPairing=(flags & FLAG_FORCE_PAIRING)!=0;
 		long cookie=result.second;
 		if (result.first!=null)
 		{

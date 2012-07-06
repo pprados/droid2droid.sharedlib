@@ -1,8 +1,5 @@
 package org.remoteandroid.internal;
 
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 
 public final class Compatibility

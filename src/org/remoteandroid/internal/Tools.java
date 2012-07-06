@@ -3,18 +3,13 @@ package org.remoteandroid.internal;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
 
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
-import static org.remoteandroid.RemoteAndroidInfo.*;
 
 public final class Tools
 {

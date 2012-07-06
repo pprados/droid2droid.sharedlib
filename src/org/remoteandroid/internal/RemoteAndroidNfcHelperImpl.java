@@ -11,6 +11,7 @@ import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.RemoteAndroidNfcHelper;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -26,10 +27,11 @@ import android.util.Log;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.UninitializedMessageException;
 
+@TargetApi(10)
 public class RemoteAndroidNfcHelperImpl 
 implements RemoteAndroidNfcHelper
 {
-	private RemoteAndroidNfcHelper.OnNfcDiscover mCallBack; 
+	private final RemoteAndroidNfcHelper.OnNfcDiscover mCallBack; 
 	public RemoteAndroidNfcHelperImpl(RemoteAndroidNfcHelper.OnNfcDiscover callback)
 	{
 		mCallBack=callback;
@@ -115,6 +117,7 @@ implements RemoteAndroidNfcHelper
 		}
 	}
 	
+	@TargetApi(14)
 	@Override
     public void onPause(Activity activity)
     {

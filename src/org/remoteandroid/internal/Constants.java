@@ -62,7 +62,17 @@ public final class Constants
 	/** Check security. */
 	public static final boolean SECURITY 					= true;
 	/** Implementation name for TLS */
-	public static final String TLS							="TLS";
+	public static final String TLS_IMPLEMENTATION_ALGORITHM	="TLS";
+	/** Hask algorithm. */
+    public static final String HASH_ALGORITHM					="SHA-256";
+    /** Secure random algorithm. */
+    public static final String SECURE_RANDOM_ALGORITHM		="SHA1PRNG";
+    /** Signature algorithm. */
+    public static final String SIGNATURE_ALGORITHM			="SHA256WithRSAEncryption";
+    /** Keypair algorithm. */
+    public static final String KEYPAIR_ALGORITHM				="RSA";
+    /** Cipher algorithm. */
+    public static final String CIPHER_ALGORITHM				="RSA/ECB/PKCS1Padding";
 
 	/** Prefix for log */
 	public static final String PREFIX_LOG						='['+Build.MODEL+"] ";
@@ -80,6 +90,8 @@ public final class Constants
 	public static final long TIMEOUT_IS_BINDER_ALIVE			=1000L; // FIXME second
 	/** Timeout to inform the finalize of binder. */
 	public static final long TIMEOUT_FINALIZE					=2000L; // FIXME second
+	/** TrafficsStats tag. */
+	public static final int SOCKET_TAG						=0xCAFE;
 	
 	/** Timeout for accept a pairing chalenge. */
 	public static final long TIMEOUT_PAIRING_ASK_CHALENGE 	= 30000L; // 30s
@@ -95,6 +107,6 @@ public final class Constants
 	public static final boolean HACK_DEAD_LOCK=false;
 	
     /** Timeout before accept anonymouse (after expose NFC or QRCode) */
-	public static final long 	TIMEOUT_ACCEPT_ANONYMOUS				=1*60L*1000; // 1m
-	
+	public static final long 	TIMEOUT_ACCEPT_ANONYMOUS				=((D) ? 3 : 1)*60L*1000L; // 1m
+
 }
