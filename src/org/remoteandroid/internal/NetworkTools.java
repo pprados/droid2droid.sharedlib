@@ -2,6 +2,7 @@ package org.remoteandroid.internal;
 
 import java.security.PrivilegedAction;
 
+import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -13,6 +14,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import static org.remoteandroid.internal.Constants.*;
 
+@TargetApi(10)
 public final class NetworkTools
 {
 	public static final int ACTIVE_REMOTE_ANDROID	=1<<0;
@@ -100,6 +102,7 @@ public final class NetworkTools
 				boolean rc=new PrivilegedAction<Boolean>() // TODO: Optimize with static
 				{
 
+					@TargetApi(10)
 					@Override
 					public Boolean run()
 					{

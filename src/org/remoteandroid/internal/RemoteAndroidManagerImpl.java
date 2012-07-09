@@ -40,6 +40,7 @@ import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.internal.Messages.Type;
 import org.remoteandroid.internal.socket.ip.NetworkSocketRemoteAndroid;
 
+import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
@@ -450,6 +451,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		}
 	}
 
+	@TargetApi(9)
 	@Override
 	public NdefMessage createNdefMessage()
 	{

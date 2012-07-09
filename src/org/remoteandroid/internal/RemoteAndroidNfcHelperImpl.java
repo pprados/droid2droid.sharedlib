@@ -11,6 +11,7 @@ import org.remoteandroid.RemoteAndroidInfo;
 import org.remoteandroid.RemoteAndroidManager;
 import org.remoteandroid.RemoteAndroidNfcHelper;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -26,6 +27,7 @@ import android.util.Log;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.UninitializedMessageException;
 
+@SuppressLint("NewApi")
 public class RemoteAndroidNfcHelperImpl 
 implements RemoteAndroidNfcHelper
 {
