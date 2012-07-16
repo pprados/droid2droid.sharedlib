@@ -14,7 +14,8 @@ enum Type
    CONNECT_FOR_BROADCAST=13;
    TRANSACT_RemoteAndroid=40;
    TRANSACT_Binder=41;
-   TRANSACT_Apk=42;
+   TRANSACT_UnBinder=42;
+   TRANSACT_Apk=43;
 }
 
 message Candidates 

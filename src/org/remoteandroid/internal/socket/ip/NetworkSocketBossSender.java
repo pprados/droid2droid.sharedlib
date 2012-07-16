@@ -76,7 +76,7 @@ public final class NetworkSocketBossSender implements BossSocketSender
     private DownstreamHandler mHandler;
 
     private final LinkedBlockingQueue<Msg> mMsgs=new LinkedBlockingQueue<Msg>();
-    private static final Pattern sPatternDN=Pattern.compile("CN=([0-9-]+)");
+    private static final Pattern sPatternDN=Pattern.compile("CN=([0-9a-f-]+)");
    
     NetworkSocketBossSender(Context context,Uri uri,DownstreamHandler handler) throws UnknownHostException, IOException
 	{

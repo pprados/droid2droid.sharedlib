@@ -115,7 +115,7 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 		
 		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.ECLAIR)
 		{
-			BluetoothAdapter.getDefaultAdapter();
+			RemoteAndroidManagerImpl.getBluetoothAdapter();
 		}
 		mServiceConnection=new ServiceConnection()
 		{
@@ -151,6 +151,15 @@ public final class RemoteAndroidManagerImpl extends RemoteAndroidManager
 			mAppContext.unbindService(mServiceConnection);
 		}
 		mManager=null;
+	}
+	static private boolean mGetBluetoothAdapter;
+	static private BluetoothAdapter mBluetoothAdapter;
+	public static BluetoothAdapter getBluetoothAdapter()
+	{
+		if (mGetBluetoothAdapter)
+			return mBluetoothAdapter; 
+		mGetBluetoothAdapter=true;
+		return mBluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
 	}
 
 	public static void initAppInfo(final Context applicationContext) throws Error

@@ -17,7 +17,8 @@ public final class Messages {
     CONNECT_FOR_BROADCAST(4, 13),
     TRANSACT_RemoteAndroid(5, 40),
     TRANSACT_Binder(6, 41),
-    TRANSACT_Apk(7, 42),
+    TRANSACT_UnBinder(7, 42),
+    TRANSACT_Apk(8, 43),
     ;
     
     public static final int PING_VALUE = 0;
@@ -27,7 +28,8 @@ public final class Messages {
     public static final int CONNECT_FOR_BROADCAST_VALUE = 13;
     public static final int TRANSACT_RemoteAndroid_VALUE = 40;
     public static final int TRANSACT_Binder_VALUE = 41;
-    public static final int TRANSACT_Apk_VALUE = 42;
+    public static final int TRANSACT_UnBinder_VALUE = 42;
+    public static final int TRANSACT_Apk_VALUE = 43;
     
     
     public final int getNumber() { return value; }
@@ -41,7 +43,8 @@ public final class Messages {
         case 13: return CONNECT_FOR_BROADCAST;
         case 40: return TRANSACT_RemoteAndroid;
         case 41: return TRANSACT_Binder;
-        case 42: return TRANSACT_Apk;
+        case 42: return TRANSACT_UnBinder;
+        case 43: return TRANSACT_Apk;
         default: return null;
       }
     }

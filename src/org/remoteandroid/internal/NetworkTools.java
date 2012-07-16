@@ -1,5 +1,6 @@
 package org.remoteandroid.internal;
 
+import static org.remoteandroid.internal.Constants.D;
 import static org.remoteandroid.internal.Constants.TAG_RA;
 import static org.remoteandroid.internal.Constants.W;
 
@@ -19,15 +20,15 @@ import android.util.Log;
 @TargetApi(10)
 public final class NetworkTools
 {
-	public static final int ACTIVE_REMOTE_ANDROID	=1<<0;
-	public static final int ACTIVE_NOAIRPLANE		=1<<1;
+	public static final int ACTIVE_REMOTE_ANDROID		=1<<0;
+	public static final int ACTIVE_NOAIRPLANE			=1<<1;
 	public static final int ACTIVE_NETWORK			=1<<2;
-	public static final int ACTIVE_LOCAL_NETWORK	=1<<3;
-	public static final int ACTIVE_GLOBAL_NETWORK	=1<<4;
+	public static final int ACTIVE_LOCAL_NETWORK		=1<<3;
+	public static final int ACTIVE_GLOBAL_NETWORK		=1<<4;
 	public static final int ACTIVE_INTERNET_NETWORK	=1<<5;
-	public static final int ACTIVE_BLUETOOTH		=1<<6;
-	public static final int ACTIVE_PHONE_DATA		=1<<7;
-	public static final int ACTIVE_PHONE_SIM		=1<<8;
+	public static final int ACTIVE_BLUETOOTH			=1<<6;
+	public static final int ACTIVE_PHONE_DATA			=1<<7;
+	public static final int ACTIVE_PHONE_SIM			=1<<8;
 	public static final int ACTIVE_NFC				=1<<9;
 
 	@TargetApi(10)
@@ -85,7 +86,7 @@ public final class NetworkTools
 		
 		try
 		{
-			BluetoothAdapter adapter=BluetoothAdapter.getDefaultAdapter();
+			BluetoothAdapter adapter=RemoteAndroidManagerImpl.getBluetoothAdapter();
 			if (adapter==null || !adapter.isEnabled())
 				activeNetwork&=~ACTIVE_BLUETOOTH;
 			else
@@ -93,7 +94,7 @@ public final class NetworkTools
 		}
 		catch (SecurityException e)
 		{
-			if (W) Log.w(TAG_RA,"Need BLUETOOTH permission for the application ?");
+			if (D) Log.d(TAG_RA,"Need BLUETOOTH permission for the application ?");
 		}
 		
 		

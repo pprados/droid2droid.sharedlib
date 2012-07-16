@@ -28,7 +28,7 @@ public final class RemoteBinderProxy implements IBinder
 
 	private DeathRecipient mDeathRecipient; // TODO: Utiliser le mDeathRecipient
 
-	private AbstractRemoteAndroidImpl mProvider;
+	private final AbstractRemoteAndroidImpl mProvider;
 
 	protected int mObject = 0; // Cloud OID for remote instance
 
@@ -132,6 +132,7 @@ public final class RemoteBinderProxy implements IBinder
 			mProvider.finalizeOID(mProvider.getConnectionId(), mObject,TIMEOUT_FINALIZE);
 	}
 	//@Override
+	@Override
 	public void dumpAsync(FileDescriptor arg0, String[] arg1) throws RemoteException
 	{
 		RemoteException re=new RemoteException();

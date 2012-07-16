@@ -9,6 +9,7 @@ import static org.remoteandroid.internal.Constants.TAG_INSTALL;
 import static org.remoteandroid.internal.Constants.TAG_SECURITY;
 import static org.remoteandroid.internal.Constants.UPDATE_PARCEL;
 import static org.remoteandroid.internal.Constants.V;
+import static org.remoteandroid.internal.Constants.W;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -53,6 +54,8 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 
 	public static final int IS_BINDER_ALIVE = 4;
 	
+	public static final int UNBIND_SRV = 5;
+
 	public static final int STATUS_REFUSE_CONNECTION_MODE=-1;
 	public static final int STATUS_REFUSE_ANONYMOUS=-2;
 	public static final int STATUS_REFUSE_NO_BOUND=-3;
@@ -114,6 +117,7 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 		throw new UnsupportedOperationException();
 	}
 	//@Override
+	@Override
 	public void dumpAsync(FileDescriptor arg0, String[] arg1) throws RemoteException
 	{
 		RemoteException re=new RemoteException();
@@ -173,7 +177,7 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 
 	/** Send transactions to remote cloud. */
 	@Override
-	public int bindOID(int connid,Intent intent,int flags,ComponentName[] name,long timeout) throws RemoteException
+	public int bindOID(int connid,int serviceConnectionOID,Intent intent,int flags,ComponentName[] name,long timeout) throws RemoteException
 	{
 		if (D) Log.d(TAG_CLIENT_BIND, PREFIX_LOG+"BindOID...");
 		Parcel data = Parcel.obtain();
@@ -181,6 +185,7 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 		try
 		{
 			
+			data.writeInt(serviceConnectionOID);
 			NormalizeIntent.writeIntent(intent,data, 0);
 			data.writeInt(flags);
 			transactRemoteAndroid(connid, BIND_OID, data, reply, 0,timeout);
@@ -196,6 +201,49 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 				reply.recycle();
 		}
 	}
+	@Override
+	public boolean unbindService(ServiceConnection conn)
+	{
+		synchronized (mBinders)
+		{
+			Binded binder=mBinders.get(conn);
+			if (binder!=null)
+			{
+				if (D) Log.d(TAG_CLIENT_BIND, PREFIX_LOG+"UnBindOID...");
+				Parcel data = Parcel.obtain();
+				Parcel reply = Parcel.obtain();
+				try
+				{
+					
+					
+					try
+					{
+						data.writeInt(System.identityHashCode(conn));
+						transactRemoteAndroid(getConnectionId(), UNBIND_SRV, data, reply, 0,mExecuteTimeout);
+						if (D) Log.d(TAG_CLIENT_BIND, PREFIX_LOG+"UnBindOID ok");
+					}
+					catch (RemoteException e)
+					{
+						if (W && !D) Log.w(TAG_CLIENT_BIND,"Error when unbind ("+e.getMessage()+")");
+						if (D) Log.w(TAG_CLIENT_BIND,"Errer when unbind",e);
+					}
+				}
+				finally
+				{
+					if (data != null)
+						data.recycle();
+					if (reply != null)
+						reply.recycle();
+				}
+				mBinders.remove(conn);
+			}
+			else
+				return false;
+		}
+		
+		return true;
+	}
+	
 
 	@Override
 	public void finalizeOID(int connid, int oid,long timeout)
@@ -282,9 +330,10 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 	{
 		ComponentName name;
 		ServiceConnection conn;
+		RemoteBinderProxy proxy;
 	}
 	
-	private WeakHashMap<RemoteBinderProxy, Binded> mBinders=new WeakHashMap<RemoteBinderProxy, Binded>();
+	private final WeakHashMap<ServiceConnection, Binded> mBinders=new WeakHashMap<ServiceConnection, Binded>();
 	
 	@Override
 	public boolean bindService(final Intent service, final ServiceConnection conn, final int flags)
@@ -298,7 +347,7 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 				try
 				{
 					ComponentName[] name=new ComponentName[1];
-					int oid=bindOID(getConnectionId(),service,flags,name,mExecuteTimeout);
+					int oid=bindOID(getConnectionId(),System.identityHashCode(conn),service,flags,name,mExecuteTimeout);
 					if (oid==-1)
 		    			PostTools.postServiceDisconnected(conn, name[0]);
 					else
@@ -308,9 +357,10 @@ public abstract class AbstractRemoteAndroidImpl implements RemoteAndroid,IRemote
 		    			Binded disconnect=new Binded();
 		    			disconnect.name=name[0];
 		    			disconnect.conn=conn;
+		    			disconnect.proxy=proxy;
 		    			synchronized (mBinders)
 		    			{
-		    				mBinders.put(proxy, disconnect);
+		    				mBinders.put(conn, disconnect);
 		    			}
 		    			PostTools.postServiceConnected(conn,name[0], proxy);
 					}
