@@ -1,22 +1,32 @@
 package org.remoteandroid.internal.socket;
 
-import static org.remoteandroid.internal.Constants.*;
+import static org.remoteandroid.RemoteAndroidManager.FLAG_ACCEPT_ANONYMOUS;
+import static org.remoteandroid.RemoteAndroidManager.FLAG_FORCE_PAIRING;
+import static org.remoteandroid.RemoteAndroidManager.FLAG_PROPOSE_PAIRING;
+import static org.remoteandroid.internal.Constants.COOKIE_EXCEPTION;
+import static org.remoteandroid.internal.Constants.COOKIE_NO;
+import static org.remoteandroid.internal.Constants.COOKIE_SECURITY;
+import static org.remoteandroid.internal.Constants.E;
+import static org.remoteandroid.internal.Constants.I;
+import static org.remoteandroid.internal.Constants.PREFIX_LOG;
+import static org.remoteandroid.internal.Constants.TAG_CLIENT_BIND;
+import static org.remoteandroid.internal.Constants.TAG_SECURITY;
+import static org.remoteandroid.internal.Constants.V;
+import static org.remoteandroid.internal.Constants.W;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 import org.remoteandroid.RemoteAndroidManager;
-import static org.remoteandroid.RemoteAndroidManager.*;
-
 import org.remoteandroid.internal.AbstractProtoBufRemoteAndroid;
 import org.remoteandroid.internal.Login;
-import org.remoteandroid.internal.Pairing;
-import org.remoteandroid.internal.RemoteAndroidManagerImpl;
+import org.remoteandroid.internal.Messages.Msg;
 import org.remoteandroid.internal.Messages.Type;
 import org.remoteandroid.internal.Pair;
+import org.remoteandroid.internal.Pairing;
 import org.remoteandroid.internal.RemoteAndroidInfoImpl;
-import org.remoteandroid.internal.Messages.Msg;
+import org.remoteandroid.internal.RemoteAndroidManagerImpl;
 
 import android.net.Uri;
 import android.os.Parcel;
@@ -123,6 +133,7 @@ public abstract class AbstractSocketRemoteAndroid<T extends BossSocketSender> ex
 			{
 				if (((flags & FLAG_ACCEPT_ANONYMOUS)==0) && !isBonded)
 				{
+					if (W) Log.w(TAG_CLIENT_BIND,PREFIX_LOG+"Use would use FLAG_ACCEPT_ANONYMOUS ?.");
 					cookie=COOKIE_NO;
 				}
 				if ((cookie==COOKIE_NO) && ((flags & FLAG_PROPOSE_PAIRING)!=0) && !isBonded) 

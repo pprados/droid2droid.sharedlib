@@ -2,7 +2,7 @@ package org.remoteandroid.internal;
 
 import android.os.Build;
 
-public final class Compatibility
+public final class Compatibility // FIXME
 {
     public static String MANUFACTURER;
     public static int VERSION_SDK_INT;

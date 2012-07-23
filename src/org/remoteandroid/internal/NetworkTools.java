@@ -10,7 +10,6 @@ import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
 import android.nfc.NfcManager;
 import android.os.Build;
 import android.provider.Settings;
@@ -64,7 +63,6 @@ public final class NetworkTools
 		        }
 			}
 			
-			WifiManager wifi=(WifiManager)context.getSystemService(Context.WIFI_SERVICE);
 			TelephonyManager telephone=(TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 			if (telephone.getDataState()==TelephonyManager.DATA_CONNECTED)
 			{

@@ -36,16 +36,16 @@ public final class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	public int				version;
 
 	/** Capability. */
-	public long				feature;
+	public long			feature;
 	
 	public boolean			isBonded;
 	
 	public boolean			acceptAnonymous;
 	
-	public boolean			isDiscoverBT;
-	public boolean			isDiscoverEthernet;
-	public boolean			isDiscoverGSM;
-	public boolean			isDiscoverNFC;
+	public boolean			isDiscoverByBT;
+	public boolean			isDiscoverByEthernet;
+	public boolean			isDiscoverByGSM;
+	public boolean			isDiscoverByNFC;
 	
 	public ArrayList<String> uris=new ArrayList<String>(0);
 	
@@ -112,20 +112,25 @@ public final class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 			isBonded=info.isBonded;
 		}
 		
-		if (isDiscoverBT!=info.isDiscoverBT && info.isDiscoverBT)
+		if (isDiscoverByBT!=info.isDiscoverByBT && info.isDiscoverByBT)
 		{
 			merged=true;
-			isDiscoverBT=info.isDiscoverBT;
+			isDiscoverByBT=info.isDiscoverByBT;
 		}
-		if (isDiscoverEthernet!=info.isDiscoverEthernet && info.isDiscoverEthernet)
+		if (isDiscoverByEthernet!=info.isDiscoverByEthernet && info.isDiscoverByEthernet)
 		{
 			merged=true;
-			isDiscoverEthernet=info.isDiscoverEthernet;
+			isDiscoverByEthernet=info.isDiscoverByEthernet;
 		}
-		if (isDiscoverGSM!=info.isDiscoverGSM && info.isDiscoverGSM)
+		if (isDiscoverByGSM!=info.isDiscoverByGSM && info.isDiscoverByGSM)
 		{
 			merged=true;
-			isDiscoverGSM=info.isDiscoverGSM;
+			isDiscoverByGSM=info.isDiscoverByGSM;
+		}
+		if (isDiscoverByNFC!=info.isDiscoverByNFC && info.isDiscoverByNFC)
+		{
+			merged=true;
+			isDiscoverByNFC=info.isDiscoverByNFC;
 		}
 		return merged;
 	}
@@ -199,9 +204,8 @@ public final class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	@Override
 	public boolean isDiscover()
 	{
-		return isDiscoverBT || isDiscoverEthernet || isDiscoverGSM || isDiscoverNFC;
+		return isDiscoverByBT || isDiscoverByEthernet || isDiscoverByGSM || isDiscoverByNFC;
 	}
-	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -262,7 +266,7 @@ public final class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 	public void clearDiscover()
 	{
 		uris.clear();
-		isDiscoverBT=isDiscoverEthernet=false;
+		isDiscoverByBT=isDiscoverByEthernet=false;
 	}
 
 	/**
@@ -307,9 +311,10 @@ public final class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 			buf.setLength(buf.length() - 1);
 		}
 		if (isBonded) buf.append(" (Bonded)");
-		if (isDiscoverBT) buf.append(" [BT]");
-		if (isDiscoverEthernet) buf.append(" [Ethernet]");
-		if (isDiscoverGSM) buf.append(" [GSM]");
+		if (isDiscoverByBT) buf.append(" [BT]");
+		if (isDiscoverByEthernet) buf.append(" [Ethernet]");
+		if (isDiscoverByGSM) buf.append(" [GSM]");
+		if (isDiscoverByNFC) buf.append(" [NFC]");
 		return buf.toString();
 	}
 
@@ -329,9 +334,10 @@ public final class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 		dest.writeLong(feature);
 		dest.writeStringList(uris);
 		dest.writeByte((byte) (isBonded ? 1 : 0));
-		dest.writeByte((byte) (isDiscoverEthernet ? 1 : 0));
-		dest.writeByte((byte) (isDiscoverBT ? 1 : 0));
-		dest.writeByte((byte) (isDiscoverGSM ? 1 : 0));
+		dest.writeByte((byte) (isDiscoverByEthernet ? 1 : 0));
+		dest.writeByte((byte) (isDiscoverByBT ? 1 : 0));
+		dest.writeByte((byte) (isDiscoverByGSM ? 1 : 0));
+		dest.writeByte((byte) (isDiscoverByNFC ? 1 : 0));
 	}
 	public void readFromParcel(Parcel parcel)
 	{
@@ -351,9 +357,10 @@ public final class RemoteAndroidInfoImpl implements RemoteAndroidInfo
 			else
 				uris.trimToSize();
 			isBonded=(parcel.readByte()==1);
-			isDiscoverEthernet=(parcel.readByte()==1);
-			isDiscoverBT=(parcel.readByte()==1);
-			isDiscoverGSM=(parcel.readByte()==1);
+			isDiscoverByEthernet=(parcel.readByte()==1);
+			isDiscoverByBT=(parcel.readByte()==1);
+			isDiscoverByGSM=(parcel.readByte()==1);
+			isDiscoverByNFC=(parcel.readByte()==1);
 		}
 		catch (InvalidKeySpecException e)
 		{

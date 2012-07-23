@@ -234,12 +234,12 @@ public final class NormalizeIntent
 		else if (v instanceof List<?>)
 		{
 			out.writeInt(VAL_LIST);
-			out.writeList((List) v);
+			out.writeList((List<?>) v);
 		}
 		else if (v instanceof SparseArray<?>)
 		{
 			out.writeInt(VAL_SPARSEARRAY);
-			out.writeSparseArray((SparseArray) v);
+			out.writeSparseArray((SparseArray<Object>) v);
 		}
 		else if (v instanceof boolean[])
 		{

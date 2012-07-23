@@ -332,7 +332,7 @@ public abstract class AbstractProtoBufRemoteAndroid extends AbstractRemoteAndroi
 								throw new SecurityException("Pairing refused with "+mUri+".");
 						}
 						if (cookie==COOKIE_EXCEPTION)
-							throw new IOException("Impossible to connect with "+mUri+"."); // FIXME: Avec Motorola Milestone et IPV6, java.net.SocketException: The socket level is invalid
+							throw new IOException("Impossible to connect with "+mUri+". Remote device is shared ?"); // FIXME: Avec Motorola Milestone et IPV6, java.net.SocketException: The socket level is invalid
 	
 						if (cookie==COOKIE_NO)
 							throw new SecurityException("Connection impossible with "+mUri);
