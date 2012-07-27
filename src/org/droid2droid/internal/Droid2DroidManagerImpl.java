@@ -503,6 +503,7 @@ public final class Droid2DroidManagerImpl extends Droid2DroidManager
 		}
 	}
 
+	@TargetApi(9)
 	@Override
 	public NdefMessage createNdefMessage()
 	{

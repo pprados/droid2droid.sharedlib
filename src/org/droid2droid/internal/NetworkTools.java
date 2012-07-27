@@ -129,6 +129,7 @@ public final class NetworkTools
 				boolean rc=new PrivilegedAction<Boolean>() // TODO: Optimize with static
 				{
 
+					@TargetApi(10)
 					@Override
 					public Boolean run()
 					{
