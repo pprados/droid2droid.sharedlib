@@ -113,7 +113,7 @@ public final class Droid2DroidManagerImpl extends Droid2DroidManager
 	public final Context mAppContext;
 	private IRemoteAndroidManager mManager;
 	private ServiceConnection mServiceConnection;
-	private static final Intent sIntentRemoteAndroid=new Intent(ACTION_BIND_REMOTE_DROID2DROID);
+	private static final Intent sIntentRemoteAndroid=new Intent(ACTION_BIND_REMOTE_ANDROID);
 
 	@Override
 	public int getVersion()

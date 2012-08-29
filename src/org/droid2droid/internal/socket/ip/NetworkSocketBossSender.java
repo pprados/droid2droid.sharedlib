@@ -123,7 +123,7 @@ public final class NetworkSocketBossSender implements BossSocketSender
 			SSLSocket socket = createSocket(InetAddress.getByName(mHost),mPort);
 			try
 			{
-				Certificate[] certificatesChaine=socket.getSession().getPeerCertificates();
+				Certificate[] certificatesChaine=socket.getSession().getPeerCertificates(); // FIXME: Bug with Jelly Bean
 				String name=socket.getSession().getPeerPrincipal().getName();
 				Matcher m = sPatternDN.matcher(name);
 				if (m.find())
